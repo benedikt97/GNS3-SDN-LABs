@@ -19,7 +19,7 @@ with open('thesis.md') as file:
 		chapter.append(line)
 		i += 1
 	print(readme)
-	with open('readme.md', 'w') as readme_file:
-		for r_line in readme:
-			readme_file.write("%s\n" % r_line)
+#	with open('readme.md', 'w') as readme_file:
+#		for r_line in readme:
+#			readme_file.write("%s\n" % r_line)
 
