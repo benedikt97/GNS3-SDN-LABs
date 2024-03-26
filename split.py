@@ -11,7 +11,7 @@ with open('thesis.md') as file:
 			with open(chapter_title + '.md', 'w') as out_file:
 				    for c_line in chapter:
         				out_file.write(c_line)
-			chapter_title = lines[i-1].splitlines()[0].replace(' ', '-')
+			chapter_title = lines[i-1].splitlines()[0].replace(' ', '-').replace(':','')
 			readme.append('['+chapter_title+']('+chapter_title+'.md'+')')
 			chapter = []
 			print(line)
@@ -19,7 +19,7 @@ with open('thesis.md') as file:
 		chapter.append(line)
 		i += 1
 	print(readme)
-#	with open('readme.md', 'w') as readme_file:
-#		for r_line in readme:
-#			readme_file.write("%s\n" % r_line)
+	with open('readme.md', 'w') as readme_file:
+		for r_line in readme:
+			readme_file.write("%s\n" % r_line)
 
