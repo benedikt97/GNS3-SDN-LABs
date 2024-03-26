@@ -3880,8 +3880,8 @@ implementiert werden. Die Pfade des Netzwerkverkehrs werden durch das
 verwendete Routingprotokoll bestimmt, welche kein geregeltes Loadsharing
 anbieten.
 
-MPLS Segment Routing (mit EVPN?\]
-=================================
+MPLS Segment Routing
+====================
 
 Anhänge
 =======
