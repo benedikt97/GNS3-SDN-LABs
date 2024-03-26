@@ -1,0 +1,58 @@
+<mxfile host="Electron" modified="2024-01-29T07:29:57.101Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.21 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="gzFSb4LbncZQUGLl5bTI" version="22.1.21" type="device">
+  <diagram name="Seite-1" id="bIhA07GkoLs4O5l-hTK4">
+    <mxGraphModel dx="1434" dy="838" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hKufWswA0tByoukRXo-G-6" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f0a30a;strokeColor=#BD7000;strokeWidth=5;endArrow=none;endFill=0;" edge="1" parent="1" source="hKufWswA0tByoukRXo-G-1" target="hKufWswA0tByoukRXo-G-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hKufWswA0tByoukRXo-G-2" value="&lt;span style=&quot;background-color: rgb(230, 230, 230);&quot;&gt;10.0.3.33&lt;/span&gt;" style="shape=mxgraph.cisco.switches.layer_3_switch;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="520" y="330" width="64" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="hKufWswA0tByoukRXo-G-3" value="&lt;span style=&quot;background-color: rgb(230, 230, 230);&quot;&gt;10.0.3.34&lt;/span&gt;" style="shape=mxgraph.cisco.switches.layer_3_switch;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="710" y="200" width="64" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="hKufWswA0tByoukRXo-G-4" value="&lt;span style=&quot;background-color: rgb(230, 230, 230);&quot;&gt;10.0.3.32&lt;/span&gt;" style="shape=mxgraph.cisco.switches.layer_3_switch;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="330" y="450" width="64" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="hKufWswA0tByoukRXo-G-5" value="&lt;span style=&quot;background-color: rgb(230, 230, 230);&quot;&gt;10.0.3.35&lt;/span&gt;" style="shape=mxgraph.cisco.switches.layer_3_switch;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="710" y="450" width="64" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="hKufWswA0tByoukRXo-G-7" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f0a30a;strokeColor=#BD7000;strokeWidth=5;endArrow=none;endFill=0;" edge="1" parent="1" source="hKufWswA0tByoukRXo-G-4" target="hKufWswA0tByoukRXo-G-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="414" y="265" as="sourcePoint" />
+            <mxPoint x="530" y="349" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hKufWswA0tByoukRXo-G-8" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f0a30a;strokeColor=#BD7000;strokeWidth=5;endArrow=none;endFill=0;" edge="1" parent="1" source="hKufWswA0tByoukRXo-G-1" target="hKufWswA0tByoukRXo-G-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="424" y="275" as="sourcePoint" />
+            <mxPoint x="540" y="359" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hKufWswA0tByoukRXo-G-9" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f0a30a;strokeColor=#BD7000;strokeWidth=5;endArrow=none;endFill=0;" edge="1" parent="1" source="hKufWswA0tByoukRXo-G-3" target="hKufWswA0tByoukRXo-G-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="434" y="285" as="sourcePoint" />
+            <mxPoint x="550" y="369" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hKufWswA0tByoukRXo-G-10" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f0a30a;strokeColor=#BD7000;strokeWidth=5;endArrow=none;endFill=0;" edge="1" parent="1" source="hKufWswA0tByoukRXo-G-4" target="hKufWswA0tByoukRXo-G-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="444" y="295" as="sourcePoint" />
+            <mxPoint x="560" y="379" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hKufWswA0tByoukRXo-G-11" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f0a30a;strokeColor=#BD7000;strokeWidth=5;endArrow=none;endFill=0;" edge="1" parent="1" source="hKufWswA0tByoukRXo-G-3" target="hKufWswA0tByoukRXo-G-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="454" y="305" as="sourcePoint" />
+            <mxPoint x="570" y="389" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hKufWswA0tByoukRXo-G-1" value="&lt;span style=&quot;background-color: rgb(230, 230, 230);&quot;&gt;10.0.3.31&lt;/span&gt;" style="shape=mxgraph.cisco.switches.layer_3_switch;sketch=0;html=1;pointerEvents=1;dashed=0;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="330" y="200" width="64" height="64" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
