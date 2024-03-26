@@ -21,5 +21,5 @@ with open('thesis.md') as file:
 	print(readme)
 	with open('readme.md', 'w') as readme_file:
 		for r_line in readme:
-			readme_file.write(r_line)
+			readme_file.write("%s\n" % r_line)
 
