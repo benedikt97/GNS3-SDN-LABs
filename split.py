@@ -9,7 +9,7 @@ with open('thesis.md') as file:
 	for line in lines:
 		if line.startswith('='):
 			if 'Lab' in chapter_title:
-				with open(chapter_title + '.md', 'w') as out_file:
+				with open(chapter_title_f + '.md', 'w') as out_file:
 					for c_line in chapter:
 						out_file.write(c_line)
 			chapter_title = lines[i-1].splitlines()[0]
