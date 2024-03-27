@@ -1,7 +1,7 @@
-OpenFlow I: Controller- und Broadcastbasiert mit Faucet {#sec:of1}
-=======================================================
+OpenFlow I - Broadcastbasiertes Forwarding
+==========================================
 
-Architektur und Technologien
+Architektur und Technologien {#sec:of1}
 ----------------------------
 
 Bei diesem Ansatz wird die Dataplane der Switche vollständig durch einen
@@ -394,4 +394,4 @@ Load-Balancing. Zu Demonstrationszecken bietet Faucet den Vorteil das
 durch das auf die Switche installierte Regelwerk viele grundlegenden
 Mechaniken eines Ethernet und IP Netzwerkes gezeigt werden können.
 
-OpenFlow II: Controller- und Pfad-basiert mit ONOS
+OpenFlow II - Pfadbasiertes Forwarding

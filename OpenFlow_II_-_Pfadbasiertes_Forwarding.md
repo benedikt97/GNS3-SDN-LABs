@@ -1,5 +1,5 @@
-OpenFlow II: Controller- und Pfad-basiert mit ONOS
-==================================================
+OpenFlow II - Pfadbasiertes Forwarding
+======================================
 
 Auch dieser Ansatz ist asymmetrisch weil Controller-basiert. Der
 Unterschied besteht darin, dass der Controller kein Regelwerk zum
@@ -12,7 +12,7 @@ Veranschaulichung genutzt.
 width="100%"}
 
 Die Funktionsweise dieses Prinzips wird an der gleichen
-Netzwerktopologie wie im Kapitel [5](#sec:of1){reference-type="ref"
+Netzwerktopologie wie im Kapitel [5.1](#sec:of1){reference-type="ref"
 reference="sec:of1"} gezeigt.
 
 #### Layer-2 Fabric - Reactive Forwarding
@@ -77,7 +77,7 @@ Simulation
 
 In dieser Simulation wird das gleiche Template, Netzwerktopologie sowie
 Switche mit identischer Konfiguration wie aus
-[5](#sec:of1){reference-type="ref" reference="sec:of1"} verwendet.
+[5.1](#sec:of1){reference-type="ref" reference="sec:of1"} verwendet.
 Einzig der Faucet-Controller wird durch den ONOS Controller
 ausgetautscht.
 
@@ -193,4 +193,4 @@ Beispiel verteiltes IP-Routing die statische Konfiguration von
 IP-Adressen auf Interfaces, was in den meisten Anwendungsfällen nicht
 praktikabel da zu wenig dynamisch ist.
 
-P4Runtime
+P4Runtime - Programmierbare Dataplane

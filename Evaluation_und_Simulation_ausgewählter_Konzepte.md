@@ -72,4 +72,4 @@ DPDK befindet sich im Backlog - SONiC with P4 DPDK (PNA architecture) --
 Basic SoftSwitch with DPDK - Deferred from 202205 release der SONiC
 Roadmap. [@sonicroadmap].
 
-OpenFlow I: Controller- und Broadcastbasiert mit Faucet {#sec:of1}
+OpenFlow I - Broadcastbasiertes Forwarding

@@ -1,5 +1,5 @@
-P4Runtime
-=========
+P4Runtime - Programmierbare Dataplane
+=====================================
 
 P4Runtime ist keine Netzwerkarchitektur als solchen, sondern lediglich
 ein Protokoll auf einem entferntem Switch eine per P4 definierte
@@ -542,4 +542,4 @@ mittels PINS, wie zum Beispiel in SONiC. Zwar gehen hier Freiheitsgrade
 in der Programmierung der Dataplane verloren, der Verbreitung der Idee
 sowie der Protokolle tut es genüge.
 
-BGP-EVPN: Verteilter und Broadcast-optimierter Ansatz mit SONiC
+BGP-EVPN - Overlaybasierte Netzwerkvirtualisierung

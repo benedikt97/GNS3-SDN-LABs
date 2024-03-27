@@ -1754,10 +1754,10 @@ DPDK befindet sich im Backlog - SONiC with P4 DPDK (PNA architecture) --
 Basic SoftSwitch with DPDK - Deferred from 202205 release der SONiC
 Roadmap. [@sonicroadmap].
 
-OpenFlow I: Controller- und Broadcastbasiert mit Faucet {#sec:of1}
-=======================================================
+OpenFlow I - Broadcastbasiertes Forwarding
+==========================================
 
-Architektur und Technologien
+Architektur und Technologien {#sec:of1}
 ----------------------------
 
 Bei diesem Ansatz wird die Dataplane der Switche vollständig durch einen
@@ -2150,8 +2150,8 @@ Load-Balancing. Zu Demonstrationszecken bietet Faucet den Vorteil das
 durch das auf die Switche installierte Regelwerk viele grundlegenden
 Mechaniken eines Ethernet und IP Netzwerkes gezeigt werden können.
 
-OpenFlow II: Controller- und Pfad-basiert mit ONOS
-==================================================
+OpenFlow II - Pfadbasiertes Forwarding
+======================================
 
 Auch dieser Ansatz ist asymmetrisch weil Controller-basiert. Der
 Unterschied besteht darin, dass der Controller kein Regelwerk zum
@@ -2164,7 +2164,7 @@ Veranschaulichung genutzt.
 width="100%"}
 
 Die Funktionsweise dieses Prinzips wird an der gleichen
-Netzwerktopologie wie im Kapitel [5](#sec:of1){reference-type="ref"
+Netzwerktopologie wie im Kapitel [5.1](#sec:of1){reference-type="ref"
 reference="sec:of1"} gezeigt.
 
 #### Layer-2 Fabric - Reactive Forwarding
@@ -2229,7 +2229,7 @@ Simulation
 
 In dieser Simulation wird das gleiche Template, Netzwerktopologie sowie
 Switche mit identischer Konfiguration wie aus
-[5](#sec:of1){reference-type="ref" reference="sec:of1"} verwendet.
+[5.1](#sec:of1){reference-type="ref" reference="sec:of1"} verwendet.
 Einzig der Faucet-Controller wird durch den ONOS Controller
 ausgetautscht.
 
@@ -2345,8 +2345,8 @@ Beispiel verteiltes IP-Routing die statische Konfiguration von
 IP-Adressen auf Interfaces, was in den meisten Anwendungsfällen nicht
 praktikabel da zu wenig dynamisch ist.
 
-P4Runtime
-=========
+P4Runtime - Programmierbare Dataplane
+=====================================
 
 P4Runtime ist keine Netzwerkarchitektur als solchen, sondern lediglich
 ein Protokoll auf einem entferntem Switch eine per P4 definierte
@@ -2889,10 +2889,10 @@ mittels PINS, wie zum Beispiel in SONiC. Zwar gehen hier Freiheitsgrade
 in der Programmierung der Dataplane verloren, der Verbreitung der Idee
 sowie der Protokolle tut es genüge.
 
-BGP-EVPN: Verteilter und Broadcast-optimierter Ansatz mit SONiC
-===============================================================
+BGP-EVPN - Overlaybasierte Netzwerkvirtualisierung
+==================================================
 
-Architektur und Technologien
+Architektur und Technologien {#architektur-und-technologien}
 ----------------------------
 
 Bei diesem Ansatz wird ein virtuelles Overlay-Netzwerk mit VXLAN
@@ -3880,8 +3880,8 @@ implementiert werden. Die Pfade des Netzwerkverkehrs werden durch das
 verwendete Routingprotokoll bestimmt, welche kein geregeltes Loadsharing
 anbieten.
 
-MPLS Segment Routing
-====================
+MPLS-SR - Traffic-Engineering
+=============================
 
 Anhänge
 =======

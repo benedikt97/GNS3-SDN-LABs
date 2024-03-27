@@ -1,7 +1,7 @@
-BGP-EVPN: Verteilter und Broadcast-optimierter Ansatz mit SONiC
-===============================================================
+BGP-EVPN - Overlaybasierte Netzwerkvirtualisierung
+==================================================
 
-Architektur und Technologien
+Architektur und Technologien {#architektur-und-technologien}
 ----------------------------
 
 Bei diesem Ansatz wird ein virtuelles Overlay-Netzwerk mit VXLAN
@@ -989,4 +989,4 @@ implementiert werden. Die Pfade des Netzwerkverkehrs werden durch das
 verwendete Routingprotokoll bestimmt, welche kein geregeltes Loadsharing
 anbieten.
 
-MPLS Segment Routing
+MPLS-SR - Traffic-Engineering

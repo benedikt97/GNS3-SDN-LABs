@@ -1,4 +1,0 @@
-MPLS Segment Routing
-====================
-
-Anhänge
