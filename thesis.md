@@ -837,8 +837,10 @@ Routen gehören:
 
 EVPN lässt sich neben VXLAN auch für MPLS als Controlplane einsetzen.
 
-Segment Routing
----------------
+MPLS
+----
+
+### ISIS Segment Routing
 
 BGP-LS P4RUntime
 
@@ -1754,8 +1756,8 @@ DPDK befindet sich im Backlog - SONiC with P4 DPDK (PNA architecture) --
 Basic SoftSwitch with DPDK - Deferred from 202205 release der SONiC
 Roadmap. [@sonicroadmap].
 
-OpenFlow I - Broadcastbasiertes Forwarding
-==========================================
+OpenFlow Lab I - Broadcastbasiertes Forwarding mit FAUCET
+=========================================================
 
 Architektur und Technologien {#sec:of1}
 ----------------------------
@@ -2150,8 +2152,8 @@ Load-Balancing. Zu Demonstrationszecken bietet Faucet den Vorteil das
 durch das auf die Switche installierte Regelwerk viele grundlegenden
 Mechaniken eines Ethernet und IP Netzwerkes gezeigt werden können.
 
-OpenFlow II - Pfadbasiertes Forwarding
-======================================
+OpenFlow Lab II - Pfadbasiertes Forwarding mit ONOS
+===================================================
 
 Auch dieser Ansatz ist asymmetrisch weil Controller-basiert. Der
 Unterschied besteht darin, dass der Controller kein Regelwerk zum
@@ -2345,8 +2347,8 @@ Beispiel verteiltes IP-Routing die statische Konfiguration von
 IP-Adressen auf Interfaces, was in den meisten Anwendungsfällen nicht
 praktikabel da zu wenig dynamisch ist.
 
-P4Runtime - Programmierbare Dataplane
-=====================================
+P4Runtime Lab - Programmierbare Dataplane
+=========================================
 
 P4Runtime ist keine Netzwerkarchitektur als solchen, sondern lediglich
 ein Protokoll auf einem entferntem Switch eine per P4 definierte
@@ -2889,8 +2891,8 @@ mittels PINS, wie zum Beispiel in SONiC. Zwar gehen hier Freiheitsgrade
 in der Programmierung der Dataplane verloren, der Verbreitung der Idee
 sowie der Protokolle tut es genüge.
 
-BGP-EVPN - Overlaybasierte Netzwerkvirtualisierung
-==================================================
+BGP-EVPN Lab - Overlaybasierte Netzwerkvirtualisierung mit SONiC
+================================================================
 
 Architektur und Technologien {#architektur-und-technologien}
 ----------------------------
@@ -3880,8 +3882,27 @@ implementiert werden. Die Pfade des Netzwerkverkehrs werden durch das
 verwendete Routingprotokoll bestimmt, welche kein geregeltes Loadsharing
 anbieten.
 
-MPLS-SR - Traffic-Engineering
-=============================
+MPLS-SR Lab - Traffic-Engineering
+=================================
+
+In dieser Simulation wird ein mehrschichtiges Netzwerk auf Basis von
+MPLS aufgebaut. Als Controlplane-Protokoll wird für MPLS das Link-State
+Routing-Protokoll ISIS eingesetzt. Als Routing-Technik wird Segment
+Routing genutzt, welches mit OSPF und ISIS realisierbar ist. Das
+Segment-Routing auf Basis von ISIS ersetzt die Notwendigkeit von LDP
+sowie von RSVP-TE. Für die Virtualisierung von Kundennetzwerken über das
+MPLS-Netzwerk wird EVPN eingesetzt. EVPN ersetzt an der Stelle die
+klassisch eingesetzten Technologien MPLS L3VPN und VPLS. Der Vorteil von
+EVPN ist die Kombinierung von Layer-2 und Layer-3 Services sowie die
+optimierte Mechanik zum Lernen von MAC-Adressen gegenüber VPLS. Für das
+EVPN wird auf den Switchen am Rand des Netzwerkes BGP konfiguriert.
+
+Traffic-Engineering wird durch das Segment-Routing ermöglicht. Die dafür
+notwendigen Policys werden auf dem eingehenden MPLS-Router konfiguriert.
+Dies kann statisch über die CLI erfolgen, oder mittels einem Controller
+der in diesem Zusammenhang PCE - Path Computation Element genannt wird.
+Dieser verbindet sich zu den Routern über eine BGP-Session und sammelt
+sowie verteilt Informationen über einen eignen BGP-Adresstyp.
 
 Anhänge
 =======

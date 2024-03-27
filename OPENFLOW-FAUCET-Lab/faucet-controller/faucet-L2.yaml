@@ -1,0 +1,139 @@
+vlans:
+    office:
+        vid: 100
+        description: "office network"
+    server:
+        vid: 200
+        description: "client network"
+
+dps:
+    sw1:
+        dp_id: 0x0000000000000001
+        hardware: "Open vSwitch"
+        stack:
+            priority: 1
+        interfaces:
+            1:
+                description: "sw1 isl to sw4"
+                stack:
+                    dp: sw4
+                    port: 1
+            2:
+                description: "sw1 isl to sw3"
+                stack:
+                    dp: sw3
+                    port: 1
+            5:
+                name: "h2"
+                description: "netlab 2"
+                native_vlan: office
+            6:
+                name: "h3"
+                description: "netlab 3"
+                native_vlan: server
+    sw2:
+        dp_id: 0x0000000000000002
+        hardware: "Open vSwitch"
+        stack:
+            priority: 1
+        interfaces:
+            1:
+                description: "sw2 isl to sw4"
+                stack:
+                    dp: sw4
+                    port: 3
+            2:
+                description: "sw2 isl to sw5"
+                stack:
+                    dp: sw5
+                    port: 2
+            5:
+                name: "h2"
+                description: "netlab 2"
+                native_vlan: office
+            6:
+                name: "h3"
+                description: "netlab 3"
+                native_vlan: server
+    sw3:
+        dp_id: 0x0000000000000003
+        hardware: "Open vSwitch"
+        stack:
+            priority: 1
+        interfaces:
+            1:
+                description: "sw3 isl to sw1"
+                stack:
+                    dp: sw1
+                    port: 2
+            2:
+                description: "sw3 isl to sw4"
+                stack:
+                    dp: sw4
+                    port: 2
+            3:
+                description: "sw3 isl to sw5"
+                stack:
+                    dp: sw5
+                    port: 1
+            5:
+                name: "h2"
+                description: "netlab 2"
+                native_vlan: office
+            6:
+                name: "h3"
+                description: "netlab 3"
+                native_vlan: server
+    sw4:
+        dp_id: 0x0000000000000004
+        hardware: "Open vSwitch"
+        stack:
+              priority: 1
+        interfaces:
+            1:
+                description: "sw4 isl to sw1"
+                stack:
+                    dp: sw1
+                    port: 1
+            2:
+                description: "sw4 isl to sw3"
+                stack:
+                    dp: sw3
+                    port: 2
+            3:
+                description: "sw4 isl to sw2"
+                stack:
+                    dp: sw2
+                    port: 1
+            5:
+                name: "h2"
+                description: "netlab 2"
+                native_vlan: office
+            6:
+                name: "h3"
+                description: "netlab 3"
+                native_vlan: server
+    sw5:
+        dp_id: 0x0000000000000005
+        hardware: "Open vSwitch"
+        stack:
+            priority: 1
+        interfaces:
+            1:
+                description: "sw5 isl to sw3"
+                stack:
+                    dp: sw3
+                    port: 3
+            2:
+                description: "sw5 isl to sw2"
+                stack:
+                    dp: sw2
+                    port: 2
+            5:
+                name: "h2"
+                description: "netlab 2"
+                native_vlan: office
+            6:
+                name: "h3"
+                description: "netlab 3"
+                native_vlan: server

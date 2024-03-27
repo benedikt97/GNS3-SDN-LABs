@@ -1,0 +1,20 @@
+{
+    "appliance_id": "da783400-a388-4cb2-8299-f916e3a1cc10",
+    "name": "Stratum-bmv2",
+    "category": "switch",
+    "description": "Stratum Switch on bmv2",
+    "vendor_name": "NLAB",
+    "vendor_url": "gns3.ing.hs-rm.de",
+    "maintainer_email": "nlab@hs-rm.de",
+    "product_name": "Stratum",
+    "registry_version": 4,
+    "status": "stable",
+    "maintainer": "HSRM NLAB",
+    "symbol": "switch.svg",
+    "docker": {
+        "adapters": 9,
+        "image": "nlab4hsrm/stratum-bmv2:beta-v1",
+        "console_type": "telnet",
+        "start_command": "stratum_bmv2 -chassis-config-file=/etc/stratum/chassis_config.pb.txt &"
+    }
+}

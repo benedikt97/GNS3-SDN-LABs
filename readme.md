@@ -1,20 +1,10 @@
-[Einleitung](Einleitung.md)
+[OpenFlow Lab I - Broadcastbasiertes Forwarding mit FAUCET](OpenFlow_Lab_I_-_Broadcastbasiertes_Forwarding_mit_FAUCET.md)
 
-[Grundlagen](Grundlagen.md)
+[OpenFlow Lab II - Pfadbasiertes Forwarding mit ONOS](OpenFlow_Lab_II_-_Pfadbasiertes_Forwarding_mit_ONOS.md)
 
-[Marktanalyse_{#secmarket}](Marktanalyse_{#secmarket}.md)
+[P4Runtime Lab - Programmierbare Dataplane](P4Runtime_Lab_-_Programmierbare_Dataplane.md)
 
-[Evaluation_und_Simulation_ausgewählter_Konzepte](Evaluation_und_Simulation_ausgewählter_Konzepte.md)
+[BGP-EVPN Lab - Overlaybasierte Netzwerkvirtualisierung mit SONiC](BGP-EVPN_Lab_-_Overlaybasierte_Netzwerkvirtualisierung_mit_SONiC.md)
 
-[OpenFlow_I_-_Broadcastbasiertes_Forwarding](OpenFlow_I_-_Broadcastbasiertes_Forwarding.md)
-
-[OpenFlow_II_-_Pfadbasiertes_Forwarding](OpenFlow_II_-_Pfadbasiertes_Forwarding.md)
-
-[P4Runtime_-_Programmierbare_Dataplane](P4Runtime_-_Programmierbare_Dataplane.md)
-
-[BGP-EVPN_-_Overlaybasierte_Netzwerkvirtualisierung](BGP-EVPN_-_Overlaybasierte_Netzwerkvirtualisierung.md)
-
-[MPLS-SR_-_Traffic-Engineering](MPLS-SR_-_Traffic-Engineering.md)
-
-[Anhänge](Anhänge.md)
+[MPLS-SR Lab - Traffic-Engineering](MPLS-SR_Lab_-_Traffic-Engineering.md)
 

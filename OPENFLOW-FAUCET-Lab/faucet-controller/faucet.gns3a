@@ -1,0 +1,19 @@
+{
+    "appliance_id": "da783400-a388-4cb2-8299-f916e3a1cc10",
+    "name": "Faucet",
+    "category": "host",
+    "description": "Container Faucet Openflow Controller",
+    "vendor_name": "NLAB",
+    "vendor_url": "gns3.ing.hs-rm.de",
+    "maintainer_email": "nlab@hs-rm.de",
+    "product_name": "faucet",
+    "registry_version": 4,
+    "status": "stable",
+    "maintainer": "HSRM NLAB",
+    "symbol": "docker.svg",
+    "docker": {
+        "adapters": 1,
+        "image": "nlab4hsrm/faucet",
+        "console_type": "telnet"
+    }
+}

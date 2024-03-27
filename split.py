@@ -8,11 +8,14 @@ with open('thesis.md') as file:
 	readme = []
 	for line in lines:
 		if line.startswith('='):
-			with open(chapter_title + '.md', 'w') as out_file:
-				    for c_line in chapter:
-        				out_file.write(c_line)
-			chapter_title = lines[i-1].splitlines()[0].replace(' ', '_').replace(':','')
-			readme.append('['+chapter_title+']('+chapter_title+'.md'+')')
+			if 'Lab' in chapter_title:
+				with open(chapter_title + '.md', 'w') as out_file:
+					for c_line in chapter:
+						out_file.write(c_line)
+			chapter_title = lines[i-1].splitlines()[0]
+			chapter_title_f = chapter_title.replace(' ', '_').replace(':','')
+			if 'Lab' in chapter_title:
+				readme.append('['+chapter_title+']('+chapter_title_f+'.md'+')')
 			chapter = []
 			print(line)
 			chapter.append(lines[i-1])

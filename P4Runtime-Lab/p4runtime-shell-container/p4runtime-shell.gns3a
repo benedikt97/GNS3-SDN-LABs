@@ -1,0 +1,19 @@
+{
+    "appliance_id": "da783400-a388-4cb2-8299-f916e3a1cc10",
+    "name": "p4runtime-shell",
+    "category": "host",
+    "description": "Container with Python P4Runtime Shell",
+    "vendor_name": "NLAB",
+    "vendor_url": "gns3.ing.hs-rm.de",
+    "maintainer_email": "nlab@hs-rm.de",
+    "product_name": "p4runtime-sh",
+    "registry_version": 4,
+    "status": "stable",
+    "maintainer": "HSRM NLAB",
+    "symbol": "docker.svg",
+    "docker": {
+        "adapters": 1,
+        "image": "nlab4hsrm/p4runtime-shell",
+        "console_type": "telnet"
+    }
+}
