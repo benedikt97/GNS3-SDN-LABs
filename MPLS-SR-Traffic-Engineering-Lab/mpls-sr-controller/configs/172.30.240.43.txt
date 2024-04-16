@@ -1,0 +1,122 @@
+! Command: show running-config
+! device: Arista-3 (vEOS-lab, EOS-4.31.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$biN1JhAyC9CjaS.g$Ic1YHUEcssXcpdP77XvZ9fEunOOcpz65y.OqRaps91B3SWFV/6DsatFweg6xMLoNmnKHRumvhSnMT5/k1wwEE/
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname Arista-3
+!
+spanning-tree mode none
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 90
+!
+vrf instance NLAB
+   rd 64020:1
+!
+management api http-commands
+   protocol http
+   no shutdown
+!
+interface Ethernet1
+   speed forced 10full
+   no switchport
+   ip address 10.200.0.6/30
+   isis enable ISIS-SR
+!
+interface Ethernet2
+   speed forced 10full
+   no switchport
+   ip address 10.200.0.9/30
+   isis enable ISIS-SR
+!
+interface Ethernet3
+   speed forced 10full
+   no switchport
+   ip address 10.200.0.13/30
+   isis enable ISIS-SR
+!
+interface Ethernet4
+!
+interface Ethernet5
+!
+interface Ethernet6
+!
+interface Ethernet7
+   switchport access vlan 90
+!
+interface Ethernet8
+!
+interface Ethernet9
+!
+interface Ethernet10
+!
+interface Ethernet11
+!
+interface Ethernet12
+!
+interface Loopback1
+   ip address 10.0.0.43/32
+   node-segment ipv4 index 43
+   isis enable ISIS-SR
+!
+interface Management1
+   ip address 172.30.240.43/16
+!
+ip routing
+ip routing vrf NLAB
+!
+mpls ip
+!
+router bgp 64020
+   router-id 10.0.0.43
+   neighbor NLAB-CORE peer group
+   neighbor NLAB-CORE remote-as 64020
+   neighbor NLAB-CORE next-hop-self
+   neighbor NLAB-CORE update-source Loopback1
+   neighbor NLAB-CORE additional-paths receive
+   neighbor NLAB-CORE additional-paths send any
+   neighbor NLAB-CORE send-community standard extended
+   neighbor NLAB-CORE maximum-routes 0
+   neighbor 10.0.0.41 peer group NLAB-CORE
+   neighbor 10.0.0.42 peer group NLAB-CORE
+   neighbor 10.0.0.44 peer group NLAB-CORE
+   neighbor 10.0.0.45 peer group NLAB-CORE
+   !
+   address-family evpn
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback1
+      neighbor 10.0.0.41 activate
+      neighbor 10.0.0.42 activate
+      neighbor 10.0.0.44 activate
+      neighbor 10.0.0.45 activate
+   !
+   vrf NLAB
+      rd 64020:1
+      route-target import evpn 64020:1
+      route-target export evpn 64020:1
+      redistribute connected
+!
+router isis ISIS-SR
+   net 20.0000.0020.0200.2043.00
+   is-type level-2
+   !
+   address-family ipv4 unicast
+   !
+   segment-routing mpls
+      router-id 10.0.0.43
+      no shutdown
+   !
+   traffic-engineering
+      no shutdown
+!
+end

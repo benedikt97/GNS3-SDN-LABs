@@ -1,0 +1,180 @@
+! Command: show running-config
+! device: Arista-1 (vEOS-lab, EOS-4.31.2F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$zXAOe6H/t5/v2FZu$VN70zMlgW9H6cYeL1ftugan/EeC2wfi99xt7amOjfp.HuXuM5rfvpJGxBGHpOEKPUVXUr8KETD.rgsx5kVqM5/
+!
+hardware counter feature mpls tunnel
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname Arista-1
+!
+spanning-tree mode none
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vlan 30,101-103
+!
+vrf instance NLAB
+   rd 64020:1
+!
+management api http-commands
+   protocol http
+   no shutdown
+!
+interface Ethernet1
+   speed forced 10full
+   no switchport
+   ip address 10.200.0.1/30
+   isis enable ISIS-SR
+!
+interface Ethernet2
+   speed forced 10full
+   no switchport
+   ip address 10.200.0.5/30
+   isis enable ISIS-SR
+!
+interface Ethernet3
+!
+interface Ethernet4
+!
+interface Ethernet5
+   switchport access vlan 101
+!
+interface Ethernet6
+   switchport access vlan 102
+!
+interface Ethernet7
+   switchport access vlan 103
+!
+interface Ethernet8
+!
+interface Ethernet9
+!
+interface Ethernet10
+!
+interface Ethernet11
+!
+interface Ethernet12
+!
+interface Loopback1
+   ip address 10.0.0.41/32
+   node-segment ipv4 index 41
+   isis enable ISIS-SR
+!
+interface Management1
+   ip address 172.30.240.41/16
+!
+interface Vlan30
+   vrf NLAB
+   ip address 192.168.1.1/24
+!
+interface Vlan101
+   vrf NLAB
+   ip address 192.168.101.1/24
+!
+interface Vlan102
+   vrf NLAB
+   ip address 192.168.102.1/24
+!
+interface Vlan103
+   vrf NLAB
+   ip address 192.168.103.1/24
+!
+ip routing
+ip routing vrf NLAB
+!
+ip prefix-list NLAB-101 seq 10 permit 192.168.101.0/24
+ip prefix-list NLAB-102 seq 10 permit 192.168.102.0/24
+ip prefix-list NLAB-103 seq 10 permit 192.168.103.0/24
+!
+mpls ip
+!
+route-map SET-COLOR permit 101
+   match ip address prefix-list NLAB-101
+   set extcommunity color 100 additive
+!
+route-map SET-COLOR permit 102
+   match ip address prefix-list NLAB-102
+   set extcommunity color 200 additive
+!
+route-map SET-COLOR permit 103
+   match ip address prefix-list NLAB-103
+   set extcommunity color 300 additive
+!
+router bgp 64020
+   router-id 10.0.0.41
+   neighbor NLAB-CORE peer group
+   neighbor NLAB-CORE remote-as 64020
+   neighbor NLAB-CORE next-hop-self
+   neighbor NLAB-CORE update-source Loopback1
+   neighbor NLAB-CORE additional-paths receive
+   neighbor NLAB-CORE additional-paths send any
+   neighbor NLAB-CORE send-community standard extended
+   neighbor NLAB-CORE maximum-routes 0
+   neighbor 10.0.0.42 peer group NLAB-CORE
+   neighbor 10.0.0.43 peer group NLAB-CORE
+   neighbor 10.0.0.44 peer group NLAB-CORE
+   neighbor 10.0.0.45 peer group NLAB-CORE
+   !
+   address-family evpn
+      neighbor default encapsulation mpls next-hop-self source-interface Loopback1
+      neighbor 10.0.0.42 activate
+      neighbor 10.0.0.43 activate
+      neighbor 10.0.0.44 activate
+      neighbor 10.0.0.45 activate
+   !
+   vrf NLAB
+      rd 64020:1
+      route-target import evpn 64020:1
+      route-target export evpn 64020:1
+      route-target export evpn route-map SET-COLOR
+      redistribute connected
+!
+router traffic-engineering
+   segment-routing
+      rib system-colored-tunnel-rib
+      !
+      policy endpoint 10.0.0.45 color 100
+         binding-sid 1000100
+         name GREEN
+         !
+         path-group preference 1
+            segment-list label-stack 900044 900042 900045
+      !
+      policy endpoint 10.0.0.45 color 200
+         binding-sid 1000200
+         name BLUE
+         !
+         path-group preference 1
+            segment-list label-stack 900044 900043 900045
+      !
+      policy endpoint 10.0.0.45 color 300
+         binding-sid 1000300
+         name RED
+         !
+         path-group preference 1
+            segment-list label-stack 900043 900045
+!
+router isis ISIS-SR
+   net 20.0000.0020.0200.2041.00
+   is-type level-2
+   !
+   address-family ipv4 unicast
+   !
+   segment-routing mpls
+      router-id 10.0.0.41
+      no shutdown
+   !
+   traffic-engineering
+      no shutdown
+!
+end
