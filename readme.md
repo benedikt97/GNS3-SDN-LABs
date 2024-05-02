@@ -4,7 +4,7 @@
 
 [P4Runtime Lab - Programmierbare Dataplane](P4Runtime_Lab_-_Programmierbare_Dataplane.md)
 
-[BGP-EVPN Lab - Overlaybasierte Netzwerkvirtualisierung mit SONiC](BGP-EVPN_Lab_-_Overlaybasierte_Netzwerkvirtualisierung_mit_SONiC.md)
+[BGP-EVPN Lab - Netzwerkvirtualisierung mit SONiC {#sec:evpnlab}](BGP-EVPN_Lab_-_Netzwerkvirtualisierung_mit_SONiC_{#secevpnlab}.md)
 
 [MPLS-SR Lab - Traffic-Engineering](MPLS-SR_Lab_-_Traffic-Engineering.md)
 

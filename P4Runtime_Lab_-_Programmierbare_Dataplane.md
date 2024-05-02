@@ -1,110 +1,187 @@
 P4Runtime Lab - Programmierbare Dataplane
 =========================================
 
-P4Runtime ist keine Netzwerkarchitektur als solchen, sondern lediglich
-ein Protokoll auf einem entferntem Switch eine per P4 definierte
-Dataplane-Logik zu implementieren und im Anschluss zu steuern. Für ein
-funktionierendes Netzwerk wird ein P4-Programm sowie - wenn die
-Implementation es erfordert - ein Controller benötigt. Eine
-Beispielhafte Implementierung ist die SD-Fabric der
-[onf]{acronym-label="onf" acronym-form="singular+short"}. Diese
-Implementiert Segment Routing mit einem zentralen PCE mittels einer per
-P4 definierten Controlplane und einer Anbindung des Controllers über
-P4Runtime.
+Architektur und Technologien {#architektur-und-technologien}
+----------------------------
 
-In diesem Kapitel wird die Simulation P4 basierter Topologien auf Basis
-einer einfachen quelloffenen Software gezeigt, welche ein einfaches
-Layer-2 Switching ohne weitere Funktionalitäten implementiert. Dafür
-wird der p4runtime-go-client genutzt, welcher mittels P4Runtime eine
-P4-Dataplane auf den Switch aufspielt und anschließend das Lernen der
-MAC-Adressen übernimmt. Die per P4 definierte Dataplane sowie der
-GO-Client ist im Repository des Entwicklers zu finden unter\
-<https://github.com/antoninbas/p4runtime-go-client>. Als virtueller
-Switch wird Stratum der [onf]{acronym-label="onf"
-acronym-form="singular+short"} verwendet.
+P4Runtime ist ein Protokoll für die Kommunikation einer abgesetzten
+Controlplane und einer Netzwerkkomponente. Im Unterschied zu OpenFlow
+ist die Implementierung auf Seite der Dataplane nicht durch einen
+Standard vorgegeben.
 
-Virtueller Switch: Stratum-bmv2
--------------------------------
+P4 und P4Runtime stellen damit mehr ein Framework zur Verfügung um
+Technologien wie VXLAN zu implementieren. Die Art und Weise der
+Implementierung, welche Funktionen auf eine externe Controlplane
+ausgelagert wird und wie diese kommunizieren liegen damit vollständig in
+Händen des Entwicklers. Eine beispielhafte Referenzimplementierung zeigt
+die Open-Networking-Foundation mit der SD-FABRIC. Mittels P4
+programmierbarer Switche mit Stratum als Betriebssystem wird ein
+Netzwerk auf Basis der Technologien Segment-Routing und IPv6 errichtet.
+Über P4Runtime wird eine externe Controlplane angebunden welche
+Applikationen die direkte Steuerung des Netzwerkes ermöglicht. Dies kann
+zum Beispiel in 5G Mobilfunknetzwerken eingesetzt werden, wo jedem
+einzelnen Nutzer gewisse Datenkontingente zugestanden werden und
+entsprechend die Verbindung gedrosselt wird.
 
-Stratum ist das [sos]{acronym-label="sos" acronym-form="singular+short"}
-welches die Grundlage aktueller Konzepte der [onf]{acronym-label="onf"
-acronym-form="singular+short"} ist. Dazu gehört das Projekt TRELLIS,
-welches neben dem Einsatz von P4Runtime auch OpenFlow noch unterstützt
-sowie das aktuelle Projekt SD-FABRIC, welches vollständig auf dem
-Einsatz von Stratum basiert. Das Betriebssystem wird auch als Thin-os
-bezeichnet und fokussiert sich auf die Bereitstellung einer P4Runtime
-Schnittstelle zur Programmierung der Dataplane. Stratum bietet neben der
-P4Runtime noch die Schnittstellen gNMI und gNOI. Es gibt keine CLI
-abseits der Linux-Boardmittel, als Schnittstellen sind lediglich die
-P4Runtime sowie gNOI und gNMI implementiert. Stratum unterstützt
-Plattformen auf Basis von Intels Tofinos, Broadcoms Tomahawk, sowie den
-Software-Switch bmv2.
+P4Runtime benötigt im Gegensatz zu OpenFlow eine durch den Nutzer
+gegebene Dataplane-Definition. In diesem Lab soll ein virtueller Switch
+über P4 programmiert werden und eine abgesetzte Controlplane über
+P4Runtime angebunden werden. Da dies an einem einfachem Beispiel gezeigt
+werden soll wird ein einzelner Layer-2 Switch mit zwei angeschlossenen
+Endgeräten gezeigt. Es wird keine komplexe Topologie und kein Layer-3
+Routing implementiert.
 
-![Stratum Architectur](media/stratum-architecture.png){#fig:faucettop
+P4
+--
+
+P4 ist eine durch ein Konsortium entwickelte Programmiersprache zur
+Beschreibung des Verhaltens einer Dataplane. [@p4] P4 ist aktuell durch
+kein RFC standardisiert, die Nutzung der Sprache in RFCs wird lediglich
+in einem Draft erwähnt [@p4rfc]. Das Projekt steht als freies Projekt
+unter der Linux Foundation.
+
+P4 benötigt einen Compiler für das jeweilige Ziel auf dem das Programm
+ausgeführt werden soll. Verfügbare Compiler sind zum Beispiel:
+
+-   Intel P4 Studio - beinhaltet Compiler für Intel Tofino.
+
+-   p4c-bm2-ss - Compiler für bmv2, eine Referenz Softwareswitch
+    Implementierung für P4.
+
+-   p4c-ebpf - Compiler für eBPF - ein Linux Kernelmodul zur
+    performanten Paketverarbeitung
+
+-   p4c-dpdk - Compiler für dpdk - ein Linux Modul zur performanten
+    Paketverarbeitung
+
+-   Xilinx P4-SDNet - Compiler für Xilinx FPGAs
+
+-   AMD Pensando SSDK - Compiler für AMD Pensando DPUs
+
+P4 ist Protokollunabhängig und hat damit keinen nativen Support für
+bestimmte Technologien wie VXLAN. Header von eingehenden Paketen können
+nach belieben geparsed werden und entsprechend verarbeitet werden. Zu
+diesem Zwecke können Parser, Tabellen und entsprechende Aktionen
+definiert werden. Damit liegt die Pipeline der Paketverarbeitung
+vollständig in den Händen des Entwicklers.
+
+![P4 Architektur Quelle: P4.org](media/p4-parts.png){#fig:p4arch
 width="100%"}
 
-Während Stratum bei Nutzung eines Intel Tofinos viele Aufrufe lediglich
-durchreicht, müssen die Aufrufe für die nicht auf P4 basierenden
-Broadcom Chips übersetzt werden. bmv2 steht für Behavioural Modell
-Version 2, welche Pakete auf Basis einer Definition die in JSON abliegt
-weiterleitet. Diese JSON selbst wird mittels einem Compiler aus einem P4
-Programm compiliert. [@stratum]
+Ein P4 Programm besteht aus mehreren Komponenten. Während die Sprache
+selbst und viele Funktionen aus der Core Library zum Standard gehören
+und auf allen Plattformen verfügbar sind, sind die möglichen
+Architektur-Komponenten durch den Compiler vorgegeben. Die
+entsprechenden Compiler bringen Architekturen mit, beziehungsweise
+müssen die jeweiligen Architekturen unterstützen.
 
-P4Runtime Controller
---------------------
+![Verschiedene P4 Architekturen Quelle:
+P4.org](media/p4archs.jpeg){width="100%"}
 
-Im folgenden werden Teile des P4-Programms sowie des in GO geschriebenen
-Controllers erläutert.
+In der Abbildung sind verschiedene Architekturen gezeigt. Die
+Architektur V1Model wird häufig eingesetzt und unter anderem auch durch
+den bmv2 Softwareswitch genutzt. Die Idee hinter PSA ist die Schaffung
+einer Architektur welche sich allgemein auf verschiedener Hardware
+abstrahieren lässt. Der Compiler für den Intel Tofino zum Beispiel
+unterstützt die Architekturen V1Model, PSA und die eigene Architektur
+TNA.
 
-Der Quellcode des in GO geschrieben Controllers sowie der eingesetzte
-P4-Code findet sich in einem geforkten Repository im Github-Account der
-Hochschule unter **nlab4hsrm/p4runtime-go-client**. Der Code steht unter
-der Apache 2.0 Lizenz und kann damit frei verwendet und modifiziert
-werden. Der Build-Prozess ist innerhalb des Repositorys dokumentiert und
-über ein Makefile automatisiert. Nach klonen des Repositorys reicht ein
-einfaches make Kommando im Wurzelverzeichnis um das Programm zu
-kompilieren. Voraussetzung dafür ist die Installation von GO. Der P4
-Code wird mittels einem temporär gestarteten Docker Container der den
-Compiler p4c enthält kompiliert. Dies macht allerdings die Installation
-von Docker zur Voraussetzung.
+### P4Runtime
 
-### l2\_switch.p4
+![P4Runtime](media/p4runtime.png){width="30%"}
 
-In dieser Datei wird das Verhalten der Dataplane spezifiziert, welches
-im weiteren auf einem Switch implementiert wird.
+P4Runtime ist ein gRPC basiertes Protokoll zwischen einem
+Netzwerk-Controller und einer in der Regel per P4 programmierten
+Netzwerkkomponente. Mit dem Protokoll können zum einen P4-Programme auf
+Netzwerkkomponenten übertragen werden und zum anderen auf Objekte wie
+Tabellen zugegriffen werden. Die zugreifbaren Objekte werden bereits in
+dem P4-Programm definiert und müssen sowohl dem P4Runtime-Server aus
+auch dem Client bekannt sein. Sie werden gespeichert in einer .p4info
+Datei. gRPC wiederum basiert auf protobufs, welches Daten im
+Binär-Format seriell überträgt. Bei protobufs ist es im allgemeinen
+notwendig, das die übertragenen Datenformate vorab beiden Seiten bekannt
+sind.
+
+### PINS
+
+In der Regel ist P4Runtime auf Netzwerkgeräten implementiert, die auf
+einer per P4 programmierbaren Hardware basieren. Dazu gehört zum
+Beispiel Intels Tofino. Mit dem Projekt PINS wird die Schnittstelle auch
+auf nicht P4-basierter Hardware implementiert. Die Freiheiten in der
+Programmierung durch die Beschreibungssprache P4 sind hierbei stärker
+eingeschränkt durch vorgegebene Blöcke in der Pipeline, die in
+unveränderlicher Hardware abgebildet sind.
+
+![P4Runtime: PINS Quelle: OCP Summit](media/p4sai.png){width="100%"}
+
+PINS dockt dabei oberhalb der Abstraktionsschicht SAI an.
+
+### Virtueller Switch: Stratum-bmv2
+
+Stratum ist ein Betriebssystem für Switche welches fundamentaler
+Bestandteil aktueller Konzepte der [onf]{acronym-label="onf"
+acronym-form="singular+short"} ist. Beispiele sind die Projekte TRELLIS,
+welches neben dem Einsatz von P4Runtime noch OpenFlow unterstützt sowie
+das aktuelle Projekt SD-FABRIC, welches vollständig auf dem Einsatz von
+Stratum basiert. Das Betriebssystem wird auch als Thin-os bezeichnet und
+fokussiert sich auf die Bereitstellung einer P4Runtime Schnittstelle zur
+Programmierung der Dataplane. Stratum bietet neben der P4Runtime noch
+die Schnittstellen gNMI und gNOI. Es gibt keine CLI abseits der
+Linux-Boardmittel, als Schnittstellen sind lediglich die P4Runtime, gNOI
+und gNMI implementiert. Stratum unterstützt Plattformen auf Basis von
+Intels Tofinos, Broadcoms Tomahawk, sowie den Software-Switch bmv2.
+[@stratum]
+
+![Stratum Architektur](media/stratum-architecture.png){#fig:faucettop
+width="100%"}
+
+Stratum integriert die Peripherie über entsprechende Treiber. Die
+eigentliche Forwarding-Hardware wird über entsprechende SDKs
+angesprochen. Die hier gezeigte SDKLT, Software Development Kit Logical
+Table ist eine Schnittstelle von Broadcom zur Programmierung der
+Broadcom eigenen ASICs. *These goals are best achieved by having a
+networking stack that is efficient, customizable and open at all layers,
+including the layer configuring the switch ASIC. SDKLT enables hardware
+vendors, Network OS vendors and end users to build tailored,
+highly-automated, high-quality, high-performance networking solutions
+that meet the needs of both distributed control-plane and centralized
+SDN-controller environments. In table-based programming, all the device
+physical resources such as MAC Address Tables, L3 route tables, TCAMs,
+etc. are exposed as logical tables.* [@sdklt]
+
+### P4Runtime Go Controller {#sec:go-client}
+
+Dieser Controller ist ein privat entwickeltes und quelloffenes Projekt
+gefunden auf Github. Es handelt sich um ein kleines P4-Programm welches
+einige wenige *tables* und *actions* zur Weiterleitung von
+Ethernet-Paketen implementiert. Mittels eines abgesetzten und in GO
+geschriebenen Controllers wird das Lernen von MAC-Adressen implementiert
+sodass der Switch sich wie eine Bridge verhält. [@p4go]
+
+Im weiteren werden die beiden Komponenten auf Basis ihres Quellcodes
+erläutert.
+
+#### l2\_switch.p4
+
+In diesem P4-Pogramm wird die Dataplane des Switches definiert.
 
     #include <core.p4>
     #include <v1model.p4>
 
-Grundlage sind die beiden Bibliotheken core und v1model. core.p4 bringt
-wichtige Routinen sowie Typendefinitionen mit. v1model.p4 beschreibt die
-verwendete Pipeline, welche alternativ auch selbst geschrieben und
-entwickelt werden kann. v1model ist eine gegebene Implementation die für
-gewöhnlich in Zusammenhang mit bmv2eingesetzt wird. Die Beschreibung der
-Dataplane findet also auf Basis eines Framework statt, welches Werkzeuge
-zum Parsen und implementieren von Logiken bereitstellt.
+Zu Beginn wird die Bibliothek *core.p4* geladen, welches weiterhin
+benötigte Routinen und Typdefinitionen enthält. An dieser Stelle wird
+ebenfalls die Architektur des P4-Targets geladen. Hier wird die in
+Abbildung [7.3](#fig:v1model){reference-type="ref"
+reference="fig:v1model"} gezeigte Architektur verwendet.
 
-![P4: v1model](media/v1model.png){width="100%"}
+![P4: v1model](media/v1model.png){#fig:v1model width="100%"}
 
-Das Modell besteht aus mehreren Blöcken, welche in dem
-selbstgeschriebenem P4-Programm mit Funktion gefüllt werden müssen.
-Dafür werden controlund parser Elemente erzeugt, aus denen dann ein
-V1Model-Objekt erzeugt wird. Auf technischer Ebene sieht das wie folgt
-aus:
+Das Model besteht aus einer festen Pipeline-Definition. Im weiteren
+Verlauf des P4-Programms werden die einzelnen Blöcke beschrieben. Dafür
+kennt die Sprache *parser*- und *control* Blöcke.
 
-``` {caption="l2\\_switch.p4"}
-V1Switch(p = ParserImpl(),
-         ig = IngressImpl(),
-         vr = verifyChecksum(),
-         eg = EgressImpl(),
-         ck = computeChecksum(),
-         dep = DeparserImpl()) main;
-```
-
-Der eingehenden Parser p erhält das vollständige Paket und extrahiert
-aus diesen Informationen die er in der Pipeline weiterreicht.
-
-``` {caption="l2\\_switch.p4 Parser eingehend"}
+``` {caption="l2\\_switch.p4 - ParseImpl"}
+\begin{lstlisting}[caption=l2\_switch.p4 ParseImpl]
 parser ParserImpl(packet_in packet, out headers hdr, inout metadata meta, inout standard_metadata_t standard_metadata) {
     state parse_ethernet {
         packet.extract(hdr.ethernet);
@@ -116,13 +193,28 @@ parser ParserImpl(packet_in packet, out headers hdr, inout metadata meta, inout 
 }
 ```
 
-Relevant sind an dieser Stelle die Objekte die der Parser entgegen nimmt
-und welche er wieder zurück gibt. Er nimmt ein Objekt packet entgegen
-und gibt die drei Objekte hdr, meta und standard\_metadata wieder
-zurück. Auf diese Objekte können die weiteren Blöcke in der Pipeline nun
-Zugreifen.
+Im ersten Block wird das empfangene Ethernet-Paket geparsed. Der
+Funktionsblock nimmt einen komplettes Ethernet-Paket entgegen -
+*packet\_in packet* - und gibt die Metadaten wieder zurück - *out
+headers hdr*. Der Block arbeitet wie eine FSM - Finite State Mashine.
+Der Block startet im Zustand *start* und wechselt ohne weitere Logik in
+den Zustand *parse\_ethernet*. In diesem wird der Header extrahiert und
+anschließend in den Zustand *accept* gewechselt, das Ende der FSM. Die
+Variablen in der Definition des Funktionsblock können als *in*, *out*
+und *inout* definiert werden. Alle Variablen die als *out* oder *inout*
+definiert sind werden dabei an den nächsten Funktionsblock, also dem
+Checksum Verificator weitergegeben.
 
-``` {caption="'l2\\_switch.p4 Ingress'"}
+``` {caption="'l2\\_switch.p4 - verify Checksum'"}
+control verifyChecksum(inout headers hdr, inout metadata meta) {
+    apply { }
+}
+```
+
+Dieser Block ist in diesem einfachen P4-Programm leer, die Checksumme
+wird also nicht überprüft.
+
+``` {caption="'l2\\_switch.p4 IngressImpl'"}
 control IngressImpl(inout headers hdr, inout metadata meta, inout standard_metadata_t standard_metadata) {
     action drop() {
         mark_to_drop(standard_metadata);
@@ -168,23 +260,18 @@ control IngressImpl(inout headers hdr, inout metadata meta, inout standard_metad
 }
 ```
 
-Dies ist der wichtigste Block. Die Funktion nimmt die Objekte entgegen,
-welche durch den vorhergehenden Parser erstellt wurden: hdr, meta und
-standard\_metadata. Zu Beginn werden vier mögliche Aktionen definiert,
-welche im weiteren aufgerufen werden können. Dazu gehören drop,
-learn\_mac, fwd und broadcast. Darunter sind die drei Methoden die ein
-Switch prinzipiell auf ein Paket anwenden kann, sprich Weiterleiten,
-Verwerfen und Fluten. Die Funktion digest unter der Aktion learn\_mac
-sorgt für die Weiterleitung der beiden Objekte hdr.ethernet.srcAddr
-standard\_metadata.ingress\_port an den Controller, in unserem Fall an
-die in GO geschriebene Anwendung. Die Aktion werden über entsprechende
-Einträge in den Tabellen aufgerufen. Definiert sind die beiden Tabellen
-smac und dmac, welche jeweils auf die entsprechende MAC-Adresse matchen.
+In diesem Block wird die eigentliche Weiterleitungsentscheidung
+getroffen. Dafür werden vier *actions* sowie zwei *tables* definiert.
+Bei der Definition der Tabelle werden die möglichen Aktionen sowie eine
+Standardaktion definiert. Die vier Aktionen bilden die bekannten drei
+Handlungsmöglichkeiten einer Bridge ab, ein Paket zu verwerfen (drop),
+weiterzuleiten (fwd), zu fluten (broadcast) und zusätzlich eine neue
+MAC-Adresse auf einer Schnittstelle zu lernen (learn\_mac).
 
 Die smac Tabelle hat als Beispiel als default\_action die Aktion
 learn\_mac definiert. Die Einträge der Tabelle sehen wie folgt aus:
 
-``` {caption="'l2\\_switch.p4 - smac Tabellen Eintrag'"}
+``` {caption="'l2\\_switch.p4 - textit{smac} Tabellen Eintrag'"}
 P4Runtime sh >>> for te in table_entry["IngressImpl.smac"].read():
             ...:     print(te)
             ...:
@@ -205,12 +292,11 @@ idle_timeout_ns: 10000000000
 ```
 
 Sobald eine MAC-Adresse bekannt ist und in dieser Tabelle steht wird die
-Aktion NoAction ausgeführt und das Paket damit nicht an den Controller
-gesendet. Analog dazu wird bei der Tabelle dmac verfahren. Zusätzlich
-wird hier allerdings noch ein Parameter übergeben, welche zum Beispiel
-die Port-ID sein kann an zu der das Paket weitergeleitet werden soll.
+Aktion *NoAction* ausgeführt und das Paket damit nicht an den Controller
+gesendet. Ist eine MAC-Adresse nicht bekannt wird die Standardaktion
+*learnmac* ausgeführt.
 
-``` {caption="'l2\\_switch.p4 - smac Tabellen Eintrag'"}
+``` {caption="l2\\_switch.p4 - \\textit{dmac} Tabellen Eintrag"}
 table_id: 45595255 ("IngressImpl.dmac")
 match {
   field_id: 1 ("hdr.ethernet.dstAddr")
@@ -229,16 +315,17 @@ action {
 }
 ```
 
+Analog dazu wird bei der Tabelle dmac verfahren. Zusätzlich wird hier
+ein Parameter zurückgegeben. In diesem Fall wird die ID der
+Schnittstelle auf dem das Ethernet-Paket weitergeleitet werden soll
+übergeben.
+
 Unter dem Schlüsselwort apply werden die in dem Block durchgeführten
-Aktionen definiert, in gezeigten Beispiel wird a) ein Counter
-inkrementiert, b) die smac-Tabelle mit entsprechender Aktion und
-abschließend die dmac-Tabelle mit entsprechender Aktion durchlaufen
+Aktionen definiert, in gezeigten Beispiel wird erst ein Counter
+inkrementiert, die smac-Tabelle mit entsprechender Aktion und
+abschließend die dmac-Tabelle mit entsprechender Aktion aufgerufen.
 
-Analog zu den gezeigten Modulen durchläuft das Paket auch die weiteren
-Module bis es schließlich vom Deparser dep entsprechend vorher gesetzter
-Werte weitergeleitet oder eben verworfen wird.
-
-``` {caption="'l2\\_switch.p4 - Deparser'"}
+``` {caption="l2\\_switch.p4 - DeparserImpl"}
 control DeparserImpl(packet_out packet, in headers hdr) {
     apply {
         packet.emit(hdr.ethernet);
@@ -246,15 +333,31 @@ control DeparserImpl(packet_out packet, in headers hdr) {
 }
 ```
 
-### main.go
+Analog zu den gezeigten Modulen durchläuft das Paket die weiteren Module
+bis es vom Deparser entsprechend vorher gesetzter Werte weitergeleitet
+oder eben verworfen wird.
+
+``` {caption="l2\\_switch.p4 - Instanziierung V1Model"}
+V1Switch(p = ParserImpl(),
+         ig = IngressImpl(),
+         vr = verifyChecksum(),
+         eg = EgressImpl(),
+         ck = computeChecksum(),
+         dep = DeparserImpl()) main;
+```
+
+Zuletzt wird eine Instanz des V1Models mit den soeben definierten
+Blöcken erstellt.
+
+#### main.go
 
 Pakete mit unbekannter Quell-Macadressen werden wie im vorherigen
 Kapitel gezeigt an den Controller gesendet. In dem GO Programm wird
-dafür eine a) eine gRPC Verbindung aufgebaut b) eine P4Runtime Session
-auf Basis der gRPC Verbindung instanziiert und c) mittels einer
-go-Routine paralell auf eingehende Nachrichten reagiert.
+dafür eine eine gRPC Verbindung aufgebaut, eine P4Runtime Session auf
+Basis der gRPC Verbindung instanziiert und mittels einer go-Routine auf
+eingehende Nachrichten reagiert.
 
-``` {caption="'main.go - Aufbau einer P4Runtime Sesssion'"}
+``` {caption="main.go - Aufbau einer P4Runtime Sesssion"}
 conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 {...}
 c := p4_v1.NewP4RuntimeClient(conn)
@@ -262,9 +365,12 @@ c := p4_v1.NewP4RuntimeClient(conn)
 p4RtC := client.NewClient(c, deviceID, electionID)
 ```
 
-Der Aufbau der Verbindung wurde hier vereinfacht dargestellt.
+Der Aufbau einer P4Runtime Session wird in dem Listing vereinfacht
+dargestellt. Es resultiert ein Objekt mit dem die Verbindung auf
+eingehende Nachrichten abgehört werden kann. Die P4Runtime-Session wird
+auf Basis einer bestehenden gRPC-Session aufgebaut.
 
-``` {caption="'main.go - GOroutine zum behandeln von Nachrichten'"}
+``` {caption="'main.go - GO-routine zur Verarbeitung eingehender Nachrichten'"}
 go func() {
         ctx := context.Background()
         handleStreamMessages(ctx, p4RtC, messageCh)
@@ -274,11 +380,12 @@ go func() {
 Mittels eine GO-Routine welche asynchron im Hintergrund läuft wird auf
 eingehende Pakete reagiert.
 
-``` {caption="'main.go - Aufruf der Funktion learnMacs'"}
+``` {caption="main.go - Aufruf der Funktion learnMacs"}
 func handleStreamMessages(ctx context.Context, p4RtC *client.Client, messageCh <-chan *p4_v1.StreamMessageResponse) {
     for message := range messageCh {
         switch m := message.Update.(type) {
-{...}
+        case *p4_v1.StreamMessageResponse_Packet:
+            log.Debugf("Received PacketIn")
         case *p4_v1.StreamMessageResponse_Digest:
             log.Debugf("Received DigestList")
             if err := learnMacs(ctx, p4RtC, m.Digest); err != nil {
@@ -290,91 +397,66 @@ func handleStreamMessages(ctx context.Context, p4RtC *client.Client, messageCh <
 }
 ```
 
-Mittels einer Case Anweisung wird auf Digest-Nachrichten, also von der
+Durch eine *case*-Abfrage wird auf Digest-Nachrichten, also von der
 Dataplane aufgrund unbekannter MAC-Adresse an den Controller gesendeten
 Paketen, die Funkion learnMacs ausgeführt.
 
-``` {caption="'main.go - Die Funktion learnMacs'"}
+``` {caption="main.go - Die Funktion learnMacs"}
 func learnMacs(ctx context.Context, p4RtC *client.Client, digestList *p4_v1.DigestList) error {
 {...}
-        dmacEntry := p4RtC.NewTableEntry(
-            "IngressImpl.dmac",
+        smacEntry := p4RtC.NewTableEntry(
+            "IngressImpl.smac",
             map[string]client.MatchInterface{
-                "hdr.ethernet.dstAddr": &client.ExactMatch{
+                "hdr.ethernet.srcAddr": &client.ExactMatch{
                     Value: srcAddr,
                 },
             },
-            p4RtC.NewTableActionDirect("IngressImpl.fwd", [][]byte{ingressPort}),
-            nil,
+            p4RtC.NewTableActionDirect("NoAction", nil),
+            smacOptions,
         )
-        if err := p4RtC.InsertTableEntry(ctx, dmacEntry); err != nil {
-            log.Errorf("Cannot insert entry in 'dmac': %v", err)
+        if err := p4RtC.InsertTableEntry(ctx, smacEntry); err != nil {
+            log.Errorf("Cannot insert entry in 'smac': %v", err)
 {...}
     return nil
 ```
 
-Diese Funktion sorgt letztendlich dafür, dass die neue MAC-Adresse in
-die entsprechende Tabelle auf dem Switch eingetragen wird mir der
-zugeordneten Aktion NoAction.
+In diesem Ausschnitt der *learnmacs*-Funktion wird die Instanziierung
+eines neuen Tabellen-Eintrags sowie die anschließende Übertragung des
+Eintrags auf den Stratum-Switch gezeigt. Hierbei handelt es sich um
+einen Eintrag in der Tabelle *smac* mit der Aktion *NoAction*.
 
 Simulation
 ----------
 
 ### Stratum-bmv2 Container
 
-Der Switch wird über einen Docker-Container implementiert. Der Software
-Switch Stratum-bmv2 wird mittels einem Debian-Pakets installiert,
-welches selbst aus entsprechendem Quellcode erstellt werden muss. Die
+Der Switch wird in Form eines Docker-Containers virtualisiert. Der
+Software Switch Stratum-bmv2 wird über ein Debian-Paket installiert,
+welches selbst aus entsprechendem Quellcode kompiliert werden muss. Die
 Vorgehensweise für die Erstellung des Debian-Pakets ist in dem
-Repository des Entwicklers dokumentiert.[@stratum-git]
-
-Im GNS3-Server-Manager Repository der Hochschule findet sich unter dem
-Ordner lab-templates ein Verzeichnis stratum-bmv2-container. In diesem
-liegen alle Dateien, auf die im weiteren referenziert wird.
-
-``` {caption="Stratum-bmv2 Dockerfile"}
-FROM debian:buster
-ENV DEBIAN_FRONTEND noninteractive
-
-ADD stratum_bmv2_deb.deb stratum_bmv2_deb.deb 
-# install tools
-RUN apt-get update \
-        && apt-get upgrade -y \
-        && apt-get install -y /stratum_bmv2_deb.deb
-
-ADD chassis_config.pb.txt /etc/stratum/chassis_config.pb.txt
-RUN mkdir /var/log/stratum
-RUN chmod 777 /var/log/stratum
-
-CMD ["/bin/bash"]
-```
-
-Der Auszug zeigt das Dockerfile zum Erstellen des Containers, welches
-mittels folgendem Befehl erfolgt:
+entsprechenden Github Repository dokumentiert.[@stratum-git]. Das
+bereits kompilierte Debian-Paket, ein Dockerfile sowie eine zugehörige
+GNS3-Appliance Beschreibungsdatei (\*.gns3a) liegen im Versuchsordner
+ab.
 
     $ docker build . -t nlab4hsrm/stratum-bmv2:<tag>
 
-Es wird als Basis-Image debian:buster eingesetzt, ein Test mit dem
-aktuelleren Debian Bookworm schlug fehl. Im weiteren wird das im
-vorherigen Schritt erstellte Debian-Paket hineinkopiert und mittels dem
-Paketmanager apt installiert. Die Anwendung benötigt im weiteren eine
-Konfigurationsdatei in welchen die verwendeten Linux-Interfaces
-definiert werden und entsprechende IDs vergeben werden. Diese Datei
-trägt den Namen chassis\_config.pb.txt und wird in dem Dockerfile dem
-Container hinzugefügt.
+Der Container wird mit gezeigtem Befehl erstellt. Der Befehl muss im
+Verzeichnis in dem das Dockerfile sowie das Debian-Paket abliegt
+ausgeführt werden. Als Basis-Image wird das ältere Debian Buster
+verwendet. Ein Versuch mit dem aktuellerem Bookworm schlug fehl
 
-Der Container kann im Anschluss in GNS3 angelegt werden. In dem
-entsprechendem GNS3-Server-Manager Template ist dies bereits
-vorbereitet. Es liegt im Repository ein vorgefertigte GNS3-Appliance
-Datei (\*.gns3a) ab, die einfach importiert werden kann.
+Der Container kann im Anschluss in GNS3 als Applikation angelegt werden.
+In dem GNS3-Server-Manager Template Stratum\_P4\_Lab ist die Applikation
+vorbereitet.
 
 ![Stratum GNS3 Appliance](media/stratum-gns3.png){#fig:evpncli
 width="100%"}
 
-Es werden 9 Interfaces konfiguriert, wobei das erste - eth0- als
-Management-Interface genutzt wird. Als Start command des Containers wird
-Stratum aufgerufen und als Parameter den Pfad zur Chassis-Konfiguration
-übergeben.
+Es werden 9 Schnittstellen provisioniert, wobei die erste - eth0- als
+Management-Schnittstelle genutzt wird. Als Start command des Containers
+wird die Anwendung stratum\_bmv2 aufgerufen der als Parameter der Pfad
+zur Chassis-Konfiguration übergeben wird.
 
     root@stratum-bmv2-2:/# stratum_bmv2 -chassis-config-file=/etc/stratum/chassis_config.pb.txt
     16:09:25.746376    82 logging.cc:72] Stratum version: not stamped.
@@ -394,10 +476,11 @@ Stratum aufgerufen und als Parameter den Pfad zur Chassis-Konfiguration
     {...}
     16:09:26.049036    82 hal.cc:220] Stratum external facing services are listening to 0.0.0.0:9339, 0.0.0.0:9559, localhost:9559...
 
-Durch Doppelklick in der GNS3-GUI auf den Stratum-Switch lässt sich der
-ausgegebene Log betrachten. Die sollte die im Listing gezeigten Zeilen
-enthalten. Wichtig ist, das die 8 Ports hinzugefügt worden sind und
-Stratum auf den Ports 9339 und 9559 Verbindungen akzeptiert.
+Nach starten des Switches kann sich der Log durch öffnen eines Terminals
+mit einem Doppelklick auf die Netzwerkkomponente betrachten. Die sollte
+die im Listing gezeigten Zeilen enthalten. Wichtig ist, das die 8 Ports
+hinzugefügt worden sind und Stratum auf den Ports 9339 und 9559
+Verbindungen akzeptiert.
 
 ### p4runtime-controller Container
 
@@ -417,23 +500,18 @@ ADD P4_LAB /P4_LAB
 CMD ["/bin/bash"]
 ```
 
-Dieser Container wird als P4Runtime-Controller in dem Versuch
-eingesetzt. Auch für diesen existiert ein entsprechender Ordner unter
-lab-templates mit einem Dockerfile, den benötigten Programmen sowie
-einer GNS3-Appliance Definition. Als Basis Image wird Ubuntu genutzt, es
-werden ein paar grundlegende Pakete sowie Python und dessen Paketmanager
-Pip installiert. Mittels Pip wird im Anschluss das Python-Modul
-p4runtime-shell installiert, welches eine interaktive Kommandozeile
-bietet die sich mit dem Befehl
+Als Controller wird ein selbst erstellter Docker-Container verwendet.
+Dieser enthält die kompilierte GO-Anwendung, beschrieben in Kapitel
+[7.2.4](#sec:go-client){reference-type="ref" reference="sec:go-client"},
+sowie eine in Python geschrieben P4Runtime-Shell mit der sich dynamisch
+Objekte von einem Switch anzeigen und modifizieren lassen. Die
+GO-Anwendung beinhaltet den ebenfalls bereits kompilierten P4-Code für
+den Stratum Software-Switch.
 
     $ python3 -m p4runtime-sh --grpc-addr <Switch Management IP>:<gRPC Port>
 
-aufrufen lässt.
-
-Abschließend wird ein Ordner in den Container kopiert, welcher den in GO
-geschriebenen P4Runtimer-Controller enthält. Dies liegt in Form einer
-ausführbaren Binärdatei vor, welche auch den kompilierten P4-Code
-beinhaltet. Dieser wird durch den Controller auf den Switch aufgespielt.
+Diese P4Runtime-Shell lässt sich als Python-Modul mit dem hier gezeigten
+Befehl als interaktive Shell aufrufen.
 
 ### Start des Netzwerkes
 
@@ -442,34 +520,35 @@ width="100%"}
 
 Zur Demonstration wird eine Topologie erstellt mit einem Stratum-Switch
 sowie einem P4Runtime-Controller. Zu Beginn werden dem Controller sowie
-dem Switch IP-Adressen zugewiesen. Dies kann über den Punkt Edit config
-im GNS3-Kontextmenü unter Auswahl der jeweiligen Geräte durchgeführt
-werden. Da keine externen Verbindungen benötigt werden ist die Nutzung
-des Cloud-Knotens und die damit notwendige Nutzung des 172.30.0.0/24er
-Netzwerkes optional. Nun sollte die Verbindung zwischen Controller und
-Switch mittels Ping überprüft werden. Ist dies erfolgreich, kann
-fortgefahren werden.
+dem Stratum Software-Switch IP-Adressen zugewiesen. Dies kann über den
+Punkt Edit config im GNS3-Kontextmenü unter Auswahl der jeweiligen
+Geräte durchgeführt werden. Da keine externen Verbindungen benötigt
+werden ist die Nutzung des Cloud-Knotens und die damit notwendige
+Nutzung des 172.30.0.0/24er Netzwerkes optional. Nun sollte die
+Verbindung zwischen Controller und Switch mittels Ping überprüft werden.
+Ist dies erfolgreich, kann fortgefahren werden.
 
     ./P4_LAB/l2_switch -addr=172.30.240.110:9559 -device-id=1 -ports=1,2,3,4,5,6,7,8 &
 
-Im Anschluss wird eine Konsole hin zum Controller gestartet und der
-Controller mit dem gezeigten Befehl gestartet. Die gezeigte IP-Adresse
-muss entsprechend angepasst werden. Durch das nachgestellte & wird der
-Prozess im Hintergrund ausgeführt und die Linux-Konsole ist weiter
-nutzbar.
+Im Anschluss wird eine Konsole auf dem Controller-Knoten gestartet und
+der Controller mit dem gezeigten Befehl gestartet. Die gezeigte
+IP-Adresse muss entsprechend angepasst werden. Durch das nachgestellte &
+wird der Prozess im Hintergrund ausgeführt und die Linux-Konsole ist
+weiter nutzbar.
 
-Nun sollte ein Ping zwischen den beiden NETLAB Knoten möglich sein,
-sofern diese eine korrekte IP-Adresse konfiguriert haben.
+Nun sollte ein Ping zwischen den beiden an dem Software-Switch
+angeschlossenen Endgeräten möglich sein, sofern diese eine IP-Adresse im
+gleichen Subnetz konfiguriert haben.
 
-    python3 -m p4runtime_sh --grpc-addr 172.30.240.110:9559
+    $ python3 -m p4runtime-sh --grpc-addr <Switch Management IP>:<gRPC Port>
 
-Im Anschluss kann auf dem Controller eine p4runtime-shell gestartet
-werden um die Tabellen auf dem Stratum-Switch auszulesen. Auch hier muss
-die IP-Adresse entsprechend angepasst werden.
+Im nächsten Schritt kann auf dem Controller eine p4runtime-shell
+gestartet werden um die Tabellen auf dem Stratum Software-Switch
+auszulesen. Auch hier muss die IP-Adresse entsprechend angepasst werden.
 
 Über folgenden Befehl lassen sich alle verfügbaren Tabellen auflisten:
 
-``` {caption="'P4Runtime-Shell: Tabellen auflisten'"}
+``` {caption="P4Runtime-Shell: Tabellen auflisten"}
 P4Runtime sh >>> tables
 IngressImpl.dmac
 IngressImpl.smac
@@ -504,7 +583,7 @@ size: 4096
 ```
 
 Um die einzelnen Einträge einer Tabelle anzuzeigen muss in der
-Python-Shell eine Schleife gebaut werden:
+Python-Shell eine Schleife konstruiert werden:
 
 ``` {caption="P4Runtime-Shell: Tabelleneinträge anzeigen"}
 P4Runtime sh >>> for te in table_entry["IngressImpl.smac"].read():
@@ -515,31 +594,35 @@ P4Runtime sh >>> for te in table_entry["IngressImpl.smac"].read():
 Fazit
 -----
 
-P4Runtime ist neben OpenFlow ein vollständig anderer Ansatz ein Netzwerk
-per Software zu definieren. Der Controller implementiert nicht nur
-Regeln die ein Switch auf Basis seiner durch die Hardware gegebenen
-Pipelines abstrahieren muss, sondern definiert diese Pipelines in Form
-von P4 Code direkt mit. In einer idealen Vorstellung könnte damit
-generische Hardware beschafft werden und das Netzwerk als gesamtes durch
-einen zentralen Controller mittels P4-Code und beliebigen
-Controller-Implementierungen definiert werden. Die derzeitige
-Betrachtung am Markt zeigt, dass die wenigen P4 Switche derzeit
-überwiegend nur durch die Hersteller selbst genutzt werden um Agil
-Dataplane-Funktionen implementieren zu können. Die Möglichkeit wird
-nicht an den Kunden weitergegeben. Einzig der SD-Fabric Ansatz der
-[onf]{acronym-label="onf" acronym-form="singular+short"} zeigt was
-potentiell möglich ist. Der Versuch zeigt eine sehr einfache per P4
-definierte Dataplane mit einer über P4Runtime angeschlossene und
-ebenfalls einfach gehaltenen Controlplane. Es wird deutlich das der
-Stratum-Switch für das Netzwerkkonzept lediglich eine austauschbare
-Komponente ist. Implementierung beliebiger Funktionen im Access-Bereich
-bis hin zu komplexen Traffic-Engineering in einem vermaschten Netzwerk
-ist mittels Programmcode auf dem zentralen Controller möglich. Dieser
-Ansatz ist damit zwar der konsequenteste Ansatz, hab aber den geringsten
-Reifegrad und derzeit praktisch keine Verbreitung. Vielversprechend ist
-die Implementierung von P4Runtime auch auf nicht P4 nativer Hardware
-mittels PINS, wie zum Beispiel in SONiC. Zwar gehen hier Freiheitsgrade
-in der Programmierung der Dataplane verloren, der Verbreitung der Idee
-sowie der Protokolle tut es genüge.
+Das Lab zeigt in einem einfachem Beispiel die Funktionsweise und die
+Implementierung einer P4-basierten Netzwerkkomponente und des
+zugehörigen Controllers.
 
-BGP-EVPN Lab - Overlaybasierte Netzwerkvirtualisierung mit SONiC
+P4Runtime ist ein konsequenter Ansatz Netzwerkkomponenten und
+Architekturen programmierbar zu gestalten. Mit P4Runtime lassen sich
+Controller-basierte Architekturen in zentraler und dezentraler Form
+realisieren. P4 bildet weiterhin eine mächtige Abstraktionsschicht
+zwischen der Vorstellung eines Anwenders wie das Netzwerk zu
+funktionieren hat und der eigentlich eingesetzten Hardware. Portable
+P4-Programme entkoppeln hierbei konsequent die Hardware von der
+Funktion. Die Programmierbarkeit ist weiter zuträglich neue Funktionen
+einfach in bestehende Netzwerke integrieren zu können.
+
+P4-basierte Netzwerkarchitekturen haben für Enterprise-Segment eine
+geringe Relevanz da hier Zeit und Kompetenz fehlt eigene Anwendungen zu
+schreiben, was der eigentlich primäre Vorteil von P4 ist. Eigentliche
+Vorteile der Programmierbarkeit auf diesem Level werden durch Anbieter
+im Carrier- und Cloudumfeld ausgeschöpft, die auf Basis von P4
+leistungsfähige und anwendungsspezifische Loadbalancer oder ähnliches
+entwickeln. Mögliche Vorteile im Enterprise-Segment sind die
+Implementierung neuer Funktionen im Feld was die Lebensdauer von
+Hardware erhöhen kann. Zeitgleich ist ein Unternehmen nicht auf eine
+bestimmte Hardware-Serie von einem Hersteller angewiesen und kann
+unabhängig seiner logischen Netzwerkarchitektur eine andere P4-basierte
+Hardwareplattform einkaufen.
+
+P4 kommt damit am nächsten und konsequentesten an die Definition von SDN
+heran. Die ONF beschreibt P4 als NG-SDN -Next Generation Software
+defined Networking.
+
+BGP-EVPN Lab - Netzwerkvirtualisierung mit SONiC {#sec:evpnlab}
