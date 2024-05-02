@@ -42,10 +42,10 @@ Next Command?
                                                                                 [28] Show LLDP
                                                                                 [29] Show remote Macs
                                                                                 [30] Show EVPN routes
-[##] Configuration Checks
---------------------------------                                                                                
-[30] Test Loopback connectivity*
-
+[##] Configuration Checks              [##] Additional Tasks
+--------------------------------------------------------------------------------------------------------------
+[40] Test Loopback connectivity*       [50] Disable GRO on all Interfaces
+                                       [51] Show vtysh config
 * Needs loaded Configurations
 \r\n''')
      return(cmd)
@@ -172,6 +172,10 @@ while(cmd != 'exit'):
 
           case '40':
             validate_underlay(config_jsons, username, password)
+          case '50':
+            disable_gro(sonic_mgmt_ips, username, password)
+          case '51':
+            show_vtysh_config(sonic_mgmt_ips, username, password)
 
 
 

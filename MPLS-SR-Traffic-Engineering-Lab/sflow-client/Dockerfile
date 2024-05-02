@@ -12,12 +12,14 @@ RUN systemctl enable sflow-rt
 RUN /usr/local/sflow-rt/get-app.sh sflow-rt browse-flows
 RUN /usr/local/sflow-rt/get-app.sh sflow-rt browse-metrics
 RUN /usr/local/sflow-rt/get-app.sh sflow-rt topology
+RUN /usr/local/sflow-rt/get-app.sh sflow-rt sflow-test
 
 
 
 
 
-CMD ["/bin/bash"]
+
+
 
 
 

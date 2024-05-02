@@ -273,6 +273,19 @@ while(cmd != 'exit'):
                          print(c1[0]['output'])
                input('Press enter to return...')
 
+          case '41':
+                  sflow_ip = input('Specify sFLow Destination Address [eg. 172.30.240.100]: ')
+                  for ip in mgmt_ips:
+                       cmd = []
+                       cmd.append('sflow run')
+                       cmd.append('sflow source ' + ip)
+                       cmd.append('sflow destination ' +sflow_ip)
+                       print('#### ' + ip)
+                       print('\n'.join(cmd))
+                       configure(cmd, ip, username, password)
+
+
+
           case '100':
                cmd = ['bash', 'pwd']
                for ip in mgmt_ips:

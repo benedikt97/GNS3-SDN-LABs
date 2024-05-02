@@ -13,10 +13,5 @@ RUN pip3 install scp
 RUN pip3 install tabulate
 
 ADD BGP_EVPN_LAB /BGP_EVPN_LAB
-ADD P4_LAB /P4_LAB
-
-
-
-
 
 CMD ["/bin/bash"]

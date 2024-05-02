@@ -1,0 +1,54 @@
+{
+    "ports": {
+      "of:0000000000000001/5": {
+        "interfaces": [
+          {
+            "name": "netlab-0-2",
+            "vlan": "100"
+          }
+        ]
+      },
+      "of:0000000000000002/6": {
+        "interfaces": [
+          {
+            "name": "netlab-1-3",
+            "vlan": "200"
+          }
+        ]
+      },
+      "of:0000000000000003/6": {
+        "interfaces": [
+          {
+            "name": "netlab-1-2",
+            "vlan": "200"
+          }
+        ]
+      },
+      "of:0000000000000005/5": {
+        "interfaces": [
+          {
+            "name": "netlab-0-3",
+            "vlan": "100"
+          }
+        ]
+      }
+    },
+    "apps" : {
+      "org.onosproject.vpls" : {
+        "vpls" : {
+          "vplsList" : [
+            {
+              "name" : "VPLS1",
+              "interfaces" : ["netlab-0-2", "netlab-0-3"],
+              "encapsulation" : "vlan"
+            },
+            {
+              "name" : "VPLS2",
+              "interfaces" : ["netlab-1-2", "netlab-1-3"],
+              "encapsulation" : "vlan"
+            }
+          ]
+        }
+      }
+    }
+  }

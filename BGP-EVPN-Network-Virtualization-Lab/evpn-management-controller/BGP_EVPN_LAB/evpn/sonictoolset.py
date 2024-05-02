@@ -285,3 +285,21 @@ def validate_underlay(configurations, username, password):
                 out = sshcmd(ip, cmd, username, password).decode('utf-8').replace('\r', '').replace('\n', '')
                 prt = ip + ' to ' + npip + ' = ' + str(out)[:100]
                 print(prt)
+
+def disable_gro(sonic_mgmt_ips, username, password):
+    for ip in sonic_mgmt_ips:
+        print('## Disabling GRO on: ' + ip)
+        for dev in ['eth1', 'eth2', 'eth3', 'eth4', 'eth5', 'eth6', 'eth7', 'eth8', 'eth9']:
+            cmd = 'sudo ethtool --offload ' + dev + ' gro off'
+            out = sshcmd(ip, cmd, username, password).decode('utf-8')
+            print(cmd)
+            print(out)
+
+def show_vtysh_config(sonic_mgmt_ips, username, password):
+    for ip in sonic_mgmt_ips:
+        print('## vtysh config for: ' + ip)
+        cmd = 'vtysh -c "show running-config"'
+        out = sshcmd(ip, cmd, username, password).decode('utf-8')
+        print(cmd)
+        print(out)
+
