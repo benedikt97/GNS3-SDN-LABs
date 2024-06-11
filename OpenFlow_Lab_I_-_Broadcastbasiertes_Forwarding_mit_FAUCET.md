@@ -4,9 +4,9 @@ OpenFlow Lab I - Broadcastbasiertes Forwarding mit FAUCET
 Architektur und Technologien {#sec:of1}
 ----------------------------
 
-In diesem erstem Lab wird versucht die in Kapitel
+In diesem erstem Lab wird die in Abschnitt
 [4.1](#sec:ref){reference-type="ref" reference="sec:ref"} gezeigte
-Referenztopologie sowie die beschriebenen Netzwerkservices mittels einem
+Referenztopologie sowie die beschriebenen Netzwerkservices mittels eines
 zentralen Controller der als zentralisierte Controlplane agiert
 abzubilden. Als Kommunikationsprotokoll zwischen Control- und Dataplane
 wird OpenFlow verwendet. In diesem ersten OpenFlow-Lab kommt der
@@ -16,7 +16,7 @@ meisten anderen OpenFlow-basierten Controllern nicht Pfad-basiert.
 ![Faucet Netzwerktopologie](media/faucet-top.png){#fig:fauarch
 width="100%"}
 
-Es wird die im Kapitel [4.1](#sec:ref){reference-type="ref"
+Es wird die im Abschnitt [4.1](#sec:ref){reference-type="ref"
 reference="sec:ref"} gezeigte Topologie umgesetzt. Es werden insgesamt
 vier simulierte Endgeräte an das Netzwerk angeschlossen, welche sich in
 zwei verschiedenen Subnetzen befinden. Dies erfordert einen Layer-2 und
@@ -25,13 +25,13 @@ können.
 
 ### Faucet
 
-Faucet ist ein quelloffenes Projekt welches auf dem ebenfalls
+Faucet ist ein quelloffenes Projekt, welches auf dem ebenfalls
 quelloffenem Python-Framework für OpenFlow Ryu basiert. Faucet bietet
 die Konfiguration von VLANs sowie ein dezentrales Routing. Mit dem
 Projekt chewie, welches ebenfalls von Faucet betrieben wird, gibt es
-einen integrierten Authentifizierungsdienst Endgeräte an einem Port
-authentifizieren kann. Faucet bietet ein fertiges Konzept Metriken in
-dem Netzwerk zu erheben und über Grafana zu visualisieren.
+einen integrierten Authentifizierungsdienst, der Endgeräte an einem Port
+authentifizieren kann [@chewie]. Faucet bietet ein fertiges Konzept
+Metriken in dem Netzwerk zu erheben und über Grafana zu visualisieren.
 
 Faucet bietet die Möglichkeit mehrere Switche zu stacken um das
 Verhalten eines einzelnen großen Switches zu simulieren. Primärer Grund
@@ -59,17 +59,17 @@ zur Kommunikation zwischen einer [cp]{acronym-label="cp"
 acronym-form="singular+short"} und [dp]{acronym-label="dp"
 acronym-form="singular+short"} um diese physikalisch und logisch
 voneinander trennen zu können. Das Protokoll spezifiziert die
-Nachrichten die zwischen den Einheiten ausgetauscht werden. Durch diese
+Nachrichten, die zwischen den Einheiten ausgetauscht werden. Durch diese
 Nachrichten werden von dem Controller generierte Flow-Regeln auf die
 jeweilige Dataplane programmiert. OpenFlow kann vielseitig eingesetzt
 werden, so kann mittels des Protokoll die Controlplane eines Netzwerkes
 vollständig zentralisiert werden. OpenFlow kann auch dafür genutzt
 werden nur bestimme Flows umzuleiten, beispielsweise für die
 Realisierung eines Traffic-Engineerings oder zur Durchsetzung von
-Regelwerken. [@ofs]
+Regelwerken [@ofs].
 
-![OpenFlow Architektur](media/openflow-medium.png){#fig:evpncli
-width="80%"}
+![OpenFlow Architektur Quelle: Aria Zhu -
+medium.com](media/openflow-medium.png){#fig:evpncli width="80%"}
 
 Auf einem Interface eingehende Pakete werden auf Basis der
 implementierten Flow-Regeln weitergeleitet.
@@ -86,7 +86,7 @@ fs.com](media/openflow-fs.jpg){#fig:evpncli width="70%"}
 Die Regeln können in mehrere untereinander verkette Tabellen geschrieben
 werden. Die Tabellen werden mittels eine ID identifiziert. Die Pakete
 durchlaufen nicht automatisch alle Tabellen, die Pakete werden den
-Tabellen mittels Regeln zugewiesen. [@ofs]
+Tabellen mittels Regeln zugewiesen [@ofs].
 
 Das Protokoll basiert auf einer Menge von definierten Nachrichten,
 welche über den normalen TCP/IP Stack übertragen werden:
@@ -109,15 +109,15 @@ welche über den normalen TCP/IP Stack übertragen werden:
 
 OpenFlow ist kein abgeschlossener Standard. Das Protokoll ist unter
 stetiger Weiterentwicklung. Seit dem initialen Release mit Version 1.1
-ist eine Vielzahl von Versionen erschienen. Aktuell veröffentlicht ist
-die version 1.6. Hinzu kam zum Beispiel die Möglichkeit mehrere Tabellen
-zu definieren oder die Möglichkeit auf neue Header zu matchen. Seit
-Version 1.5.0 ist es zum Beispiel möglich Regeln auf TCP-Flags
-anzuwenden. Diese stetige Weiterentwicklung stellt Netzwerk-Ausrüster
-vor die Herausforderung diese Funktionen kontinuierlich zu
-implementieren. Teilweise treffen sie hier auf durch die Hardware
-gegeben Limitationen, so dass Funktionen modifiziert implementiert
-werden oder weggelassen werden.
+im Jahr 2011 ist eine Vielzahl von Versionen erschienen. Aktuell
+veröffentlicht ist die version 1.6. Hinzu kam zum Beispiel die
+Möglichkeit mehrere Tabellen zu definieren oder die Möglichkeit auf neue
+Header zu matchen. Seit Version 1.5.0 ist es zum Beispiel möglich Regeln
+auf TCP-Flags anzuwenden. Diese stetige Weiterentwicklung stellt
+Netzwerk-Ausrüster vor die Herausforderung, diese Funktionen
+kontinuierlich zu implementieren. Teilweise treffen sie hier auf durch
+die Hardware gegeben Limitationen, so dass Funktionen modifiziert
+implementiert werden oder weggelassen werden.
 
 ### Virtueller Switch: OpenvSwitch
 
@@ -130,33 +130,34 @@ Switch implementiert Layer-2 Funktionen wie VLANs,
 [stp]{acronym-label="stp" acronym-form="singular+short"} sowie
 komplexere Technologien wie VXLAN.
 
-![OpenVSwitch Architektur](media/ovs_architecture_01.png){width="100%"}
+![OpenvSwitch Architektur - Quelle:
+hustcat.github.io](media/ovs_architecture_01.png){width="100%"}
 
 OpenvSwitch nutzt unter Linux ein eigenes Kernel-Modul für die
 Weiterleitung von Paketen. Die Weiterleitungsregeln werden durch den
 Dienst vswitchd programmiert, der als Controlplane fungiert und im Falle
 von OpenFlow die Regeln entsprechend konvertiert und abstrahiert. Die
 Netlink Kommunikation erfolgt mittels Flow Keys, welche Regeln zur
-Weiterleitung von Paketen definieren. [@ovsdp].
+Weiterleitung von Paketen definieren [@ovsdp].
 
-![OpenVSwitch Datapath Regeln](media/ovs-dp.png){#fig:ovsdp
+![OpenvSwitch Datapath Regeln](media/ovs-dp.png){#fig:ovsdp
 width="100%"}
 
 Über den in der Abbildung [5.4](#fig:ovsdp){reference-type="ref"
 reference="fig:ovsdp"} gezeigten Befehl lassen sich die in das
 Kernel-Modul implementierten Regeln ausgeben. In diesem Fall sind zwei
 Hosts an den Switch angebunden, die untereinander Kommunizieren. Es
-existiert für jeweils jede Richtung eine Regel welche auf die Pakete
+existiert für jeweils jede Richtung eine Regel, welche auf die Pakete
 greift und als entsprechende Aktion an den entsprechenden Port
 weiterleitet.
 
 Alternativ kann Data Plane Development Kit, kurz DPDK, als Controlplane
 genutzt werden, welches im Linux-Userspace ausgeführt wird und aufgrund
 einer anderen Architektur höhere Übertragungsraten als das OpenvSwitch
-Kernel-Modul erreicht. DPDK unterstützt weiterhin die Auslagerung von
-Funktionen auf die physikalische Netzwerkkarte um weitere
-Performance-Optimierungen zu erreichen. Ein detaillierter Vergleich
-zwischen der Performance verschiedener Technologien unter dem
+Kernel-Modul erreicht [@ovsdpdk]. DPDK unterstützt weiterhin die
+Auslagerung von Funktionen auf die physikalische Netzwerkkarte um
+weitere Performance-Optimierungen zu erreichen. Ein detaillierter
+Vergleich zwischen der Performance verschiedener Technologien unter dem
 OpenvSwitch findet sich unter [@ovsdpperf].
 
 OpenFlow Regelwerk I - Statisch
@@ -164,10 +165,10 @@ OpenFlow Regelwerk I - Statisch
 
 In diesem Abschnitt soll die Funktionsweise der Paketweiterleitung mit
 Faucet an Beispielhaften Regeln generisch erläutert werden. Als Beispiel
-werden die ausgelesenen Regeln aus dem Switch OpenVSwitch-5 betrachtet.
-Zuerst werden die wichtigsten initialen Regeln nach der Initialisierung
-von Faucet betrachtet. Die Regeln sind im mehreren Tabellen kaskadiert.
-Nachfolgend steht UNI für User-Network-Interface und NNI für
+werden die ausgelesenen Regeln aus dem Switch OpenvSwitch-5 betrachtet.
+Zuerst werden die relevanten Regeln nach der Initialisierung von Faucet
+betrachtet. Die Regeln sind im mehreren Tabellen kaskadiert. Nachfolgend
+steht UNI für User-Network-Interface und NNI für
 Network-Network-Interface. Um die weiteren Regeln einordnen zu können
 werden folgende Informationen gegeben:
 
@@ -177,7 +178,7 @@ werden folgende Informationen gegeben:
 
 -   **eth5** - Client-Interface mit VLAN-Tag 100
 
--   **eth2** - Client-Interface mit VLAN-Tag 200
+-   **eth6** - Client-Interface mit VLAN-Tag 200
 
 -   **VLAN 100** - 192.168.0.1/24 / 00:00:00:00:00:11 virtuelle MAC
 
@@ -220,7 +221,7 @@ In dieser Tabelle wird die Behandlung von Broadcasts ersichtlich.
 Broadcasts werden nur an [uni]{acronym-label="uni"
 acronym-form="singular+short"}s sowie über Interfaces die Teil eins
 durch Faucet berechneten Baumes sind weitergeleitet. Dies verhindert die
-Bildung von Schleifen und den daraus resultierenden Broadcast-Storms
+Bildung von Schleifen und den daraus resultierenden Broadcast-Storms.
 
 ![Faucet Regeln Initial - Switch 1 Table
 5](media/faucet-rule-1-5.png){width="100%"}
@@ -232,8 +233,9 @@ Broadcast-Pakete an alle aktiven Interfaces weiter.
 
 In der Abbildung ist die in diesem Labor konfigurierte Baumstruktur
 dargestellt. Als Root-Bridge nutzt Faucet die Bridge mit der kleinsten
-ID. Es kann sinnvoll sein diese zentral in einem Netzwerk zu
-positionieren.
+ID. Es ist sinnvoll, diese anders als in diesem Lab zentral in einem
+Netzwerk zu positionieren. Die Root-Bridge wurde mit Absicht dezentral
+platziert um hieraus entstehend Nachteile hervorzuheben.
 
 OpenFlow Regelwerk II - Dynamisch
 ---------------------------------
@@ -293,11 +295,11 @@ Simulation
 
 Für die Simulation kann das vorbereitete Template OpenFlow-Lab auf dem
 GNS3-Server-Manager der Hochschule genutzt werden. In diesem sind die
-Docker-Container für Faucet und den OpenVSwitch bereits vorbereitet.
+Docker-Container für Faucet und den OpenvSwitch bereits vorbereitet.
 Zusätzlich ist bereits ein Projekt erstellt, in dem die
 Referenztopologie angelegt ist.
 
-Der **OpenVSwitch** wird als Docker-Container in die
+Der **OpenvSwitch** wird als Docker-Container in die
 Simulations-Umgebung implementiert. Es wird ein fertiger Container aus
 dem öffentlichen Dockerhub Repository verwendet -
 gns3/openvswitch:latest. Der OpenvSwitch ist vorgefertigt in dem
@@ -316,7 +318,7 @@ im GNS3-Kontextmenü der jeweiligen Switche gesetzt werden. Auf den
 OpenvSwitchen muss über das Terminal eine OpenFlow-Bridge erstellt,
 konfiguriert sowie Ports zu dieser hinzugefügt werden.
 
-``` {caption="Faucet OpenVSwitch Konfiguration 1"}
+``` {caption="Faucet OpenvSwitch Konfiguration 1"}
 # Configure OpenFlow Bridge
 ovs-vsctl add-br of
 ovs-vsctl set bridge of protocols=OpenFlow13
@@ -327,7 +329,7 @@ ovs-vsctl set-controller of tcp:10.0.0.250:6653
 
 Es wird das verwendete Protokoll, OpenFlow in der Version 1.3,
 festgelegt. Der fail\_mode=secure sorgt dafür das der OpenvSwitch keine
-Pakete weiterleitet wenn er keine Verbindung zum Controller hat. Die
+Pakete weiterleitet, wenn er keine Verbindung zum Controller hat. Die
 Datapath-ID identifiziert die einzelnen OpenvSwitch-Instanz eindeutig
 gegenüber dem Faucet Controller. Die OpenFlow-Kommunikation wird aktiv
 durch den Switch aufgebaut. Dafür wird die IP-Adresse des Controllers an
@@ -336,7 +338,7 @@ dieser Stelle konfiguriert.
 Im Anschluss werden die genutzten Interfaces von der Standard-Bridge
 entfernt und der OpenFlow-Bridge hinzugefügt.
 
-``` {caption="Faucet OpenVSwitch Konfiguration 2"}
+``` {caption="Faucet OpenvSwitch Konfiguration 2"}
 ovs-vsctl del-port eth1
 ovs-vsctl add-port of eth1
 ovs-vsctl set Interface eth1 ofport_request=1
@@ -363,14 +365,14 @@ ovs-vsctl add-port of eth8
 ovs-vsctl set Interface eth8 ofport_request=8
 ```
 
-Mittels dem ofport\_requestwird den Schnittstellen eine feste
+Mittels dem ofport\_request wird den Schnittstellen eine feste
 OpenFlow-ID zugewiesen. Wird dieser Befehl nicht gesetzt, kann der
 OpenFlow-ID von der Interface-ID abweichen, was prinzipiell nicht
-problematisch ist aber die Komplexität erhöht.
+problematisch ist, aber die Komplexität unnötig erhöht.
 
 Die Konfiguration lässt sich wie folgt überprüfen:
 
-``` {caption="Faucet OpenVSwitch Konfiguration überprüfen"}
+``` {caption="Faucet OpenvSwitch Konfiguration überprüfen"}
 / # ovs-vsctl show
 {...}
     Bridge of
@@ -455,7 +457,7 @@ konfiguriert wird, welche Faucet nutzt um diese der Router-IP
 zuzuordnen.
 
 Für ein Routing zwischen den VLANs müssen Router-Instanzen konfiguriert
-werden und die jeweiligen VLANs zwischen denen geroutet werden soll
+werden und die jeweiligen VLANs, zwischen denen geroutet werden soll,
 spezifiziert werden.
 
 ``` {caption="Faucet: Routing Konfiguration"}
@@ -499,9 +501,9 @@ Beispiel wird das VLAN server als VLAN zugeordnet.
 
 ### Start des Netzwerkes
 
-Zum Start des Netzwerkes wird nun der FaucetDienst gestartet. Dafür wird
-in der Konsole für Faucet folgender Befehl abgesetzt um den Prozess im
-Hintergrund zu starten:
+Zum Start des Netzwerkes wird nun der Faucet-Dienst gestartet. Dafür
+wird in der Konsole für Faucet folgender Befehl abgesetzt um den Prozess
+im Hintergrund zu starten:
 
     $ faucet &
 
@@ -545,7 +547,7 @@ ovs-ofctl -O OpenFlow13 dump-flows br0
 
 Die Logs von Faucet lassen sich mit folgendem Befehl anzeigen:
 
-``` {caption="'Faucet: Logs anzeigen'"}
+``` {caption="Faucet: Logs anzeigen"}
 cat /var/log/faucet/faucet.log
 ```
 
@@ -563,7 +565,7 @@ ihn im Anschluss wieder starten zu können.
 Fazit
 -----
 
-Faucet ist eine solide OpenFlow-basierte Controller-Lösung welche ein
+Faucet ist eine solide OpenFlow-basierte Controller-Lösung, welche ein
 Netzwerk mit Layer-2 und Layer-3 Services bereitstellen kann. Faucet
 zeigt die Vorteile eines zentral konfigurierbaren Netzwerkes mit dem
 Potential zur einfachen Automatisierung, macht sich aber mögliche

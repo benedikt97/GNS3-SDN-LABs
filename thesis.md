@@ -3,170 +3,216 @@ author:
 - Benedikt Heuser
 bibliography:
 - literatur.bib
-date: 02.11.2023
+date: 31.05.2024
 title: 'Evaluation und Simulation aktueller Software-Defined-Networking
   Konzepte'
 ---
 
-![image](media/logo_hsrm.png){width="30%"}
+![image](media/logo_hsrm.png){width="35%"}
 
-Hochschule RheinMain\
-Fachbereich ITE\
-Studiengang EE-CS
+**Fachbereich**
 
-**Masterthesis**\
+Ingenieurswissenschaften
 
-1.2
+**Studienbereich**
 
-  -------------- ----------------------------------- --
-  verfasst von   **Benedikt [Heuser]{.smallcaps}**   
-                 Matrikelnummer 105320               
-                                                     
-  am                                                 
-                                                     
-  -------------- ----------------------------------- --
+Informationstechnologie und Elektrotechnik
+
+**Studiengang**
+
+Electrical Engineering - Connected Systems
+
+**Master-Thesis**\
+
+1.2 \
+**Benedikt [Heuser]{.smallcaps}**\
+
+  ----------------- ------------------------------- --
+  Referent/in:      Prof. Dr.-Ing. Bernhard Gross   
+  Korreferent/in:   Dipl.-Inform. Erik Auerswald    
+  am                                                
+                                                    
+  ----------------- ------------------------------- --
 
 [Kompiliert am  um  - Erstellt mit LaTeX]{style="color: 0.4"}
 
 Einleitung
 ==========
 
-Die Hochschule Rhein-Main betreibt einen GNS3-Server mit einer
-Nutzerverwaltung sowie einer Template-Funktion zur Durchführung von
-Praktikas im Netzwerkbereich. In dieser Thesis sollen
-[sdn]{acronym-label="sdn" acronym-form="singular+short"} Architekturen
-sowie entsprechende Netzwerkkomponenten gefunden werden, die sich auf
-dieser Plattform virtualisieren lassen. Ziel ist es hiermit
-[sdn]{acronym-label="sdn" acronym-form="singular+short"} Technologien im
-Rahmen der Lehre auf der Plattform demonstrieren und untersuchen zu
-können. Für dieses Ziel müssen verschiedene Fragen beantwortet werden.
+Software-Defined-Networking, kurz SDN, ist eine wichtige Entwicklung im
+Bereich der Netzwerktechnik, die ein zentrales automatisierbares
+Management sowie zentrale Weiterleitungsentscheidungen ermöglicht. Eine
+zentrale Sicht auf Topologie und Zustand des Netzwerkes ermöglicht
+optimierte Datenpfade. Eine Realisierung über per OpenFlow-Protokoll
+programmierbare Switche wurde populär ab 2010, praktisch jeder namhafte
+Hersteller hatte eine Lösung im Portfolio. Diese Art von SDN konnte
+seinerseits allerdings keine relevante Marktdurchdringung erreichen und
+auch der technologische Nachfolger P4 hat derzeit noch keine besondere
+Relevanz am Markt. *Software-deﬁned networking (SDN) is obsolete, \...*
+- behauptet das Beratungsunternehmen Gartner in ihrem Hype Cycle for
+Enterprise Networking, 2023:
 
-Zu Beginn muss die Frage nach aktuellen SDN-Architekturen beantwortet
-werden. Dafür wird im ersten Schritt der Begriff SDN definiert. Der
-Begriff SDN wird oft eng mit der Technologie OpenFlow verbunden,
-beschreibt aber eine grundlegende Idee Computernetzwerke zu gestalten.
-Es wird eine Marktanalyse durchgeführt um Technologien auszumachen die
-bei am Markt erhältlichen Lösungen eingesetzt werden und diese
-zusätzlich Technologien auf ihre Verbreitung bewerten zu können.
+> *Software-deﬁned networking (SDN) is obsolete, as true SDN
+> technologies (not just technologies marketed as SDN) have not achieved
+> signiﬁcant market traction[@ghc].*
 
-Die zweite Aufgabe besteht darin gefundene Technologien und
-Architekturen auf der Plattform der Hochschule simuliert werden können.
-Die hier zu beantwortende Frage ist die Frage nach virtualisierbaren
-Netzwerkkomponenten, welche benötigte Protokolle und Funktionen
-unterstützen um entsprechende Architekturen zu simulieren.
+Ein Aufleben von SDN zeigt sich derzeit allerdings im WAN-Bereich, die
+Lösungen werden bezeichnet mit SD-WAN. Zugleich verbreiten sich
+alternative Technologien, die die gleichen Zielsetzungen des
+ursprünglichen SDN-Ansatzes über andere Wege lösen. Oft wird hier der
+Begriff Fabric für ein solches Netzwerk verwendet.
 
-*Software-deﬁned networking (SDN) is obsolete, \...* - das zumindest
-behauptet das Beratungsunternehmen Gartner in Ihrem Hype Cycle for
-Enterprise Networking, 2023. Diese Aussage wird im Rahmen der
-Auseinandersetzung mit aktuellen SDN-Technologien eingeordnet und
-versucht zu bewerten.
+SDN ist Bestandteil des Masterkurses Multimedia Networking an der
+Hochschule RheinMain. Der Kurs beinhaltet derzeit einen minimalistischen
+OpenFlow-Versuch auf Basis der minimalistischen Simulationsplattform
+Mininet. Hier besteht der Wunsch die Laborversuche um neue
+SDN-Technologien zu erweitern und zeitgleich auf eine vorhandene
+leistungsfähigere Simulationsplattform (GNS-3) zu migrieren.
 
-Jeder ausgemachten Technologie wird ein eigenes Kapitel gewidmet,
-welches im Anschluss für sich betrachtet eine vollwertige Beschreibung
-der Simulation und der Technologien beinhalten soll. Diese Simulation
-werden im weiteren auch als Lab bezeichnet. In einem kurzen Fazit sollen
-Erkenntnisse einfließen, sowie in einigen wenigen Worten die Technologie
-im Kontext SDN eingeordnet werden.
+Software-Defined-Networking, in der Regel mit SDN abgekürzt, beschreibt
+eine Art und Weise Netzwerke zu implementieren. Der Begriff wurde durch
+die Technologie OpenFlow geprägt. Netzwerke basieren bis heute auf den
+Technologien Ethernet, dem Internetprotokoll (IP) sowie einer Vielzahl
+von Routingprotokollen. Das 1980 entwickelte Ethernet bringt bei dem
+Einsatz in heutigen Netzwerken, Herausforderungen und Einschränkungen
+mit. Es ist Zielsetzung von SDN, diesen zu begegnen und zugleich die Art
+und Weise, wie Netzwerke implementiert und administriert werden, zu
+optimieren. Im Vordergrund steht dabei eine zentrale Verwaltung,
+programmierbare Schnittstellen sowie optimierte Pfadentscheidungen im
+Netzwerk.
 
-Tradionelles Netzwerk {#sec:tn}
----------------------
+Der Begriff SDN ist nicht scharf definiert. Der Begriff wurde lange Zeit
+im erheblichen Maße im Marketing genutzt, unter anderem auch für
+Lösungen die wenig mit der eigentlichen Idee gemeinsam haben. Ein
+Beispiel hierfür ist Omada des Herstellers tp-link, welches mit
+Softwaredefinierte Netzwerke (SDN) mit Cloudzugriff beworben wird. Die
+Lösung beinhaltet lediglich ein zentrales Management über eine
+Cloudanwendung, basiert aber unabhängig davon auf einer klassischen
+Netzwerk-Architektur.
 
-Da im weiteren Verlauf öfter ein Vergleich zu einem traditionellen
-Netzwerkgezogen wird, soll diesem Begriff in diesem Kapitel Kontext
-gegeben werden.
+Weiterhin haben sich neue Technologien mit kongruenten Zielen zu dem
+klassischen OpenFlow-SDN am Markt etabliert. Diese neuen Ansätze lösen
+aber in der Regel nur Teilbereiche der Problematik, die mit OpenFlow
+begegnet werden sollte. Die Vielfältigkeit in den Lösungsansätzen sowie
+die breite mögliche Auslegung des Begriffes Software definiert
+verhindern eine scharfe Definition des Begriffes. Während laut der
+Open-Networking-Foundation derzeit Lösungen auf Basis von P4 das
+aktuelle SDN repräsentieren, werden am Markt hauptsächlich Lösungen auf
+Basis von Netzwerkvirtualisierung als SDN-Architekturen vertrieben,
+siehe zum Beispiel Ciscos SD-Access.
 
-Die Aufgabe eines Netzwerkes ist es Computern und anderen Endgeräten
+Im Rahmen dieser Masterthesis sollen deshalb aktuelle
+Weiterentwicklungen im Bereich SDN identifiziert, bewertet und deren
+Umsetzbarkeit auf Basis der Netzwerksimulationsplattform GNS3 überprüft
+werden. GNS3-Beispielszenarien, weiterhin auch als Lab bezeichnet,
+sollen als Basis neuer Praktikumsversuche dienen.
+
+Die Thesis startet mit einem Grundlagen-Kapitel, in dem wichtige
+Konzepte erläutert werden. Anschließend werden in einem
+Marktanalyse-Kapitel die angebotenen Lösungen ausgewählter Hersteller
+analysiert. Die einzelnen Labs zu den jeweiligen Technologien werden in
+je einem eigenem Kapitel behandelt. Jedes dieser Kapitel beinhaltet
+einen eigenen Grundlagen- beziehungsweise Fazit-Abschnitt, der
+spezifisch auf die jeweilige Technologie eingeht. Ein im letzten Kapitel
+gezogenes Fazit soll die Erfahrungen, die während dieser Thesis
+gesammelt wurden, darstellen sowie kurz den aktuellen Stand der
+architektonischen Idee SDN zusammenfassen.
+
+Grundlagen
+==========
+
+In diesem Grundlagenkapitel wird allgemein auf die Unterschiede zwischen
+SDN-Netzwerken und klassischen Netzwerk eingegangen. Dafür werden die
+beiden Begriffe jeweils definiert. Zusätzlich wird das Thema
+Netzwerksimulation sowie Anforderungen an Netzwerke in Form von
+bereitzustellenden Services und Netzwerkvirtualisierung mit der
+Unterscheidung zwischen Transport- und aufgegriffen.
+
+Traditonelles Netzwerk {#sec:tn}
+----------------------
+
+Da im weiteren Verlauf des öfteren ein Vergleich zu einem traditionellen
+Netzwerk gezogen wird, wird der Begriff in diesem Abschnitt näher
+erläutert. Betrachtet werden Computer-Netzwerke auf Basis des
+Internetprotokoll (IP) und der Ethernettechnologie.
+
+Die Aufgabe eines Netzwerkes ist es, Computern und anderen Endgeräten
 untereinander die Kommunikation untereinander zu ermöglichen. Hierbei
-hat sich Ethernet zum faktischen Standard etabliert. Ethernet ist eine
-Technologie die bereits in den 1970er Jahren von Xerox entwickelt worden
-ist. An einem Ethernet-Netzwerk können mehrere Teilnehmer angeschlossen
-werden. Ähnlich einer Bus-Topologie haben alle Teilnehmer sich
-ursprünglich das selbe physikalische Medium geteilt, was eine
-Kollisionsdetektion in Form von CSMA/CD notwendig machte. Eine Belastung
-des Netzwerkes von über 60 Prozent führte zu vielen Kollisionen, was das
-Netzwerk ineffizient machte. Als nächsten Entwicklungsschritt wurden
-Bridges eingeführt, welche Pakete auf Basis Ihrer MAC-Adresse nur an den
-dedizierten Ziel-Host weiterleiten [@bridge]. Heutige am Markt
-verfügbare Switche sind aus funktionaler Sicht Bridges. Diese
-segmentieren damit Ethernet-Netzwerke und verringern Kollisionen durch
-Reduktion von Datenverkehr zu Hosts die nicht an den Daten interessiert
-sind.
+hat sich das Ethernet zum faktischen Standard etabliert. Ethernet ist
+eine Technologie, die bereits in den 1970er Jahren von Xerox entwickelt
+worden ist. An einem Ethernet-Netzwerk können mehrere Teilnehmer
+angeschlossen werden. Während ursprüngliche Hubs noch auf einem
+geteiltem Medium basiert haben und Ethernet-Pakete an alle Teilnehmer
+des Netzwerk gesendet wurdet, lernen heutige Switches MAC-Adressen auf
+Schnittstellen und stellen Pakete nur noch entsprechenden Endgeräten zu.
 
-Auf Ethernet wird zur globalen Adressierung von Geräten über einzelne
-Ethernet-Netze hinweg IP genutzt. IP-Netzwerke werden unterteilt in
-Subnetze, definiert durch einen IP-Adressbereich und einer dazugehörigen
-Subnetzmaske. Innerhalb eines Subnetzes kommunizieren Hosts über
+Zur globalen Adressierung von Geräten über einzelne Ethernet-Netze
+hinweg wird IP genutzt. IP-Netzwerke werden unterteilt in Subnetze,
+definiert durch einen IP-Adressbereich und einer dazugehörigen
+Subnetzmaske. Innerhalb eines Subnetzes kommunizieren Hosts über das
 Ethernet direkt miteinander. Zwischen Subnetzen kommunizieren sie über
 Router, welche in mehreren Subnetzen gleichzeitig eine Schnittstelle
-besitzen. Der Host schickt sein Paket um einen Host in einem anderen
-Subnetz zu erreichen an den Router, der das Paket entsprechend
-weiterleitet - oder auch routet. Der Host kennt das Router unter dem
-Synonym Default-Gateway.
+besitzen. Der Host schickt sein Paket an den Router, der das Paket
+entsprechend weiterleitet - oder auch routet. Der Router in einem
+Ethernet-Netzwerk wird auch gerne als Default-Gateway bezeichnet. Bei
+normalem IP-Routing findet keine Optimierung der Paketströmung auf Basis
+der Auslastung (Traffic-Engineering) statt, dies resultiert aus der
+mangelnden globalen Sicht auf das Netzwerk durch den einzelnen Router.
+Da bei normalen Routing die Weiterleitungsentscheidung auf jedem Router
+unabhängig getroffen wird, muss zusätzlich die Information eines
+gewählten Pfades zwischen den Routern geteilt werden, um eine
+Ende-zu-Ende Traffic-Engineering zu ermöglichen.
 
-Die IP-Kommunikation basiert auf dem Address-Resolution-Protocoll, kurz
+Die IP-Kommunikation basiert auf dem Address-Resolution-Protocol, kurz
 ARP. Das Protokoll dient dazu, zu einer IP-Adresse die zugehörige
-MAC-Adresse aufzulösen. Dazu sendet er einen Broadcast an alle
-Teilnehmer des Netzwerkes woraufhin der gesuchte Host mit seiner
-MAC-Adresse antwortet. Unter Kenntnis der MAC-Adresse adressiert er
-seine Nachricht mit dieser MAC-Adresse und schickt sie in Richtung des
-Switches. Der Switch hat eine Tabelle mit MAC-Adressen und den
-zugehörigen Schnittstellen und leitet das Paket analog dazu weiter. Hat
-er keinen entsprechenden Eintrag schickt er das Paket über alle
-Interfaces heraus. Befindet sich ein Host in einem anderen Netzwerk,
-entscheidet der Host das Paket nicht direkt, sondern über sein
-Default-Gateway zu versenden. Dies ist in der Regel ein Router mit eine
-IP-Adresse im selben Subnetz.
+MAC-Adresse aufzulösen. ARP basiert auf Broadcasts-Frames, die an alle
+Teilnehmer eines Ethernet-Netzwerkes gesendet werden. Bei IPv6 wird NDP
+(Neighbour Discovery Protocol) verwendet, welches anstelle von Layer-2
+Broadcasts auf Layer-3 Multicasts basiert.
 
-Sowohl das ARP-Protokoll als auch die Layer-2 Paketweiterleitung
-benötigen Broadcasts, also das fluten (engl. flooding) von Paketen um zu
-funktionieren. Genau dieser Mechanismus führt bei traditioneller
-Netzwerke in Hinsicht aus Skalierbarkeit und Ausgestaltung der Topologie
-zu Einschränkungen.
+Sowohl das ARP-Protokoll als auch Data Plane Learning, also die
+Verarbeitung von Paketen mit unbekannter MAC-Adressen, benötigen
+Broadcasts, also das Fluten (engl. flooding) von Paketen, um zu
+funktionieren. Genau dieser notwendige Mechanismus führt bei
+traditionellen Netzwerken in Hinsicht auf Skalierbarkeit und
+Ausgestaltung der Topologie zu Einschränkungen.
 
-Um ein einfaches Zusammenstecken sowie redundante und vermaschte
-Ethernet-Topologien zu ermöglichen wurde im ersten Schritt das
-Spanning-Tree-Protocoll, kurz STP, eingeführt. Dieses berechnet eine
-Baumstruktur und schaltet vereinfacht gesagt alle Interfaces im Netzwerk
-ab die die im Pfad dieses Baumes liegen. Dadurch wird die logische
-Netzwerktopologie schleifenfrei und erfüllt damit diese Anforderung von
-Ethernet. Da Spanning-Tree nicht gut skaliert sowie keine optimale
-Ausnutzung aller verfügbaren Pfade ermöglicht wurde als weiterer offene
-Standard Shortes-Path-Bridging, kurz SPB, erschaffen. Dieses Arbeitet
-auf Prinzip von Netzwerkvirtualisierung mit ISIS für
-Erreichbarkeitsinformationen und MAC-in-MAC um Pakete zu verpacken und
-zu übertragen.
+Um redundante und vermaschte Ethernet-Topologien zu ermöglichen, wurde
+das Spanning-Tree-Protocol, kurz STP, eingeführt. Dieses berechnet eine
+Baumstruktur und blockiert vereinfacht gesagt alle Interfaces im
+Netzwerk, die nicht im Pfad dieses Baumes liegen. Dadurch bleibt die
+logische Netzwerktopologie schleifenfrei und erfüllt damit diese
+Anforderung von Ethernet.
 
-Die Kernaspekte die SDN begegnen möchte sind schlussfolgernd:
+Zusammenfassend weisen traditionelle Netzwerke folgende Einschränkungen
+auf:
 
--   Ethernet erfordert eine logische Baumstruktur
+-   Ethernet erfordert eine logische Sternstruktur, was wiederum
+    redundante Strecken im Netzwerk verbietet.
 
--   Layer-2 Redundant hat eine hohe Komplexität (STP, MLAG)
+-   Layer-2 Redundanz und Schleifenvermeidung wird durch das STP nur
+    eingeschränkt bereitgestellt und eignet sich nicht für große Netze.
 
--   Ethernet erlaubt kein Traffic-Engineering
+-   Ethernet unterstützt von sich aus kein Traffic-Engineering.
 
 -   Broadcasts erzeugen bei großen Netzwerken eine relevante
-    Netzwerkauslastung
+    Netzwerkauslastung.
 
-Gründe für SDN
---------------
-
-Die Idee hinter Software-Defined-Networking ist es das Netzwerk im
-gesamten Programmierbar zu gestalten. Die Motivationen sowie Probleme
-die dadurch gelöst werden sollen sind vielfältig. Sie beziehen sich zum
-einen auf die administrative Sicht, bei der zum Beispiel die manuelle
-Konfiguration sämtlicher Teilnehmer eines Netzwerkes entfallen soll.
-Weiterhin sollen darüber Mechaniken implementiert werden können, die bei
-traditionellen Netzwerke nicht möglich sind wie zum Beispiel Layer-2
-Pfad Redundanz und Traffic-Engineering.
+-   Layer-2 Netzwerke müssen auf jedem Knoten im Netzwerk konfiguriert
+    werden.
 
 Der Begriff SDN
 ---------------
 
-In diesem Kapitel wird eine Differenzierung des Begriffes
-Software-Defined-Networking versucht.
+Technologien unter dem Konzept SDN haben als Ziel obig genannte
+Einschränkungen zu begegnen. Grundlage hierbei sind zentralisierte
+Konzepte, die es unter anderem ermöglichen auf etablierte Standards zur
+Interoperabilität und Informationsverteilung zu verzichten, da keine
+Informationen zwischen Controlplanes geteilt werden müssen und die
+Funktion des gesamten Netzwerke selbst definiert werden kann.
 
 Der Begriff [sdn]{acronym-label="sdn" acronym-form="singular+short"}
-wird gerne als Marketingbegriff eingesetzt ohne dabei einen wirklichen
+wird häufig als Marketingbegriff eingesetzt, ohne dabei einen wirklichen
 Hinweis auf Eigenschaften des beworbenen Produktes zu geben. Es liegt
 keine scharfe Definition des Begriffes vor. Der Begriff kam im
 Zusammenhang mit Entwicklungen der Stanford Universität auf, die mit
@@ -175,125 +221,151 @@ Hilfe von [of]{acronym-label="of" acronym-form="singular+short"} die
 programmieren konnten. Damit ließen sich Controller-basierte
 Netzwerkkonzepte realisieren.
 
-Allgemein betrachtet wird die Bezeichnung Software-Definedfür Geräte
-verwendet, deren Funktionen und deren Funktionsweise per Software
-definiert werden kann. Ein Beispiel sind Software-Defined-Radios. Diese
-Geräten verfügen über eine Antenne welche in verschiedenen Frequenzen
-Signale modulieren können. Über eine entsprechende Software lassen sich
-diese Geräte dann zum Beispiel für Bluetooth, WLAN oder Zigbee
-einsetzen. Die eigentliche Funktion der Geräte ist also durch Software
-definiert. Oft verschwimmt der Begriff auch mit dem Begriff
-Virtualisierung. So werden Systeme im Storage-Bereich, welche auf
-Grundlage von mehreren Servern einen gemeinsamen Speicher virtualisiert
-darstellen auch gerne als Software-Defined-Storage bezeichnet.
+Allgemein betrachtet wird die Bezeichnung Software-Defined für Geräte
+verwendet, deren Funktionsweise per Software definiert werden kann. Ein
+Beispiel sind Software-Defined-Radios. Diese Geräte verfügen über eine
+Antenne, welche in verschiedenen Frequenzen Signale modulieren können.
+Über eine entsprechende Software lassen sich diese Geräte dann zum
+Beispiel für Bluetooth, WLAN oder Zigbee einsetzen. Die eigentliche
+Funktion der Geräte ist also durch Software definiert. Oft verschwimmt
+der Begriff auch mit dem Begriff Virtualisierung. So werden Systeme im
+Storage-Bereich, welche auf Grundlage von mehreren Servern einen
+gemeinsamen Speicher virtualisiert darstellen, auch gerne als
+Software-Defined-Storage bezeichnet.
 
-Im Netzwerk-Bereich beschreibt der Begriff zum einen die Entkopplung der
-[cp]{acronym-label="cp" acronym-form="singular+short"} von der
-[dp]{acronym-label="dp" acronym-form="singular+short"}, was die
-Notwendigkeit einer programmierbaren [dp]{acronym-label="dp"
-acronym-form="singular+short"} sowie Protokolle zur Kommunikation dieser
-beiden untereinander bedingt. Durch eine zentrale
-[cp]{acronym-label="cp" acronym-form="singular+short"} lassen sich
-weiterhin genannte Optimierungen auf Ethernet-Ebene deutlich einfache
-implementieren. Weiterhin beschreibt es die Schaffung von offenen
-Schnittstellen von der [cp]{acronym-label="cp"
-acronym-form="singular+short"} hin zu zentralen Management-Instanzen um
-die Administration eines Netzwerkes zu zentralisieren und zu
-automatisieren. Der Begriff wird auch für Fabrics verwendet, die durch
-Netzwerkvirtualisierung eine wichtige Grundlage für die
-Programmierbarkeit eines Netzwerkes schaffen.
+Im Netzwerkbereich finden sich hauptsächlich zwei Definitionen für den
+Begriff SDN. Die erste Definition beschreibt die Programmierbarkeit
+eines Netzwerkes auf der Ebene eingesetzter Komponenten und
+Architekturen. Diese Programmierbarkeit kann auf verschiedenen Ebenen
+erreicht werden und basiert primär auf offenen [api]{acronym-label="api"
+acronym-form="singular+short"}s. Offene Schnittstellen können hierbei
+zwischen Controlplane und Dataplane als auch zwischen Controlplane und
+einer Managementplane implementiert werden. Auch kann eine
+Netzwerkplattform an sich programmierbar werden, beispielsweise durch
+den Einsatz von FPGAs.
+
+Eine zweite Definition beschreibt primär die Auftrennung von Dataplane
+und Controlplane und der anschließenden Implementierung einer zentralen
+Software-basierten Controlplane. Hierbei geht es weniger wie bei der
+ersten Definition darum, das Verhalten von eingesetzten Komponenten
+programmatisch verwalten zu können, sondern das Verhalten eines
+Netzwerks als solches programmatisch steuern zu können. Diese
+Auftrennung von Controlplane und Dataplane setzt wiederum offene
+Schnittstellen, wie in der ersten Definition beschrieben, voraus.
+
+In einem bereits 2015 erschienenem informativen RFC wurde auf die
+Problematik des undefinierten Begriffes SDN eingegangen. Zudem wurde
+versucht den Begriff entsprechend einzuordnen [@sdn]. Beschreibendes
+Zitat aus dem RFC:
+
+> *SDN research often focuses on varying aspects of programmability, and
+> we are frequently confronted with conflicting points of view regarding
+> what exactly SDN is. (\...) For example, both OpenFlow \[OpenFlow\]
+> and the Network Configuration Protocol (NETCONF) \[RFC6241\] have been
+> characterized as SDN interfaces, but they refer to control and
+> management, respectively[@sdn]..*
 
 ### Unterscheidungsmerkmale SDN
 
-Grundlegend lassen sich Netzwerkkonzepte im Allgemeinen und vor allem
-dehnen die in die SDN Definition passen über verschiedene Merkmale
-unterscheiden und einordnen.
+Grundlegend lassen sich SDN-Konzepte über verschiedene Merkmale
+unterscheiden.
 
-#### Asymmetrisch vs Symmetrisch
+#### Asymmetrisch vs symmetrisch
 
 [sdn]{acronym-label="sdn" acronym-form="singular+short"} Architekturen
-lassen sich unterscheiden in Asymmetrisch und Symmetrisch. Bei
+lassen sich klassifizieren als asymmetrisch oder symmetrisch. Bei
 asymmetrischen Architekturen wird die [cp]{acronym-label="cp"
 acronym-form="singular+short"} zentralisiert und in der Regel als eine
 Software-Anwendung implementiert. Bei symmetrischen Modellen wird die
-[cp]{acronym-label="cp" acronym-form="singular+short"} verteilt direkt
-auf den einzelnen Netzwerkgeräten implementiert. Die Vorteile
-asymmetrischer Modelle sind die zentrale Konfiguration und die
-Verzichtbarkeit von Protokollen zur Verteilung von Informationen.
-Nachteilig ist, dass dieser Controller einen Single Point of Failure
-darstellt. Zusätzlich können zentrale Controller nicht unbegrenzt
-skalieren. Vorteile symmetrischer Modelle ist die Architektur-bedinge
-Redundanz und Skalierung bei wachsender Netzwerkgröße. Traditionelle
-Netzwerkkonzepte mit autonom lernenden Bridges und Routing-Protokollen
-sind hierbei als Symmetrisch zu bezeichnen.
+[cp]{acronym-label="cp" acronym-form="singular+short"} verteilt auf den
+einzelnen Netzwerkgeräten implementiert. Die Vorteile asymmetrischer
+Modelle sind die zentrale Konfiguration und die Verzichtbarkeit von
+Protokollen zur Verteilung von Informationen. Nachteilig ist, dass die
+zentralen Controller einen Single Point of Failure darstellen.
+Zusätzlich können zentrale Controller nicht unbegrenzt skalieren.
+Vorteile symmetrischer Modelle sind die architektonische Redundanz und
+Skalierung bei wachsender Netzwerkgröße. Traditionelle Netzwerkkonzepte
+mit autonom agierenden Netzwerkkomponenten unter Einsatz von
+Routing-Protokollen sind hierbei als symmetrisch zu bezeichnen.
 
-#### Floodless vs Floodbased
+#### Floodless vs floodbased
 
-Wie in Kapitel [1.1](#sec:tn){reference-type="ref" reference="sec:tn"}
-beschrieben basieren wichtige Mechaniken von Ethernet/IP Netzwerken auf
+Wie in Abschnitt [2.1](#sec:tn){reference-type="ref" reference="sec:tn"}
+beschrieben, basieren wichtige Mechaniken von Ethernet/IP Netzwerken auf
 Broadcasts. Broadcasts sind im Allgemeinen in großen Netzwerken und
 vermaschten Topologien problematisch. Daher versuchen einige Ansätze
 diese Broadcasts zu unterdrücken beziehungsweise zu optimieren.
 Gesendete Broadcasts zur Auflösung von Adressen werden zum Beispiel
-abgefangen und direkt mit Informationen aus einer Datenbank beantwortet.
-Architekturen deren Verbreitung von Erreichbarkeits-Informationen nicht
-auf Broadcasts basiert werden daher allgemein als Floodless bezeichnet.
-Broadcasts werden allerdings auch gerne von Anwendungen auf der
-Applikationsebene eingesetzt um zum Beispiel alle Drucker in einem
-Netzwerk zu finden, was eine entsprechende Implementierung von
-intelligenten Broadcasts oft notwendig macht.
+abgefangen und direkt mit Informationen aus einer Datenbank beantwortet
+(ARP-Proxy). Architekturen, deren Verbreitung von
+Erreichbarkeits-Informationen nicht auf Broadcasts basieren, werden
+daher allgemein als floodless bezeichnet. Broadcasts werden allerdings
+auch gerne von Anwendungen auf der Applikationsebene eingesetzt, um
+beispielsweise Drucker in einem Netzwerk zu finden. Dies macht oft eine
+entsprechende Implementierung von Broadcasts notwendig.
 
-#### Hostbased vs Netbased
+#### Hostbased vs netbased
 
 Traditionellerweise sind Netzwerkfunktionen auf dedizierter
 Netzwerkhardware abgebildet. Ein Host ist über eine
-Ethernet-Schnittstelle ohne VLAN-Tag mit dem Netzwerk verbunden. Durch
-das Aufkommen von Virtualisierungsplattformen und anderen
-Applikationsplattformen wie Kubernetes welche innere
+Ethernet-Schnittstelle mit dem Netzwerk verbunden, wobei der Host hier
+hier keine Kenntnis von Netzwerkvirtualisierungen oder Routing hat.
+Durch das Aufkommen von Virtualisierungsplattformen und anderen
+Applikationsplattformen wie Kubernetes, welche innere
 Netzwerkarchitekturen haben, wurde begonnen Netzwerkfunktionalität auf
 die Server zu ziehen. Prominentes Beispiel ist der OpenvSwitch, welcher
-dafür verwendet wird Netzwerk an Virtuelle Maschinen zu provisionieren.
-Netzwerkfunktionen wie Routing oder Netzwerkvirtualisierung kann direkt
-auf dem Anwendungsserver abgebildet werden. Vorteilhaft ist hier die
-enge mögliche Integration zwischen Anwendungen und dem Netzwerk.
+zur Provisionierung von Netzwerken an virtuelle Maschinen verwendet
+wird. Netzwerkfunktionen wie Routing oder Netzwerkvirtualisierung können
+direkt auf dem Anwendungsserver abgebildet werden. Vorteilhaft ist hier
+die enge mögliche Integration zwischen der Anwendung und dem Netzwerk.
 Prominente Beispiele sind OpenStacks Neutron, VMwares NSX und Flow von
 Nutanix. Diese Produkte erlauben die Provisionierung von
 Netzwerkdiensten auf der Anwendungsschicht.
 
 ### Erwartungen an SDN
 
-Wie festgestellt gibt es keine scharfe Definition des Begriffes SDN.
-Weiterhin wird versucht die auf SDN-Netzwerke projizierten Erwartungen
-zu Beschreiben um entsprechende Lösungsansätze skizzieren zu können.
+Wie festgestellt, gibt es keine scharfe Definition des Begriffes SDN.
+Deshalb wird versucht, die auf SDN-Netzwerke projizierten Erwartungen zu
+beschreiben, um entsprechende Lösungsansätze skizzieren zu können.
 
-#### Erwartung 1: Controllerbasiert - Programmierbarkeit und Zentrales Management
+#### Erwartung 1: Controllerbasiert - Programmierbarkeit und zentrales Management
 
-Durch Einsatz eines zentralen Controllers können mehrere Probleme gelöst
-werden. Durch die Zentralisierung der [cp]{acronym-label="cp"
-acronym-form="singular+short"} können
-Ethernet-Weiterleitungsentscheidungen auf Basis einer umfassenden
-Kenntnis des Netzwerkes intelligent getroffen werden. Es können optimale
-Pfade auf Basis verschiedener Metriken ermittelt werden. Durch die
-Zentralisierung des Management ist die Konfiguration an einer zentralen
-Stelle möglich. Während ein zentrales Management bei einer
-zentralisierten Controlplane ein positiver Nebeneffekt ist, können auch
-bei symmetrischen Netzwerkkonzepten dedizierte Management-Controller zum
-Einsatz kommen. Viele moderne Lösungen setzen dabei auf ein
-Cloud-basiertes zentrales Management für die verschiedenen Komponenten
-eines Netzwerkes.
+Durch Einsatz einer zentralen Controlplane können mehrere Probleme
+gelöst werden. Weiterleitungsentscheidungen können auf Basis einer
+umfassenden Kenntnis des Netzwerkes intelligent getroffen werden. Es
+können optimale Pfade auf Basis verschiedener Metriken ermittelt werden.
+Architektonisch bedingt wird das Netzwerk hierbei auch an einer
+zentralen Stelle administriert und konfiguriert. Dies erlauben auch
+zentrale Management-Anwendung, wobei hierbei die Komplexität des
+Netzwerkes in diesen abgebildet werden muss um relevante Vorteile zu
+schaffen. Ehemals am Markt verfügbare SDN-Controller boten oft eine
+zentrale WebGUI zur Administration, siehe OpendayLight DLUX . Auch
+moderne Lösungen wie Cisco SD-Access bieten eine zentrale WebGUI
+basierte Administration, siehe hierzu Cisco Catalyst Center. Der Begriff
+SDN kann also durchaus die Erwartung an eine zentrale und graphische
+Administration implizieren.
 
 #### Erwartung 2: Redundanz, Skalierfähigkeit und Weiterleitungsoptimierungen
 
-Wie in Kapitel [1.1](#sec:tn){reference-type="ref" reference="sec:tn"}
-beschrieben erlaubt Ethernet abseits der Nutzung von Spanning-Tree keine
-redundanten Datenpfade und Grenzen bei der sinnvollen Größe von
-Netzwerken. Datenpfade laufen stets entlang eine Baumstruktur. Durch den
-Einsatz von Netzwerkvirtualisierungen oder auch der Zentralisierung der
-[cp]{acronym-label="cp" acronym-form="singular+short"} lassen sich eben
-diese Einschränkungen mit unterschiedlichen Methoden aufheben oder
-zumindest mindern.
+Wie in Abschnitt [2.1](#sec:tn){reference-type="ref" reference="sec:tn"}
+beschrieben, erlaubt Ethernet abseits der Nutzung von Spanning-Tree nur
+bedingt redundante Datenpfade und ist bei der sinnvollen Ausdehnung von
+Layer-2 Netzwerken begrenzt. Datenpfade laufen stets entlang eine
+Baumstruktur. Durch den Einsatz von Netzwerkvirtualisierungen oder auch
+der Zentralisierung der [cp]{acronym-label="cp"
+acronym-form="singular+short"} lassen sich eben diese Einschränkungen
+mit unterschiedlichen Methoden aufheben oder zumindest mindern. Gerade
+bei Einsatz von Netzwerkvirtualisierung in
+Enterprise-Netzwerkkomplettlösungen wird mit hoher Resilienz und
+gleichzeitiger Skalierbarkeit bei geringer Komplexität geworben. Extreme
+Networks schreibt zu der eigenen Fabric-Lösung:
 
-#### Erwartung 3: Disaggregation Funktion/Software von Hardware
+> *Fabric Connect -- uniquely -- makes this cocktail of complexity
+> redundant for the mainstream, and businesses can now build a robust,
+> reliable, scalable and virtualized architecture that is also free of
+> complexity[@exfc].*
+
+#### Erwartung 3: Disaggregation Software von Hardware
 
 Die Software auf Netzwerkhardware ist in der Regel eng an die jeweilige
 Hardwareplattform gekoppelt und in seiner Bedienung und Funktionalität
@@ -301,139 +373,286 @@ herstellerspezifisch. Das Mischen von Plattformen verschiedener
 Hersteller kann sich als problematisch erweisen, da zum Beispiel
 Protokolle im Detail unterschiedlich implementiert sind. Zudem kommen
 teilweise Hersteller-proprietäre Protokolle zum Einsatz. Beispiel
-hierfür sind Stacking-Mechanismen oder [mlag]{acronym-label="mlag"
-acronym-form="singular+short"} Protokolle.
+hierfür sind Stacking- oder MLAG-Protokolle
+(Multiswitch-Link-Aggregation-Group).
 
 Der Einsatz einer einzelnen Softwareplattform in einem Netzwerk auf
 Hardwareplattformen verschiedener Hersteller kann diesem Problem
 entgegen wirken. Der Vendor-Lockin kann damit minimiert werden. Die
 Funktionsweise eines Netzwerkswitch wird hierbei durch die aufgespielte
 Software definiert, die Hardware wird austauschbar. Herausforderung
-hierbei ist die Programmierung der eingesetztes Hardware durch das
+hierbei ist die Programmierung der eingesetzten Hardware durch das
 [sos]{acronym-label="sos" acronym-form="singular+short"} über dafür
 notwendige Treiber.
 
-#### Erwartung 4: Traffic Engineering
+Ein Beispiel für diese geschürte Erwartung ist ein Auszug aus dem
+Marketing von DELL:
+
+> *A uniquely open approach to SDN - While vendors are making more and
+> more claims about being open, only Dell delivers true Open
+> Networking\*, allowing a choice of supported operating systems on
+> Dell's Open Networking Switches*[@dellsdn].
+
+#### Erwartung 4: Traffic-Engineering
 
 Traffic-Engineering beschreibt die Implementierung eines geschlossenen
-Regelkreises in einem Netzwerk. Auf gemessene Metriken wie die
-Auslastung einer Netzwerkstrecke kann durch die Umleitung von Daten über
-andere Pfade im Netzwerk reagiert werden. Notwendig dafür sind
-transparente Metriken, die Programmierbarkeit von Datenpfaden und ein
-Regelglied welches die erhobenen Daten auswertet und entsprechend
-reagiert. In der realen Welt sind derzeit SD-WAN Lösungen im Trend, die
-die Nutzung verschiedener WAN-Strecken von Unternehmen optimieren.
+Regelkreises in einem Netzwerk. Auf gemessene Metriken, wie die
+Auslastung einer Netzwerkstrecke, kann durch die Umleitung von Daten
+über andere Pfade im Netzwerk reagiert werden. Notwendig dafür sind
+umfassende Metriken, die Programmierbarkeit von Datenpfaden und ein
+Regelglied, welches die erhobenen Daten auswertet und entsprechend
+reagiert.
 
-### Der Begriff Netzwerkvirtualisierung
+Traffic-Engineering ist einer der zentralen Vorteile die bei
+Controller-basierten Netzerkkonzepten, wie sie im SDN Umfeld häufig
+angetroffen werden, effizient umgesetzt werden können. Cisco schreibt
+zum Traffic-Engineering mit Hilfe von Segment-Routing:
 
-Der Begriff der Netzwerkvirtualisierung beschreibt die Abbildung einer
-Netzwerkinfrastruktur unabhängig der darunter liegenden physikalischen
-Topologie. Ein einfaches Beispiel sind VLANs. Im komplexeren Fall lassen
-sich Netzwerke auf Basis von Enkapsulierungsprotokollen wie zum Beispiel
-VXLAN vollständig virtualisieren. Gerade im Service-Provider Bereich, wo
-mehrere Kunden eine gemeinsame physikalische Infrastruktur nutzen wird
-Netzwerkvirtualisierung in der Regel eingesetzt. Der Begriff wird
-ebenfalls für den Einsatz virtueller Switche auf
-Virtualisierungsplattformen genutzt.
+> *Because segment routing directs traffic on a stateless, flexibly
+> defined path, it has the benefit of being programmed by an SDN
+> controller or locally by the head-end source-based routing*[@ciscosr].
 
-### Der Begriff Fabric
-
-Der Begriff Fabric wird üblicherweise für Konzepte genutzt, bei denen
-Switche in einer vermaschten Topologie angeordnet werden. Die
-Einschränkungen herkömmlicher Strukturen, in denen ein Netzwerk
-sternförmig aufgebaut werden muss, was Konzepte mit mehreren Stufen wie
-Core, Aggregation und Edge erfordert, sollen hier nicht gelten.
-Weiterhin impliziert eine Fabric eine vereinfachte Konfiguration von
-Services, im optimales Fall an einer zentralen Stelle oder zumindest nur
-am Rand des Netzwerkes. Das Netzwerk soll aus konfigurativer Sicht als
-ein Gesamtes und nicht als eine Vielzahl von Netzwerkkomponenten gesehen
-werden.
+Die Erwartung von optimierten Datenflüssen unter Beachtung des
+Netzwerk-Zustandes kann also bei einem mit SDN betitelten Netzwerk
+durchaus bestehen.
 
 ### SDN im Wandel der Zeit
 
-Mit der Aussage SDN is obsolete bezieht sich Gartner mit hoher
-Wahrscheinlichkeit auf Controller- und Pfadbasierte Ansätze auf Basis
-von OpenFlow die ab 2014 den Begriff SDN maßgeblich geprägt haben. Wie
-in der weiteren Martkanalyse gezeigt wird, fristet die Technologie
-OpenFlow ein Nischendasein in spezialisierten Einsatzgebieten. Der
-funktionelle Nachfolger von OpenFlow ist P4Runtime, die Technologie wird
-von der [onf]{acronym-label="onf" acronym-form="singular+short"} auch
-gerne als Next-Gen SDN bezeichnet. Die Technologie findet zwar Beachtung
-bei Service-Providern und Cloud-Anbietern wie Google [@p4google], zeigt
-aber keine relevante Durchdringung bei Enterprise-Produkten. Teilweise
-werden zwar P4-basierte Geräte angeboten, die Fähigkeit diese
-Programmieren zu können wird allerdings oft nicht an den Endanwender
-weitergegeben, sondern lediglich dazu genutzt dynamisch Funktionen durch
-die Hersteller implementieren zu können, siehe Kapitel
-[3.3](#sec:arista){reference-type="ref" reference="sec:arista"} und
+Mit der Aussage SDN is obsolete bezieht sich Gartner vermutlich auf
+Controller- und Pfad-basierte Ansätze auf Basis von OpenFlow, welche ab
+2014 den Begriff SDN maßgeblich geprägt haben. Wie in der weiteren
+Martkanalyse gezeigt wird, fristet die Technologie OpenFlow ein
+Nischendasein in spezialisierten Einsatzgebieten. Der funktionelle
+Nachfolger von OpenFlow ist P4Runtime, die Technologie wird von der
+[onf]{acronym-label="onf" acronym-form="singular+short"} auch gerne als
+Next-Gen SDN bezeichnet. Die Technologie findet zwar Beachtung bei
+Service-Providern und Cloud-Anbietern wie Google [@p4google], zeigt aber
+keine relevante Durchdringung bei Enterprise-Produkten. Teilweise werden
+P4-basierte Geräte zwar angeboten, die Fähigkeit diese programmieren zu
+können wird allerdings oft nicht an den Endanwender weitergegeben,
+sondern lediglich dazu genutzt dynamisch Funktionen durch den Hersteller
+implementieren zu können, siehe Abschnitt
 [3.1](#sec:cisco){reference-type="ref" reference="sec:cisco"}.
 
-Das klassische SDN spielt im Enterprise-Segment keine Rolle mehr. Der
-Begriff wurde in den letzten Jahren allerdings wieder aufgenommen für
-sogenannten SD-WAN Technologien. Diese basieren in der Regel weder auf
-OpenFlow noch auf P4Runtime. SD-WAN Lösungen nehmen Metriken
-verschiedener WAN-Anbindung eines Unternehmensstandortes auf wie Jitter,
-Latenz oder Auslastung und weißt im Anschluss dynamisch Datenverkehr
-entsprechend optimale Pfade zu. Damit lässt sich Verkehr über
-verschiedene Strecken zwischen Standorten sowie über mehrere
-Internet-Breakouts verteilen. Die Etablierung eines geschlossenen
-Regelkreises passt zu den in dieser Thesis definierten Zielen von SDN.
+Das klassische SDN (OpenFlow) spielt im Enterprise-Segment keine Rolle
+mehr. Der Begriff wurde in den letzten Jahren allerdings wieder
+aufgenommen für sogenannten SD-WAN Technologien. Diese basieren in der
+Regel weder auf OpenFlow noch auf P4Runtime. SD-WAN Lösungen nehmen
+Metriken verschiedener WAN-Anbindung eines Unternehmensstandortes auf
+wie Jitter, Latenz oder Auslastung, und weisen im Anschluss Datenverkehr
+optimale Pfade zu. Damit lässt sich Datenverkehr über verschiedene
+Strecken zwischen Standorten sowie über mehrere Internet-Breakouts
+verteilen. Die Etablierung eines geschlossenen Regelkreises passt zu den
+in dieser Thesis definierten Zielen von SDN.
 
-Nimmt man diese Definition zugrunde lassen sich durchaus aktuelle
-Netzwerkkonzepte finden dies sich als Software-Defined bezeichnen
-lassen. Die in den weiteren Kapitel vorgestellten Lösungen adressieren
-hierbei durchaus verschiedene Problemstellungen. Als Beispiel lassen
-sich mit BGP-EVPN Fabrics aufbauen in denen sich mit geringem
-Konfigurationsaufwand Layer-2 und Layer-3 Services provisionieren
+Nimmt man allerdings diese Definition zugrunde, finden sich durchaus
+aktuelle Netzwerkkonzepte, die sich als Software-Defined bezeichnen
+lassen. Die in den weiteren Abschnitten vorgestellten Lösungen
+adressieren hierbei verschiedene Problemstellungen. Als Beispiel lassen
+sich mit virtuelle Netzwerke auf gerouteten Netzwerken spannen
+(BGP-EVPN), in denen sich Layer-2 und Layer-3 Services provisionieren
 lassen, was wiederum Management-Controller basierte Konzepte ermöglicht.
-P4 und P4Runtime wiederum machen das Verhalten eines einzelnen Gerätes
-programmierbar und ermöglichen über eine generische Schnittstelle welche
-für jede P4-Anwendung frei definiert werden kann die Zentralisierung der
+P4 und P4Runtime machen das Verhalten eines Gerätes programmierbar und
+ermöglichen über eine generische Schnittstelle, welche für jede
+P4-Anwendung frei definiert werden kann, die Zentralisierung der
 [cp]{acronym-label="cp" acronym-form="singular+short"}. MPLS Segment
-Routing ermöglicht Traffic-Engineering in dem es die Programmierung von
+Routing ermöglicht Traffic-Engineering, in dem es die Programmierung von
 festgelegten Pfaden im Netzwerk erlaubt. Hiermit ist die Implementation
 von geschlossenen Regelkreisen in Netzwerken ohne eine Zentralisierung
 der Controlplane wie bei OpenFlow möglich.
 
 Der Begriff SDN hat also durchaus noch heute Relevanz, darf aber nicht
-gleichgesetzt werden mit dem 2014 definiertem Begriff SDN der Lösungen
+gleichgesetzt werden mit dem 2014 definiertem Begriff SDN, der Lösungen
 auf Basis von OpenFlow bezeichnet hat.
 
-Die Technologie OpenFlow, beziehungsweise das klassische SDN, ist in
-teilen an dem Ansprich gescheitert als allumfassende Lösung für den Bau
-von Netzwerken zu dienen. Die stetige Weiterentwicklung von Protokollen
-und damit notwendige Anpassungen der OpenFlow-Spezifikationen die
-wiederum durch die Anbieter von Netzwerkhardware implementiert werden
-mussten sowie Skalierungsprobleme zentralisierter Architekturen sind
-weitere mögliche Gründe für das Scheitern von OpenFlow am Markt.
-Spezialisierte Produkte hingegen die das Protokoll gezielt für kleinere
-Problemlösungen nutzen setzen das Protokoll bis heute ein. Ein Beispiel
+Die Technologie OpenFlow und damit das klassische SDN, ist vermutlich an
+dem Anspruch gescheitert, als allumfassende Lösung für den Betrieb von
+Netzwerken zu dienen. Die stetige Weiterentwicklung von Protokollen und
+damit notwendige Anpassungen der OpenFlow-Spezifikationen, die wiederum
+durch die Anbieter von Netzwerkhardware implementiert werden mussten,
+sowie Skalierungsprobleme zentralisierter Architekturen, sind weitere
+mögliche Gründe für das Scheitern von OpenFlow am Markt [@ofk].
+Spezialisierte Produkte hingegen, die das Protokoll gezielt für kleinere
+Problemlösungen nutzen, setzen das Protokoll bis heute ein. Ein Beispiel
 dafür ist Nevion mit einer SDN-Lösung speziell für die
-Videoübertragungsindustrie[@nevion].
+Videoübertragungsindustrie [@nevion].
 
-In einem bereits 2015 erschienenem informativen RFC wurde auf die
-Problematik des undefinierten Begriffes SDN eingegangen sowie der
-Begriff entsprechend versucht einzuordnen[@sdn]. Beschreibendes Zitat
-aus dem RFC - *SDN research often focuses on varying aspects of
-programmability, and we are frequently confronted with conflicting
-points of view regarding what exactly SDN is. (\...) For example, both
-OpenFlow \[OpenFlow\] and the Network Configuration Protocol (NETCONF)
-\[RFC6241\] have been characterized as SDN interfaces, but they refer to
-control and management, respectively..*
+Gartner schreibt hierzu in ihrem Hype Cycle for Enterprise Networking,
+2023:
+
+> *SDN products that separate the network control plane from the
+> forwarding plane never achieved mainstream enterprise adoption.
+> Unfortunately, with time, SDN has evolved into an overused marketing
+> term, essentially meaning "new stuff in networking." However, interest
+> in SDN led to innovations in automation, orchestration and
+> programmability. It paved the way for innovations like software-deﬁned
+> WAN (SD-WAN), microsegmentation, brite-box switching and SD-branch
+> products[@ghc].*
+
+Disaggregation Software und Hardware
+------------------------------------
+
+Die Paketweiterleitung wird in Netzwerkgeräten typischerweise über
+[asic]{acronym-label="asic" acronym-form="singular+short"}s
+(Application-Specific Integrated Circuit) und in selteneren Fällen mit
+FPGAs (Field Programmable Gate Array) implementiert. Die häufiger
+eingesetzten ASICs haben ihre Funktionen in unveränderbarer Hardware
+abgebildet. In einem ASIC nachträglich nur sehr begrenzt eine neue
+Funktion integriert werden. Vorteil dieser ASICs ist allerdings eine
+hohe parallele Performance, die bei dem Einsatz in einem belastetem
+Netzwerk benötigt wird. Für einen einfachen Vergleich, in der
+Spezifikation PCI Express sind derzeit pro Lane 15,13 Gigabyte pro
+Sekunde möglich. Der aktuelle High-End Prozessor AMD Threadripper 3990X
+hat insgesamt 64 Lanes zur Anbindung von Peripherie über PCI-Express und
+kann damit eine theoretische maximale Bandbreite von 64 x 15,13 = 968,32
+Gigabyte in der Sekunde leisten. Der aktuelle High-End Switching-ASIC
+von Broadcom, der Tomahawk 5, kann in der Sekunde 64 x 100 = 6400
+Gigabyte verarbeiten. Der stark vereinfachte Vergleich soll zeigen, dass
+selbst die theoretisch maximale Datenmenge, die bei Nutzung aller PCI
+Express Lanes durch einen aktuellen x86 Prozessor fließen kann, ein
+Bruchteil der Bandbreite aktueller Switching-ASICs ist. Zusätzlich
+trifft der Switching-ASIC bei dieser Bandbreite noch
+Weiterleitungs-Entscheidungen.
+
+In der Regel werden nicht alle Funktionen eines Switches durch den ASIC
+abgedeckt. Komplexe Funktionen wie Spanning-Tree Berechnungen oder
+Routing-Protokolle werden in der CPU des Switches abgebildet. Dafür kann
+der ASIC die dafür notwendigen Pakete an die CPU weiterleiten. Der Weg
+eines Paketes über den ASIC wird allgemein als Fast-Path bezeichnet.
+Wird ein Paket zur Verarbeitung an die CPU ausgeleitet wird dieser Weg
+als Slow-Path bezeichnet.
+
+Dadurch, dass die ASICs in den Netzwerkgeräten in vielen Fällen von den
+Herstellern selbst entwickelt sind, spezifische Funktionen abdecken und
+in vielen Fällen auf verschiedenen Konzepten der Paketverarbeitung in
+Form unterschiedlicher Pipelines beruhen, besteht eine enge Abhängigkeit
+zwischen dem Betriebssystem und der jeweiligen Hardware.
+
+![Closed- vs Opennetworking](media/cnon1.png){#fig:co1 width="100%"}
+
+In dem linken Teil der Abbildung [2.1](#fig:co1){reference-type="ref"
+reference="fig:co1"} ist eine solche Abhängigkeit dargestellt. In den
+Netzwerkkomponenten der verschiedenen Herstellern werden ASICs aus
+eigener Produktion oder ASICs von Drittherstellern eingebaut. Unter
+anderem die Firmen Broadcom und Nvidia vertreiben Netzwerk-ASICs an
+Netzwerkausrüster. Diese werden allgemein als Merchant-Silicon
+bezeichnet. Der Zugriff auf diese Hardware erfolgt über proprietäre
+Programmierschnittstellen, beziehungsweise bei Merchant-Silicon durch
+den Chip-Entwickler bereitgestellte Schnittstellen in Form von SDKs
+(Service-Delivery-Kits), die in der Regel nicht quelloffen sind. Die
+Hardware ist üblicherweise über die gängige Schnittstelle PCI
+(Peripheral Component Interconnect) angebunden.
+
+Auf der rechten Seite wird ein offeneres Konzept gezeigt, welches sich
+im Markt derzeit etabliert. Als Betriebssystem kommt ein Linux zum
+Einsatz in Form eine angepassten Distribution des jeweiligen
+Herstellers. In manchen Fällen, wie zum Beispiel der DELL
+Open-Networking Serie ist dieses Betriebssystem austauschbar. Diese
+Portabilität setzt die hier gezeigte offene Schnittstelle hin zu der
+Hardware voraus. Zwischen den beiden Abbildungen existieren einige
+Graustufen wie die Geräte von Aruba. Diese basieren auf einem Linux, auf
+welches im begrenzten Maße direkter Zugriff gewährt wird. Die
+eigentliche Forwarding-Hardware ist allerdings proprietär und damit
+nicht zugreifbar für Software von Dritten.
+
+Die Methoden die Schnittstellen zur Hardware offen zu gestalten sind
+hierbei unterschiedlich. Bei Cumulus Linux wurde der Dienst - switchd-
+integriert, welcher verschiedene Hardware-ASICs abstrahiert [@switchd].
+Für SONiC wurde eine Schnittstelle definiert, an die die
+Hardware-Lieferanten mit ihrem Treiber andocken müssen.
+
+Gerade bei Plattformen mit häufig eingesetzten Merchant-Silicon Chips,
+wie dem Broadcom Trident oder Tomahawk, ist oft die Möglichkeit gegeben
+ein alternatives Switchbetriebsystems zu installieren. Beispiel sind die
+Open-Networking Switche von Dell wie dem S5224F-ON, wobei das ON für
+Open-Networking steht. Eine Integration verbreiteter ASICs, wie das bei
+Merchant-Silicon in der Regel der Fall ist, ist für die Anbieter dritter
+Betriebssysteme attraktiver als die Integration von ASICs mit geringen
+Stückzahlen.
+
+![Closed- vs Opennetworking 2](media/cnon2.png){width="100%"}
+
+Konsequentester Ansatz ist auf Fixed-Function Hardware zu verzichten und
+vollständig programmierbare Chips wie FPGAs
+(Field-Programmable-Gate-Array) einzusetzen. Das Betriebssystem kann
+dann seinen eigenen Programmcode für den Hardware-Chip mitbringen, und
+definiert damit benötigtes Verhalten der Hardware. Diese
+programmierbaren Chips werden oft als programmierbare NPUs - Network
+processing unit - bezeichnet. Eine Möglichkeit ist die Verwendung von
+FPGAs, welche schon lange auf dem Markt sind. Ein Beispiel hierfür ist
+der Arista Switch FPGA auf Basis des Xilinx Virtex UltraScale+ oder der
+Cisco Nexus 3550. P4 ist eine spezifische Beschreibungssprache für
+Paketverarbeitungs-Pipelines im Netzwerkbereich. Für die Sprache stehen
+Compiler für die gängigen FPGA-Plattformen wie Xilinx oder AMD Vivado,
+oder auch für den Einsatz von P4 spezialisierten Chips wie dem Intel
+Tofino zur Verfügung. Unter anderem vertreiben Arista, Aruba und Extreme
+Netzwerkkomponenten auf Basis des Intel Tofinos.
+
+### SAI {#sec:sai}
+
+![SAI Architektur Quelle:
+design-reuse.com](media/sai-arch.jpg){#fig:evpncli width="50%"}
+
+SAI, Switch Abstraction Interface, ist eine offene Schnittstelle zur
+Programmierung der Dataplane und damit der Hardware eines Switches. SAI
+ist eine Sammlung von C-Aufrufen, in der entsprechende Funktionen der
+Hardware-Treiber verlinkt werden. Die Besonderheit von SAI ist, dass es
+Aufgabe der Hersteller von Switching-Hardware ist entsprechende Treiber
+zu liefern, die sich in SAI integrieren. Festgelegt wird in diesem Fall
+die Schnittstelle zwischen Treiber und Controlplane. Es ist nicht
+Aufgabe der Controlplane sich an spezifische Hardware-Schnittstellen
+anzupassen. Durch den Einsatz von SONiC durch Microsoft in der
+Azure-Cloud und durch viele andere Hersteller, ist diese
+Standardisierung die Erste mit einer relevanten Marktmacht, um sich
+durchzusetzen [@sai].
+
+### ONIE
+
+![ONIE](media/onie.png){#fig:onie width="100%"}
+
+ONIE (Open Network Install Environment) ist eine Art erweiterter
+Bootloader und bietet eine Umgebung um Betriebssysteme auf
+Netzwerkkomponenten zu installieren. ONIE implementiert dabei die bei
+Netzwerkhardware bekannte Mechanik einer Primär- und einer
+Sekundärpartition, welche es nach einem fehlerhaften Update erlaubt
+wieder zur alten Installation zurückzukehren. Weiterhin implementiert
+ONIE eine Linux-Shell in Form von Busybox und wird beispielsweise von
+DELL genutzt, um Firmware-Updates auf der Hardware durchzuführen.
+
+### GNS3
+
+GNS3 - Graphical Network Simulator-3 - ist eine quelloffene Plattform
+zur Simulation von Netzwerken. GNS3 bietet eine graphische
+Benutzeroberfläche, in der Komponenten angeordnet werden können sowie
+untereinander vernetzt werden können. Die Anwendung ist Server-Client
+basiert. Der Server ist im Backend für die Virtualisierung der
+verschiedenen angelegten Geräte zuständig, wobei verschiedene
+Virtualisierungstechnologien eingesetzt werden können. Die Vernetzungen
+zwischen den Geräten basiert auf UDP Tunneln, welche mittels ubridge
+realisiert werden. GNS3 bietet weiterhin hilfreiche Tools, wie die
+Möglichkeit über die Oberfläche Wireshark-Mitschnitte auf bestimmten
+UDP-Tunneln zwischen Geräten zu starten sowie Filter auf diesen
+anzulegen. Weiterhin bietet GNS3 mit einem NAT-Knoten die Möglichkeit
+einen Internet-Breakout zu realisieren. Über einen Cloud-Knoten biete es
+die Möglichkeit ein physikalisches Interface in die Topologie
+einzubinden, um eine Schnittstelle zu echten Hardware-Komponenten
+herzustellen.
+
+![GNS3 GUI](media/gns3.png){width="100%"}
 
 Netzwerksimulation
 ------------------
 
-Ähnlich wie in anderen Technologiesektoren entwickeln sich die Ansätze
-und Technologien im Netzwerkbereich mit steigender Geschwindigkeit
-weiter. Netzwerke zu simulieren kann hilfreich zur Evaluierung von
-Konzepten, zur Validierung von Änderungen an bestehenden Netzwerken und
-zur Schulung und Lehre sein. Ein Netzwerk zu simulieren ist nicht nur
-erheblich kostengünstiger, sondern ermöglicht auch den Aufbau komplexer
-Topologien mit weniger zeitlichem und arbeitstechnischem Aufwand.
-Zentrale Herausforderung für eine realitätsnahe Simulation ist die
-Realisierung von hardwarenahen Funktionen, welche bei den physikalischen
-Geräten direkt im Chip implementiert sind.
+Ähnlich wie in anderen Technologiesektoren, entwickeln sich die
+Technologien im Netzwerkbereich mit steigender Geschwindigkeit weiter.
+Netzwerksimulation kann hilfreich zur Evaluierung von Konzepten, zur
+Validierung von Änderungen an bestehenden Netzwerken und zur Schulung
+und Lehre von Administratoren sein. Ein Netzwerk zu simulieren ist nicht
+nur erheblich kostengünstiger, sondern ermöglicht auch den Aufbau
+komplexer Topologien mit weniger zeitlichem und arbeitstechnischem
+Aufwand. Zentrale Herausforderung für eine realitätsnahe Simulation ist
+die Realisierung von hardwarenahen Funktionen, welche bei den
+physikalischen Geräten in der Hardware implementiert sind.
 
 Die Vorteile einer Netzwerksimulation haben auch viele Hersteller
 erkannt und bieten eigene Simulationsplattformen an. Gerne genutzter
@@ -453,10 +672,10 @@ Simulationslösungen:
 
 Diese sind teilweise Cloud-basiert wie die Lösung von Cisco oder
 Extreme, und teilweise lokale Programme auf Basis von frei erhältlichen
-Hypervisoren wir VirtualBox, siehe die H3c Lösung Cloud Lab.
+Typ-2 Hypervisoren wie VirtualBox, siehe die H3c Lösung Cloud Lab.
 
 Einige Hersteller bieten auch eine virtuelle Variante ihres Switch-OS
-an, um dieses in eigenen Simulationsumgebungen einzusetzen. Beispiele
+an, um diese in eigenen Simulationsumgebungen einzusetzen. Beispiele
 sind:
 
 -   **DELL OS10** - Dell bietet auf seiner Homepage ein GNS-3 Bundle von
@@ -469,156 +688,19 @@ sind:
     Betriebsystemes an, welche dadurch auch in GNS-3 lauffähig ist.
 
 -   **SONiC** - Die Entwickler von SONiC bieten eine virtuelle Variante
-    SONIC-VSin Repository an.
-
-Die Betriebssysteme lassen ich in der Regel auf den gängigen
-Hypervisoren Qemu, VirtualBox und VMware ausführen.
-
-Grundlagen
-==========
-
-Disaggregation Software und Hardware
-------------------------------------
-
-Die Paketweiterleitung wird in Netzwerkgeräten typischerweise über
-[asic]{acronym-label="asic" acronym-form="singular+short"}s
-(Application-Specific Integrated Circuit) und in selteneren Fällen mit
-FPGAs (Field Programmable Gate Array) implementiert. Die häufiger
-eingesetzten ASICs haben ihre Funktionen in unveränderbarer Hardware
-integriert. So kann in einem ASIC nachträglich nur sehr begrenzt eine
-neue Funktion wie zum Beispiel VXLAN integriert werden. Vorteil dieser
-ASICs ist allerdings die hohe parallele Performance die bei der
-Weiterleitung benötigt werden. Für einen einfachen Vergleich, in der
-Spezifikation PCI Express sind derzeit pro Lane 15,13 Gigabyte möglich.
-Der aktuelle High-End Prozessor AMD Threadripper 3990X hat insgesamt 64
-Lanes zur Anbindung von Peripherie über PCI-Express und kann damit eine
-theoretische maximale Bandbreite von 64 x 15,13 = 968,32 Gigabyte in der
-Sekunde leisten. Der aktuelle High-End Switching-ASIC von Broadcom, der
-Tomahawk 5 kann in der Sekunde 64 x 100 = 6400 Gigabyte verarbeiten. Der
-stark vereinfachten Vergleich soll zeigen, dass selbst die theoretisch
-maximale Datenmenge bei Nutzung aller PCI Express Lanes durch einen
-aktuellen x86 Prozessor fließen kann ein Bruchteil der Bandbreite
-aktueller Switching-ASICs ist. Außer acht gelassen wird die Tatsache,
-dass der ASIC in dieser Bandbreite zusätzlich
-Weiterleitungsentscheidungen zu jedem Paket trifft.
-
-In der Regel werden nicht alle Funktionen eines Switches durch den ASIC
-abgedeckt. Komplexe Funktionen wie Spanning-Tree Berechnungen oder
-Routing-Protokolle werden in der CPU des Switches abgebildet. Dafür kann
-der ASIC die dafür notwendigen Pakete, bei diesen Beispielen
-Spanning-Tree BPDUs oder Nachrichten von Routing-Protokollen, an die CPU
-weiterleiten. Der Weg eines Paketes über den ASIC wird allgemein als
-Fast-Path bezeichnet, wird ein Paket zur Verarbeitung an die CPU
-ausgeleitet wird dieser Weg als Slow-Path bezeichnet.
-
-Dadurch das die ASICs in den Netzwerkgeräten in vielen Fällen von den
-Herstellern selbst entwickelt sind, spezifische Funktionen abdecken und
-vielen Fällen auf verschiedenen Konzepten der Paketweiterleitung beruhen
-besteht eine enge Abhängigkeit zwischen dem Betriebssystem auf dem
-Switch und der jeweiligen darunterliegenden Hardware.
-
-![Closed- vs Opennetworking](media/cnon1.png){#fig:co1 width="100%"}
-
-In dem linken Teil der Abbildung [2.1](#fig:co1){reference-type="ref"
-reference="fig:co1"} ist dies dargestellt. In den Switchen der
-verschiedenen Herstellern werden ASICs aus eigener Produktion eingebaut
-oder auch ASICs von Drittherstellern. Unter anderem die Firmen Broadcom
-und Nvidia vertreiben Netzwerk-ASICs an Netzwerkausrüster. Diese werden
-dann allgemein als Merchant-Silicon bezeichnet. Der Zugriff auf diese
-Hardware erfolgt über proprietäre Programmierschnittstellen
-beziehungsweise bei Merchant-Silicon durch den Chip-Entwickler
-bereitgestellte Schnittstellen, die in der Regel nicht quelloffen sind.
-
-Auf der rechten Seite wird ein heute immer häufiger genutztes Konzept
-gezeigt. Als Betriebssystem auf dem Switch kommt ein gewöhnliches Linux
-zum Einsatz. Dieses spricht in manchen fällen über eine standardisierte
-oder quelloffene Programmierschnittstelle mit der jeweils verbauten
-Hardware. Hier gibt es verschiedene Lösungsansätze. Teilweise kommen
-proprietäre Treiber zum Einsatz, bei Cumulus Linux wurde ein Dienst
-switchd geschrieben der verschiedene Hardware-ASICs quelloffen
-abstrahiert hat. Für SONiC wurde eine Schnittstelle definiert an die die
-ASIC-Produzenten mir ihrem Treiber andocken müssen. Funktionen wie
-Routing und andere Controlplane-Protokolle sind als Dienste im Linux
-integriert. Die Varianten sind hier vielfältig und werden und es gibt
-eine Menge Kontraststufen zwischen den beiden Zeichnungen. Manche
-Hersteller wie Arista erlauben den direkten Zugriff auf ihre zugrunde
-liegendes Linux sowie die Installation von eigenen Anwendungen in
-diesem.
-
-Standardisierte Schnittstellen bringen die Möglichkeit das
-Switchbetriebssystem auszutauschen. Gerade bei Plattformen mit häufig
-eingesetzten Merchant-Silicon Chips wie der Broadcom Trident Serien, ist
-oft die Möglichkeit gegeben ein alternatives Switchbetriebsystems zu
-installieren. Beispiel sind die Open-Networking Switche von Dell wie dem
-S5224F-ON, wobei das ON für Open-Networking steht. Eine Integration
-verbreiteter ASICs, wie das bei Merchant-Silicon in der Regel der Fall
-ist, ist für die Anbieter dritter Betriebssysteme attraktiver als die
-Integration von ASICs mit geringen Stückzahlen.
-
-![Closed- vs Opennetworking 2](media/cnon2.png){width="100%"}
-
-Einen weiteren konsequenten Ansatz die Software von der Hardware zu
-entkoppeln ist es die Hardware programmierbar zu machen. Das
-[sos]{acronym-label="sos" acronym-form="singular+short"} bringt seinen
-eigenen Programmcode für den Hardware-Chip mit, und definiert darüber
-Weiterleitungsverhalten und benötigte Tabellen. Diese programmierbaren
-Chips werden allgemein als programmierbare NPUs - Network processing
-unit - bezeichnet. Eine Möglichkeit ist die Verwendung von FPGAs, welche
-schon lange auf dem Markt sind. Ein Beispiel hierfür ist der Arista
-Switch FPGA auf Basis des Xilinx Virtex UltraScale+ oder der Cisco Nexus
-3550. P4 ist eine spezifische Beschreibungssprache für
-Paketverarbeitungs-Pipelines im Netzwerkbereich. Für die Sprache gibt es
-Compiler für die gängigen FPGA-Plattformen wie Xilinx oder AMD Vivado,
-oder auch für den Einsatz von P4 spezialisierten Chips wie dem Intel
-Tofino. Unter anderem Arista vertreibt Switche auf Basis des Intel
-Tofinos.
-
-### SAI
-
-![SAI Architektur Quelle:
-design-reuse.com](media/sai-arch.jpg){#fig:evpncli width="50%"}
-
-[sai]{acronym-label="sai" acronym-form="singular+short"}, Switch
-Abstraction Interface, ist eine offene Schnittstelle zur Programmierung
-der Dataplane und damit der Hardware eines Switches. SAI ist eine
-Sammlung von C-Aufrufen in der entsprechende Funktionen der
-Hardware-Treiber verlinkt werden. Die Besonderheit von SAI ist es, dass
-es Aufgabe der Hersteller von Switching-Hardware ist entsprechende
-Treiber zu liefern die sich in SAI integrieren. Festgelegt wird in
-diesem Fall die Schnittstelle zwischen Treiber und Controlplane. Es ist
-nicht Aufgabe der Controlplane sich an spezifische
-Hardware-Schnittstellen anzupassen. Durch den Einsatz von SONiC durch
-Microsoft in der Azure-Cloud und durch viele andere Hersteller ist diese
-Standardisierung die erste mit einer relevanten Marktmacht um sich
-durchzusetzen. [@sai]
-
-### ONIE
-
-![ONIE](media/onie.png){#fig:onie width="100%"}
-
-ONIE ist eine Art erweiterter Bootloader und bietet die einfache
-Möglichkeit Betriebssysteme auf Netzwerkhardware zu installieren. ONIE
-implementiert dabei die bei Netzwerkhardware bekannte Mechanik einer
-Primär- und einer Sekundärpartition, welche es nach einem Fehlerhaften
-Update erlaubt wieder zur alten Installation zurückzukehren. Weiterhin
-implementiert ONIE eine Linux-Shell in Form von Busybox und wird
-beispielsweise von DELL genutzt um Firmware-Updates auf der Hardware
-durchzuführen.
-
-Netzwerksimulation
-------------------
+    SONIC-VS an.
 
 Die Simulation von Netzwerken basiert auf der Virtualisierung des
-[sos]{acronym-label="sos" acronym-form="singular+short"} auf einem
+[sos]{acronym-label="sos" acronym-form="singular+short"} auf einem Typ-2
 Hypervisor. Eingesetzt werden je nach Betriebssystem-Architektur QEMU,
 Dynamips, Virtualbox, VMware oder auch Containertechnologien wie Docker.
 Die Mehrheit aktueller Enterprise-Switche basieren auf regulären
 x86-Architekturen mit UNIX-artigen Betriebssystemen wie Linux. Dazu
 gehört unter anderem Ciscos IOS-XE und XR, Extremes EXOS und VOSS und
 einige mehr. Die Virtualisierung dieser Systeme stellt keine größere
-Herausforderung dar da verbreitete Technologien genutzt werden. Um einen
-virtuellen Link zwischen zwei virtuellen Switchen zu stecken können UDP
-Tunnel eingesetzt werden.
+Herausforderung dar, da verbreitete Technologien genutzt werden. Um
+einen virtuellen Link zwischen zwei virtuellen Switchen zu stecken,
+können UDP Tunnel eingesetzt werden.
 
 ![GNS3 UDP Tunnel](media/gns3-udp-tunnel.png){#fig:gns3-udp
 width="100%"}
@@ -626,82 +708,65 @@ width="100%"}
 In dieser Abbildung sind zwei UDP Verbindungen zwischen zwei offenen
 Ports auf dem lokalen Loopback-Interface zu sehen. Jeweils für jede
 Richtung einen. Diese Verbindungen werden durch den GNS3 eigenen ubridge
-Dienst erstellt.[@ubridge] Vorteil dieses Verfahrens ist, das jegliche
-Art von Interfaces miteinander Verbunden werden können. Weiterhin
-besteht die Möglichkeit den Linux-Netzwerkstack zu nutzen. So können
-immer jeweils zwei Interfaces in eine Linux-Bridge gesteckt werden um
-eine Kommunikation zu ermöglichen. Diese funktioniert allerdings nur mit
-Interfaces der virtuellen Instanzen die dem Kernel des Hosts bekannt
-sind. Die durch GNS3 erstellten QEMU VMs haben zum Beispiel kein
-virtuelles Interface im Linux Kernel des Hosts. Gleichzeitig ist eine
-gemeinsame Topologie mit UDP Tunnel problemlos über mehrere
-Virtualisierungshosts möglich, während dies bei Linux-Bridges nicht ohne
-weiteres möglich ist. Zu beachten sind die Performance Einschränkungen
-bei den UDP Tunneln, da die Pakete durch einen kompletten Software-Stack
-gehen.
+Dienst erstellt [@ubridge]. Vorteil dieses Verfahrens ist, das jegliche
+Art von Interfaces miteinander verbunden werden können und die
+Kommunikation auf diesem Tunnel mit einfachen Mitteln mitgeschnitten
+werden kann.
 
-Die größte Herausforderung ist die Implementierung von hardwarenahen
-Funktionen der Switche in die virtuellen Versionen. Im optimalen Fall
-wird ein Paket welches an einem Switch ankommt direkt, zum Beispiel von
-einem ASIC, weitergeleitet und passiert nicht die CPU des Switches.
+Alternativ besteht die Möglichkeit den Linux-Netzwerkstack zu nutzen. So
+können immer jeweils zwei Interfaces in eine Linux-Bridge gesteckt
+werden, um eine Kommunikation zu ermöglichen. Dies funktioniert
+allerdings nur mit Interfaces der virtuellen Instanzen, die dem Kernel
+des Hosts bekannt sind. Die durch GNS3 erstellten QEMU VMs haben zum
+Beispiel kein virtuelles Interface im Linux Kernel des Hosts.
+Gleichzeitig ist eine gemeinsame Topologie mit UDP Tunnel problemlos
+über mehrere Virtualisierungshosts möglich, während dies bei
+Linux-Bridges nicht ohne weiteres möglich ist. Zu beachten sind die
+Performance Einschränkungen bei den UDP Tunneln, da die Pakete durch
+einen kompletten Software-Stack geleitet werden.
+
+Die größte Herausforderung ist die Implementierung von hardwarenaher
+Funktionen in die virtuellen Versionen. Im optimalen Fall wird ein
+Paket, welches an einem Switch ankommt Hardware-basiert, zum Beispiel
+von einem ASIC, weitergeleitet und passiert nicht die CPU des Switches.
 Lediglich Protokoll-Pakete wie zum Beispiel BGP-Pakete, LLDP-Pakete oder
-STP-Pakete werden an die CPU weitergeleitet um dort verarbeitet zu
+STP-Pakete werden an die CPU weitergeleitet, um dort verarbeitet zu
 werden. Moderne Switche setzen MAC-basierte Layer-2 Weiterleitung,
 IP-basierte Layer-3 Weiterleitung sowie die Implementierung von Filtern
 in Form von ACLs direkt in der Hardware um. Da ein virtueller Switch
-keine Hardware wie einen ASIC hat, durchlaufen alle Pakete den TCP/IP
-Stack des [sos]{acronym-label="sos" acronym-form="singular+short"}es.
-Die Simulation von [cp]{acronym-label="cp"
-acronym-form="singular+short"} Funktionen wie Routing-Protokollen ist
-damit in der Regel trivial da keine Änderungen an dem
-[sos]{acronym-label="sos" acronym-form="singular+short"} vergenommen
-werden müssen. Alle Funktionen die allerdings in die Hardware eines
-Switches geschrieben werden, müssen durch andere Mechaniken ersetzt
-werden.
+keine Hardware wie einen ASIC hat, durchlaufen alle Pakete zwangsweise
+den Software TCP/IP Stack des jeweiligen Betriebssystems. Die Simulation
+von [cp]{acronym-label="cp" acronym-form="singular+short"} Funktionen,
+wie Routing-Protokollen, ist damit in der Regel trivial, da keine
+Änderungen an dem [sos]{acronym-label="sos"
+acronym-form="singular+short"} vorgenommen werden müssen. Alle
+Funktionen die allerdings in die Hardware eines Switches abgebildet
+werden, müssen durch andere Mechaniken ersetzt werden.
 
 Relevantes Qualitätsmerkmal bei den virtuellen Varianten ist der
 Implementierungsgrad von eigentlich in der Hardware abgebildeten
 Funktionen. In der Regel ist einfaches VLAN basiertes Switching und
 Routing implementiert. Seltener verfügbar sind komplexere Funktionen wie
-ACLs, also Filterlisten oder Quality-of-Service. Das fehlen dieser
-Funktionen kann auch Abseits von direkter Nutzung problematisch sein.
-Für MLAG-Konstrukte ist die Filterung gewisser Pakete auf der
-Verbindungsstrecke zwischen den beiden Switchen notwendig. Im Beispiel
-von dem virtuellen DELL OS-10 lässt sich ein MLAG, bei DELL VLT genannt,
-zwar erfolgreich konfigurieren, funktioniert aber Aufgrund mangelnder
-Filterung auf dem VLT-Link nicht korrekt.
+ACLs, also Filterlisten oder Quality-of-Service. Das Fehlen dieser
+Funktionen kann auch abseits von direkter Nutzung problematisch sein.
+Für MLAG-Konstrukte zum Beispiel ist die Filterung bestimmter Pakete auf
+der Verbindungsstrecke zwischen den beiden Switchen notwendig. Im
+Beispiel von dem virtuellen DELL OS-10 lässt sich ein MLAG, bei DELL VLT
+genannt, zwar erfolgreich konfigurieren, funktioniert aber aufgrund
+mangelnder Filterung von STP-Paketen (Spanning-Tree-Protocol) nicht
+vollständig korrekt.
 
-Die Ansätze Funktionen in die virtuellen Switche zu implementieren
-unterscheiden sich hierbei. Arista setzt zum Beispiel einen eigenen
-Dienst ein der alle Pakete entgegen nimmt und entsprechend weiterleitet.
-Dies ermöglicht dem Hersteller eine einfache Virtualisierung einer
-großen Bandbreite an Funktionen. Nachteilig ist hierbei die geringe
-Performance. SONiC hingegen bildet die Mechaniken auf Basis der
-Linux-Netzwerkstack ab. Die Linux Interfaces werden durch einen Dienst
-konfiguriert. Für erweiterte Funktionen werden Tabellen wie
-MAC-Adresstabellen im Betrieb manipuliert. Dies ermöglicht eine
-deutliche höhere Performance, die Abbildung komplexer Funktionen ist
-allerdings komplexer.
-
-### GNS3
-
-GNS3 - Graphical Network Simulator-3 - ist eine quelloffene Plattform
-zur Simulation von Netzwerken. GNS3 bietet eine graphische
-Benutzeroberfläche in der Komponenten angeordnet werden können sowie
-untereinander vernetzt werden können. Die Anwendung ist Server-Client
-basiert. Der Server ist im Backend für die Virtualisierung der
-verschiedenen angelegten Geräte zuständig, wobei verschiedene
-Virtualisierungstechnologien eingesetzt werden können. Die Vernetzungen
-zwischen den Geräten basiert auf UDP Tunneln welche mittels
-ubridgerealisiert werden. GNS3 bietet weiterhin hilfreiche Tools wie die
-Möglichkeit über die Oberfläche Wireshark-Mitschnitte auf bestimmten
-UDP-Tunneln zwischen Geräten zu starten sowie Filter auf diesen
-anzulegen. Weiterhin bietet GNS3 mit einem NAT-Knoten die Möglichkeit
-einen Internet-Breakout zu realisieren sowie über einen Cloud-Knoten die
-Möglichkeit ein physikalisches Interface in die Topologie einzubinden um
-eine Schnittstelle zu echten Hardware-Komponenten herzustellen.
-
-![GNS3 GUI](media/gns3.png){width="100%"}
+Die Ansätze, Funktionen in die virtuellen Switching-Plattformen zu
+implementieren, unterscheiden sich hierbei. Arista setzt bei ihrer
+virtuellen Appliance zum Beispiel einen eigenen Dienst ein, welcher alle
+Pakete entgegen nimmt und entsprechend weiterleitet. Dies ermöglicht dem
+Hersteller eine einfache Virtualisierung einer großen Bandbreite an
+Funktionen. Nachteilig ist hierbei die geringe Performance. SONiC
+hingegen bildet die Funktionen auf Basis der Linux-Netzwerkstack ab. Die
+Linux Interfaces werden durch einen Dienst konfiguriert. Für erweiterte
+Funktionen werden Tabellen wie MAC-Adresstabellen manipuliert. Dies
+ermöglicht eine deutliche höhere Performance. Die Abbildung vielfältiger
+Funktionen ist allerdings komplexer.
 
 ### GNS3-Server-Manager
 
@@ -709,68 +774,77 @@ Der GNS3-Server-Manager ist eine Web-Anwendung betrieben durch das NLAB
 der Hochschule Rhein-Main. Diese Anwendung bietet Nutzern die
 Möglichkeit auf Basis von Vorlagen GNS3-Server bereitzustellen. Die
 GNS3-Server werden über OpenVPN erreichbar gemacht. Die Dokumentation
-für diese Anwendung ist zu finden unter
-<https://github.com/nlab4hsrm/gns3-Server-Manager/tree/main/Doc>
+für diese Anwendung ist zu finden unter:\
+<https://github.com/nlab4hsrm/gns3-Server-Manager/tree/main/Doc>.
+Entwickelt wurde die Anwendung im Rahmen einer Bachelor-Arbeit durch
+einen ehemaligen Studenten[@pavlov].
 
 Services im Netzwerk - Netzwerkvirtualisierung {#sec:services}
 ----------------------------------------------
 
 Die Netzwerkvirtualisierung beschreibt die Bereitstellung von
 Netzwerkdiensten unabhängig der zugrunde liegenden Infrastruktur.
-Technisch wird dies in der Regel durch Tunnelprotokolle zur
-netzwerkunabhängigen Übertragung von Paketen durch ein Netzwerk
-hindurch.
+Technisch wird dies in der Regel durch Tunnelprotokolle zur Übertragung
+von Paketen durch ein Transport-Netzwerk hindurch realisiert.
 
-Prinzipiell unterscheidet man zwischen drei Services die in einem
+Prinzipiell unterscheidet man zwischen drei Services, die in einem
 Netzwerk bereitgestellt werden können. Zur Unterscheidung wird der
 Begriff Overlay-Netzwerk oder Gast-Netzwerk für das bereitgestellte
-Netzwerk das der Benutzer am Rand des Netzwerk zu sehen bekommt
-verwendet. Der Begriff Underlay-Netzwerk beziehungsweise
-Transport-Netzwerk wird für das zugrundeliegende Netzwerk für die
+Netzwerk verwendet. Der Begriff Underlay-Netzwerk, beziehungsweise
+Transport-Netzwerk, wird für das zugrundeliegende Netzwerk für die
 eigentliche Datenübertragung verwendet.
 
+### Layer-1 Service (Pseudowire)
+
 ![Netzwerkvirtualisierung: Layer-1
-Service](media/layer-1-nvo.png){width="100%"}
+Service](media/layer-1-nvo.png){width="80%"}
 
 Auch als Pseudowire bekannt ist die Bereitstellung eines Layer-1
 Services. Einfacher ausgedrückt wird hier ein Kabel durch eine
-Netzwerk-Infrastruktur simuliert. Die beiden Switche auf dehnen das
-virtuelle Kabel terminiert verhalten sich für den außenstehenden
+Netzwerk-Infrastruktur simuliert. Die beiden Switche, auf denen das
+virtuelle Kabel terminiert, verhalten sich für den außenstehenden
 Betrachter wie rudimentäres Patchpanel. Dies wird in der Regel nur für
 sehr spezielle Anwendungsfälle wie Testaufbauten an Hochschulen
-verwendet, oder wenn der Betreiber des Netzwerkes für Kunden wirklich
-als reiner Dienstleister auftritt.
+verwendet, oder wenn der Betreiber des Netzwerkes für Kunden als reiner
+Dienstleister auftritt.
+
+### Layer-2 Service (Switching-Fabric)
 
 ![Netzwerkvirtualisierung: Layer-2
-Service](media/layer-2-nvo.png){width="100%"}
+Service](media/layer-2-nvo.png){width="80%"}
 
 Als Layer-2 Service bezeichnet man die Bereitstellung von
 Ethernet-Netzwerken an verschiedenen Endpunkten des Netzwerkes. Die
 konfigurierten Schnittstellen des Netzwerkes verhalten sich hierbei für
-den Außenstehenden Betrachter wie ein großer Switch. Typischerweise
-werden in vielen Unternehmen Policys an VLANs aufgehängt was zu dem
-Wunsch führt VLANs an jedem Punkt des Unternehmens dynamisch verfügbar
-zu haben. Oftmals wird eine Portauthentifizierung eingesetzt, die dafür
-sorgt das dem Mitarbeiter unabhängig seines Standortes sein VLAN mit den
-damit verknüpften Berechtigungen zugewiesen wird. Ebenfalls werden
-Layer-2 Services auch für Anwendungen benötigt die eine direkte Layer-2
+den außenstehenden Betrachter wie ein großer Switch. Typischerweise
+werden in vielen Unternehmen Policys an VLANs aufgehängt, was zu dem
+Wunsch führt VLANs an jedem Punkt des Unternehmens verfügbar zu haben.
+Oftmals wird eine Portauthentifizierung eingesetzt, die dafür sorgt das
+dem Mitarbeiter unabhängig seines Standortes sein VLAN mit den damit
+verknüpften Berechtigungen zugewiesen wird. Ebenfalls werden Layer-2
+Services auch für Anwendungen benötigt die eine direkte Layer-2
 Verbindung voraussetzen, weil sie zum Beispiel Broadcasts zur
 Kommunikation einsetzen. Dazu gehören oft Komponenten wie vernetzte
-Türschlösser, Stechterminals oder alte Industrie-Steuerungen die diese
-Anforderung mit sich bringen.
+Türschlösser, Stechterminals oder alte Industrie-Steuerungen, die diese
+Anforderung mit sich bringen. Ein weiterer beliebt Anwendungsfall sind
+hochverfügbare Anwendungen, welche mitsamt ihrer IP-Adresse in ein
+anderen Rechenzentrum Failovern können möchten. Dafür ist Voraussetzung,
+das eben dieses VLAN an beiden Standorten verfügbar ist.
+
+### Layer-3 Service (Routing-Fabric)
 
 ![Netzwerkvirtualisierung: Layer-3
-Service](media/layer-3-nvo.png){width="100%"}
+Service](media/layer-3-nvo.png){width="80%"}
 
 Zuletzt lassen sich auch Layer-3 Services bereitstellen. Dies bedeutet
 die Bereitstellung eines virtuellen gerouteten Netzwerkes auf Basis des
 Underlay-Netzwerkes. Die Bereitstellung kann mittels Switched-Ports auf
 denen ein geroutetes VLAN liegt oder über Routed-Ports erfolgen.
 Technisch wird dies durch VRFs- Virtual Routing and Forwarding -
-Instanzen gelöst. Der Hauptsächliche Vorteil der Nutzung von VRFs
-gegenüber der direkten Nutzung des gerouteten Netzwerkes ist die
-vollständige Separierung zwischen diesen Netzwerken. Dies kann zum einen
-verwendet werden um Schutzzonen voneinander zu trennen oder aber um die
+Instanzen gelöst. Der zentrale Vorteil der Nutzung von VRFs gegenüber
+der direkten Nutzung des gerouteten Netzwerkes ist die vollständige
+Separierung zwischen diesen Netzwerken. Dies kann zum einen verwendet
+werden, um Schutzzonen voneinander zu trennen oder aber um die
 Netzwerkinfrastrukturen verschiedener Kunden auf ein und derselben
 Hardware-Infrastrukturen abzubilden.
 
@@ -781,24 +855,25 @@ Traffic-Engineering beschreibt die aktive Gestaltung und Optimierung von
 Datenflüssen in Netzwerken. Dies kann eingesetzt werden um vorhandene
 Infrastrukturen optimal auszunutzen. Zum Beispiel können bei einer
 Lastsituation ein indirekter Pfad mit einer schlechteren Metrik genutzt
-werden um den direkten Pfad vor einer Überlast zu schützen. Für ein
+werden, um den direkten Pfad vor einer Überlast zu schützen. Für ein
 wirksames Traffic-Engineering ist zum einen die Erhebung von Messdaten
 der einzelnen Strecken, eine Instanz welche den Zustand des Netzwerkes
-kennt und Pfadentscheidungen trifft, sowie eine Netzwerkarchitektur
-welche die dynamische Lenkung von Datenverkehr ermöglicht notwendig.
+kennt und Pfadentscheidungen trifft, sowie eine Netzwerkarchitektur,
+welche die dynamische Lenkung von Datenverkehr ermöglicht, notwendig.
 
-Routing-Protokolle berechnen ihre Pfade Aufgrund von notwendigen Hops,
-wobei diese über die Konfiguration von Gewichten beeinflussbar sind. Der
-Pfad der hierbei gewinnt wird im Anschluss verwendet, unabhängig von der
-Lastsituation. Damit dieser Pfad nicht verwendet wird könnte das Gewicht
-einzelner Strecken erhöht werden, was allerdings sämtlichen Datenverkehr
-betreffen würde und eine generelle hohe Komplexität hat. Es ist keine
-granulare Steuerung von Datenverkehr möglich. In Layer-2 Netzwerken
-folgen Pfade immer den Weg des Broadcasts innerhalb einer logischen
-sternförmigen Topologie. Erste Implementierungen die ein exaktes und
-granulares Traffic-Engineering ermöglicht haben waren Flow-basierte
-Konzepte auf Basis von OpenFlow. Mit MPLS Segment Routing existiert eine
-weitere Technologie die eben dies erlaubt.
+Routing-Protokolle berechnen ihre Pfade auf Basis rechnerischer
+Distanzen, wobei diese über die Konfiguration von Gewichten einzelner
+Strecken beeinflussbar sind. Der Pfad der hierbei gewinnt wird im
+Anschluss verwendet, unabhängig von der Lastsituation. Damit dieser Pfad
+nicht verwendet wird, könnte das Gewicht einzelner Strecken erhöht
+werden, was allerdings sämtlichen Datenverkehr betreffen würde und eine
+generelle hohe Komplexität vorweist. Es ist keine granulare Steuerung
+von Datenverkehr möglich. In Layer-2 Netzwerken folgen Pfade immer dem
+Weg des Broadcasts innerhalb einer logischen sternförmigen Topologie.
+Erste Implementierungen, die ein exaktes und granulares
+Traffic-Engineering ermöglicht haben, waren Flow-basierte Konzepte auf
+Basis von OpenFlow. Mit MPLS Segment-Routing existiert eine weitere
+Technologie die eben dies erlaubt.
 
 Programmierbare Netzwerke
 -------------------------
@@ -813,55 +888,93 @@ ebenfalls bedingt als Programmierschnittstelle verwenden. Die
 Programmierbarkeit eines Netzwerkes wird hierbei weiterhin durch die
 genutzte Netzwerkarchitektur gestützt. Muss zur Provisionierung eines
 neuen VLANs dieses auf jedem Switch im Netzwerk angelegt werden und die
-Topologie beachtet werden um keine Schleifen zu erzeugen ist die
-Komplexität meist zu hoch um diese effizient durch eine Software
-durchzuführen. Die Nutzung von Netzwerkvirtualisierung kann zum Beispiel
-diese Problematik abfangen.
+Topologie beachtet werden um keine Schleifen zu erzeugen, ist die
+Komplexität meist zu hoch, um diese effizient durch eine Software
+durchzuführen. Die Nutzung von Netzwerkvirtualisierung kann diese
+Komplexität reduzieren.
 
-Zum anderen kann damit die vollständige Programmierbarkeit der
-Netzwerkhardware selbst gemeint sein. Das Verhalten eines gängigen
-Enterprise-Switches wie einem Cisco Catalyst lässt sich in der Regel
-nicht programmieren sondern nur konfigurieren. Die Möglichkeiten sind
-eng gesteckt durch die Implementationen der Hersteller. Zum Beispiel
-FPGA-basierte Switche lassen sich hingegen in ihrer Funktion frei
-programmieren. Die Nutzung einer Netzwerk spezifischen
-Beschreibungssprache mitsamt der hierfür gegeben Schnittstelle P4Runtime
-ermöglicht eine vollständige Programmierung des Netzwerkes.
-Anwendungsfälle sind hier selten Enterprise-Netzwerke, da hier die
-Komplexität zu hoch ist und die Vorteile zu gering sind. Geeignete
-Anwendungsfälle ist der Einsatz eines Switches für dedizierte Funktionen
-wie zum Beispiel ein Load-Balancing vor einem Anwendungscluster.
-Programmierbare Hardware kann ebenfalls eingesetzt werden um dynamisch
-durch den Hersteller Funktionen nachreichen zu können.
+Zum anderen kann damit die Programmierbarkeit der Netzwerkhardware
+selbst gemeint sein. Das Verhalten eines gängigen Enterprise-Switches
+wie einem Cisco Catalyst lässt sich in der Regel nicht programmieren,
+sondern nur konfigurieren. Die Möglichkeiten sind eng gesteckt durch die
+Implementationen der Hersteller. FPGA-basierte Switche lassen sich
+hingegen in ihrer Funktion frei programmieren. Die Nutzung einer
+Netzwerk-spezifischen Beschreibungssprache, wie zum Beispiel P4 mitsamt
+der hierfür gegeben Schnittstelle P4Runtime, vereinfacht eine
+Programmierung von Netzwerkkomponenten. Anwendungsfälle sind hier selten
+Enterprise-Netzwerke, da die Komplexität zu hoch ist und die Vorteile zu
+gering sind. Ein geeigneter Anwendungsfall ist der Einsatz eines
+Switches für dedizierte Funktionen, wie zum Beispiel Load-Balancing vor
+einem Anwendungscluster. Programmierbare Hardware kann ebenfalls
+eingesetzt werden, um im Feld durch den Hersteller Funktionen
+nachreichen zu können.
+
+Weitere Begriffsdefinitionen
+----------------------------
+
+**Netzwerkvirtualisierung**\
+Der Begriff wird gerne für zwei unterschiedliche Konzepte verwendet. Zum
+einen beschreibt er die Abbildung eines virtuellen Netzwerkes auf einer
+physikalischen Netzwerk-Infrastruktur. Dieses virtuelle Netzwerk kann
+dabei größtenteils unabhängig der zugrunde liegenden Infrastruktur
+provisioniert werden. Diese Netzwerkvirtualisierung wird auch im
+weiteren als Underlay/Overlay-Konzept bezeichnet. Underlay-Netzwerke
+werden auch oft als Transportnetze und Overlay-Netzwerke als
+Nutzernetzwerke bezeichnet. Zum anderen wird der Begriff für
+virtualisierte Netzwerkkomponenten eingesetzt. Dazu gehören virtuelle
+Switche, Firewalls und Router, welche primär in
+Virtualisierungsumgebungen zum Einsatz kommen.
+
+**Fabrics**\
+Der Begriff Fabric wird üblicherweise für Konzepte genutzt, bei denen
+Switche in einer vermaschten Topologie angeordnet werden können. Die
+Einschränkungen herkömmlicher Strukturen, in denen ein Netzwerk
+sternförmig aufgebaut werden muss, sollen hier nicht gelten. Weiterhin
+impliziert eine Fabric eine vereinfachte Konfiguration von Services,
+siehe zum Thema Services Abschnitt
+[2.5](#sec:services){reference-type="ref" reference="sec:services"}, im
+optimalen Fall an einer zentralen Stelle oder zumindest nur am Rand des
+Netzwerkes.
+
+**Smartswitches**\
+Den Begriff SmartSwitches nutzt AMD für Netzwerkkomponenten, die auf
+programmierbaren DPUs basieren. Der Begriff ist das Gegenstück zu einem
+SmartNIC, welcher einen programmierbaren Netzwerkadapter bezeichnet.
+SmartSwitches sollen in Netzwerken weitere Services übernehmen können
+wie Firewalling und Load-Balancing. Zusätzlich sollen durch die
+Möglichkeiten offener und frei definierbarer Schnittstellen
+Controller-Lösungen möglich sein, die weniger Komplexität als bestehende
+Lösungen auf Basis von BGP und EVPN haben.
+
+> *SDN enables virtualized networks with a less complex overlay not
+> based on running control protocols like BGP, but programmed through an
+> SDN controller*[@pensando].
 
 Marktanalyse {#sec:market}
 ============
 
 Die Marktanalyse dient zur Findung aktueller im Enterprise-Umfeld
 eingesetzter Technologien. Zusätzlich können auf Basis der Marktanalyse
-vorgestellte Technologien auf Relevanz bewertet werden. Eine
-Netzwerkarchitektur die auf Basis von Protokollen arbeitet die in
-praktisch keinem Enterprise-Netzwerkequipment integriert ist hat hierbei
-geringere Relevanz. Aus diesem Grund werden die verschiedenen
-Netzwerk-Plattformen der Hersteller betrachtet. Die meisten Hersteller
-bieten ein ganzheitliches Netzwerkkonzept rund um ein einfaches
-Webgui-basiertes Managementtool an, welche ebenfalls aus technologischer
-Sicht betrachtet werden.
+vorgestellte Technologien auf Relevanz bewertet werden. Aus diesem Grund
+werden die verschiedenen Netzwerk-Plattformen der Hersteller untersucht.
+Die meisten Hersteller bieten ein ganzheitliches Netzwerkkonzept rund um
+ein einfaches WebGUI-basiertes Managementtool an, welche ebenfalls aus
+technologischer Sicht betrachtet werden.
 
 Zur Identifikation relevanter Hersteller wird der Gartner Bericht für
 LAN und WLAN Lösungen für Unternehmen genutzt, in dem die Vision und die
-entsprechende Fähigkeit die Vision zum Implementieren bewertet wird.
+entsprechende Fähigkeit diese Vision umzusetzen bewertet wird.
 
-![Gartner - Magic Quadrant for Enterprise Wired and Wireless LAN
+![Quelle: Gartner - Magic Quadrant for Enterprise Wired and Wireless LAN
 Infrastructure](media/gartner1.png){#fig:gartner1 width="100%"}
 
-Betrachtet werden die Lösungen der Hersteller die in der Abbildung
+Betrachtet werden die Lösungen der Hersteller, die in der Abbildung
 [3.1](#fig:gartner1){reference-type="ref" reference="fig:gartner1"} im
-Quadranten Leadergeführt werden. Gartner definiert ihre
+Quadranten Leader geführt werden. Gartner definiert ihre
 Bewertungskriterien nur in einem kompletten Bericht, welcher
 kostenpflichtig erworben werden muss. Die Grafik wird nicht zur
-Bewertung der Hersteller untereinander sondern lediglich als
-Anhaltspunkt für eine Auswahl von Herstellen genutzt. Daher wird auf
+Bewertung der Hersteller untereinander, sondern lediglich als
+Anhaltspunkt für eine Selektion von Herstellen genutzt. Daher wird auf
 eine exakte Quellenanalyse verzichtet.
 
 Cisco {#sec:cisco}
@@ -871,16 +984,16 @@ Cisco bietet drei verschiedene Switching-Plattformen an. Die Nexus-Serie
 sind Komponenten für das Rechenzentrum, die Catalyst-Serie sind Access-
 und Distributionskomponenten für den Campus. Zuletzt hat Cisco mit
 Meraki einen Netzwerkausrüster gekauft und dessen Portfolio als dritte
-Option in ihr Angebot übernommen. Die Fokus der Meraki-Switche liegt auf
+Option in ihr Angebot übernommen. Der Fokus der Meraki-Switche liegt auf
 einem vereinfachtem Management aus der Cloud.
 
 Die Netzwerkkomponenten der verschiedenen Serien arbeiten jeweils mit
-ihrem eigenen Cisco-Proprietären Betriebssystemen. Es ist, bis aus
-wenige Ausnahmen, nicht möglich Betriebssysteme von Drittanbietern zu
-installieren. Die wenigen Ausnahmen bieten eine Unterstützung für SONiC.
-Das aktuell auf der Catalyst-Plattform eingesetzte IOS-XE unterstützt
-auf einigen Plattformen OpenFlow sowie gängige Konfigurations- und
-Virtualisierungsprotokolle.
+ihrem eigenen proprietären Betriebssystemen. Es ist, bis aus wenige
+Ausnahmen, nicht möglich Betriebssysteme von Drittanbietern zu
+installieren. Die wenigen Ausnahmen bieten eine Unterstützung für SONiC
+[@ciscosonic]. Das aktuell auf der Catalyst-Plattform eingesetzte IOS-XE
+unterstützt auf einigen Plattformen OpenFlow sowie gängige
+Konfigurations- und Virtualisierungsprotokolle.
 
 Mit dem Cisco Silicon One hat Cisco eine P4 basierte programmierbare NPU
 im Portfolio. Der Chip wird unter anderem bei der im Jahr 2023
@@ -890,7 +1003,7 @@ Namen UADP - Unified Access Data Plane verbaut. Die NPU wird nur in
 eigenen Hardwareserien verbaut. Die Fähigkeit den Chip zu programmieren
 wird nicht an den Endanwender weitergegeben. Der Silicon One G200 ist
 zum Beispiel im Cisco Catalyst 9500X eingebaut, und kann in der größten
-Ausbaustufe 8 x 400 Gbit/s und insgesamt 12,1 Tb/s verarbeiten. [@sone]
+Ausbaustufe 8 x 400 Gbit/s und insgesamt 12,1 Tb/s verarbeiten [@sone].
 
 Cisco bietet für die gängigen Plattformen wie auch die aktuellste Cisco
 Catalyst 9000 Plattform virtuelle Varianten an, welche für Trainings-
@@ -904,11 +1017,12 @@ Der Cisco Extensible Network Controller, kurz XNC ist ein klassischer
 SDN Controller auf Basis des OpenDaylight Controllers. Neben dem
 standardisiertem OpenFlow Protokoll nutzt der Controller proprietäre
 Cisco Protokolle aus dem Cisco Open Network Environment Plattform Kit,
-kurz onePK. [@xnc]
+kurz onePK [@xnc].
 
 ![CISCO XNC - Bildquelle: [@xnc]](media/xnc.png){width="100%"}
 
-Das Produkt wurde 2022 abgekündigt.
+Das Produkt wurde 2022 abgekündigt und wird in der Marktanalyse nur zur
+Einordnung der OpenFlow-Technologie vorgestellt.
 
 ### Cisco ACI
 
@@ -921,10 +1035,10 @@ zwischen Controllern und Hardware wird Opflex eingesetzt [@opf]. Mit dem
 Cisco eigenem Protokoll lassen sich auch Geräte und Software von
 Drittherstellern in die Fabric einbinden. Zudem gibt es auf der
 Applikationsseite Schnittstellen zu Red Hats Ansible, Terraform und
-weiteren [iac]{acronym-label="iac" acronym-form="singular+short"}
-Lösungen. Zusätzlich gibt es Schnittstellen zu Applikationsplattformen
-wie Kubernetes und OpenShift, um auch sich auch hier in die
-Infrastruktur zu integrieren.[@aci] [@aci2]
+weiteren IaC (Infrastructure-as-Code) Lösungen. Zusätzlich gibt es
+Schnittstellen zu Applikationsplattformen wie Kubernetes und OpenShift,
+um auch sich auch hier in die Infrastruktur zu integrieren [@aci]
+[@aci2].
 
 ![CISCO ACI Initialisierung - Bildquelle:
 https://www.wwt.com/article/6-steps-to-cisco-aci](media/apic-bootstrap.png){width="100%"}
@@ -937,22 +1051,21 @@ Vorgang erstreckt sich schrittweise über die gesamte Infrastruktur.
 ![CISCO ACI Architektur - Bildquelle:
 https://www.wwt.com/article/6-steps-to-cisco-aci](media/apic-underlay.png){width="100%"}
 
-Die Lösung basiert auf einem [uo]{acronym-label="uo"
-acronym-form="singular+short"} Ansatz. Im Gastnetzwerk wird VXLAN und
-MP-BGP eingesetzt, im Transportnetz kommt das Routing-Protokoll ISIS zum
-Einsatz. [@aci3] Die Lösung wird bis heute, Stand 2023, aktiv von Cisco
-vertrieben.
+Die Lösung basiert auf einem Underlay/Overlay Ansatz. Im Gastnetzwerk
+wird VXLAN und MP-BGP eingesetzt, im Transportnetz kommt das
+Routing-Protokoll ISIS zum Einsatz [@aci3].
+
+Die Lösung wird bis heute, Stand 2024, aktiv von Cisco vertrieben.
 
 ### Cisco SD-Access
 
 Cisco SD-Access ist die aktuelle Campus Lösung von Cisco. Mit diesem
-Produkt will Cisco moderne Konzepte wie [ztna]{acronym-label="ztna"
-acronym-form="singular+short"} oder Mikrosegmentation in skalierbaren
-Netzwerken umsetzen. Die Lösung basiert auf einem
-[uo]{acronym-label="uo" acronym-form="singular+short"} Ansatz und einem
-dedizierten Managementcontroller Cisco Catalyst Center. Der Controller
-kann lokal und in der Cloud betrieben werden. Als Kapsellungsprotokoll
-auf der Dataplane wird auch hier [vx]{acronym-label="vx"
+Produkt will Cisco moderne Konzepte wie ZTNA (Zero-Trust-Network-Access)
+oder Mikrosegmentation in skalierbaren Netzwerken umsetzen. Die Lösung
+basiert auf einem Underlay/Overlay Ansatz und einem dedizierten
+Managementcontroller Cisco Catalyst Center. Der Controller kann lokal
+und in der Cloud betrieben werden. Als Kapsellungsprotokoll auf der
+Dataplane wird auch hier [vx]{acronym-label="vx"
 acronym-form="singular+short"} eingesetzt. Cisco setzt für die
 Controlplane LISP ein. Der Grund dafür wird diskutiert [@sdlisp].
 
@@ -963,19 +1076,17 @@ Juniper
 -------
 
 Juniper bietet Netzwerkausrüstung für Service Provider, Rechenzentren
-sowie für [can]{acronym-label="can" acronym-form="singular+short"} an.
-Die Switche für [can]{acronym-label="can" acronym-form="singular+short"}
-werden unter dem Namen EX geführt. Juniper entwickelt für diese
-Netzwerkkomponenten eigene ASICs[@junasi]. Bei den
-[dcn]{acronym-label="dcn" acronym-form="singular+short"} bietet Juniper
-auch einige Modelle auf Basis von Broadcom Chips an, die teilweise auch
-offiziell SONiC unterstützen.
+sowie für Campus-Netzwerke an. Die Switche für Campus-Netzwerke werden
+unter dem Namen EX geführt. Juniper entwickelt für diese
+Netzwerkkomponenten eigene ASICs [@junasi]. Bei den Datacenter-Switchen
+bietet Juniper einige Modelle auf Basis von Broadcom Chips an, die
+teilweise offiziell SONiC unterstützen.
 
-Das Juniper eigene Betriebssystem heißt Junos-OS und unterstützt unter
+Das Juniper eigene Betriebssystem heißt JUNOS-OS und unterstützt unter
 anderem BGP-EVPN. Eine automatisierte und WebGUI basierte Konfiguration
-und Administration eines solchen [uo]{acronym-label="uo"
-acronym-form="singular+short"}-Konzeptes ermöglicht Juniper mit der
-Cloudlösung Juniper Mist und der On-Premise Lösung Apstra.
+und Administration eines solchen Underlay/Overlay-Konzeptes ermöglicht
+Juniper mit der Cloudlösung Juniper Mist und der On-Premise Lösung
+Apstra.
 
 ### Juniper Apstra
 
@@ -985,11 +1096,11 @@ von verschiedenen Netzwerkdesigns, wobei der Fokus auf EVPN mit VXLAN
 liegt. Apstra ist ein zugekauftes Produkt und unterstützt daher auch
 andere Plattformen wie Cisco Nexus, Arista EOS und SONiC. Dafür werden
 auf den Switchen jeweilige Agents installiert, welche dem Apstra-Server
-eine entsprechende REST-API anbieten. [@junapstra]
+eine entsprechende REST-API anbieten [@junapstra].
 
 ### Juniper Mist
 
-![Auszug aus Juniper-EVPN-VXLAN CAMPUS
+![Quelle: Juniper Whitepaper - EVPN-VXLAN CAMPUS
 FABRICS](media/juniper-mist.png){#fig:mist width="80%"}
 
 Juniper Mist ist eine Cloud-Anwendung zu Konfiguration, Administration
@@ -997,7 +1108,7 @@ und Überwachung von Juniper Netzwerkgeräten verschiedene Architekturen
 auf Basis von BGP-EVPN und VXLAN unterstützt. Diese werden in Abbildung
 [3.2](#fig:mist){reference-type="ref" reference="fig:mist"} gezeigt.
 Juniper wirbt mit einer KI-Integration, welche bei der Fehlerfindung und
-Behebung unterstützt. [@junevpn] [@junmist].
+Behebung unterstützt [@junevpn] [@junmist].
 
 ### Juniper Northstar
 
@@ -1006,14 +1117,15 @@ und IP-Netzwerke auf Basis von Segment Routing. Der Controller arbeitet
 Pfad-basiert und programmiert durch Auswertung von Netzwerkauslastung
 und darauffolgender Pfadberechnung einen geschlossenen Regelkreislauf.
 
-![Juniper Northstar](media/northstar.png){#fig:evpncli width="100%"}
+![Juniper Northstar Quelle: Juniper](media/northstar.png){#fig:evpncli
+width="100%"}
 
 Arista {#sec:arista}
 ------
 
 Arista bietet ein breites Portfolio an Netzwerkkomponenten für
-Datacenter- Campusnetzwerken. Die Datacenterswitche sind zu erkennen an
-Modellnummern mit 4 Ziffern wie zum Beispiel 7060CX2-32S. Die
+Datacenter- und Campusnetzwerke. Die Datacenterswitche sind zu erkennen
+an Modellnummern mit 4 Ziffern wie zum Beispiel 7060CX2-32S. Die
 Campusswitche sind zu erkennen an Modellnummern mit 3 Ziffern wie zum
 Beispiel 720XP-48Y6. Die Switche basieren überwiegend auf Broadcom Chips
 [@aristams]. Arista hat ein eigenes [sos]{acronym-label="sos"
@@ -1022,11 +1134,11 @@ Variante, vEOS, und einer containerisierte Variante, cEOS. Beide sind
 für den produktiven Betrieb gedacht.
 
 Aristas Linux-basiertes Switch-Betriebssystem EOS wirbt mit einer großen
-Bandbreite von Schnittstellen über alle Ebenen um diese in
+Bandbreite von Schnittstellen über alle Ebenen, um diese in
 [sdn]{acronym-label="sdn" acronym-form="singular+short"} Konzepte zu
 integrieren. EOS steht für Extensible Operating System. Arista wirbt mit
 der Möglichkeit dieses Betriebssystemen mit RPM-Paketen einfach
-erweitern zu können um beispielsweise neue Funktionen implementieren zu
+erweitern zu können, um beispielsweise neue Funktionen implementieren zu
 können. Neben OpenFlow hat Arista ein funktional erweitertes Protokoll
 mit dem Namen DirectFlow entwickelt, um Flow-Regeln in den Switch zu
 programmieren. Dies nutzte eine Firewall Lösung von Palo Alto, um
@@ -1063,24 +1175,23 @@ acronym-form="singular+short"} gezeigt. So erlaubt Arista den Einsatz
 andere Software auf Ihren Switchen und stellt einen containerisierte
 Variante ihres [sos]{acronym-label="sos" acronym-form="singular+short"}
 bereit, um dieses auf Fremdhardware einzusetzen. Als Hardwareabstraktion
-wird [sai]{acronym-label="sai" acronym-form="singular+short"} genutzt.
-Es wird zum Beispiel der Facebook Switch Wedge 100 von Arista
-unterstützt [@aristaoh].
+wird SAI genutzt. Es wird zum Beispiel der Facebook Switch Wedge 100 von
+Arista unterstützt [@aristaoh].
 
 Arista hatte schon früh eine OpenFlow-Implementierung, welche allerdings
 wieder entfernt wurde. Arista setzt anstelle von ONIE ihre eigene Lösung
-Abootein, die es ermöglicht andere [sos]{acronym-label="sos"
+Aboot ein, die es ermöglicht andere [sos]{acronym-label="sos"
 acronym-form="singular+short"} zu installieren. Aristas EOS unterstützt
 die gängigen offenen und standardisierten Konfigurationsprotokolle.
 
 Weiterer nennenswerter Bestandteil des Portfolios ist die 7170 Serie.
-Dieser Switch basiert auf dem P4 programmierbaren Intel Tofino. Dies
+Dieser Switch basiert auf dem P4 programmierbaren Intel Tofino. Diesen
 nutzt Arista dafür, um den Switch mit verschiedenen Anwendungsprofilen
 anzubieten und Features dyamisch implementieren zu können. Dazu gehören
 die Profile Network Service Offload, Stateless Cloud Load Balancing,
 Broadcast Media Tools und einige mehr. Der Switch wird mit Aristas EOS
-betrieben, welches auf dieser Plattform P4Runtime unterstützt.
-[@aristap4]
+betrieben, welches auf dieser Plattform P4Runtime unterstützt
+[@aristap4].
 
 ### CloudVision
 
@@ -1090,9 +1201,9 @@ gRPC Netzwerkhardware mit dem hauseigenen Betriebssystem EOS verwaltet.
 Arista unterstützt dabei mehrere Netzwerkkonzepte, welche sich jeweils
 als Configlets in dem Git Account des Herstellers finden lassen. Die
 hier präferierten Netzwerkarchitekturen basieren auf einer
-Netzwerkvirtualisierung mit EVPN und VXLAN[@aristaevpn]. Weiterhin
-bietet Arista mit NetDB und sFlow Möglichkeiten reichhaltige
-Telemetriedaten von den Geräten zu sammeln. [@cve]
+Netzwerkvirtualisierung mit EVPN und VXLAN [@aristaevpn]. Weiterhin
+bietet Arista mit NetDB und sFlow Möglichkeitenn reichhaltige
+Telemetriedaten von den Geräten zu sammeln [@cve].
 
 ![Arista Open Networking - Bildquelle:
 [@aristacvds]](media/arista-cloudvision-api.png){#fig:aristaapi
@@ -1100,15 +1211,15 @@ width="100%"}
 
 Die Abbildung [3.5](#fig:aristaapi){reference-type="ref"
 reference="fig:aristaapi"} zeigt den Einsatz von gRPC als Interface zu
-den eigenen Switchen hin. Der Controller bietet eine Integration zu
-VMwares SDN-Lösung NSX.
+der eigenen Plattform. Der Controller bietet eine Integration zu VMwares
+SDN-Lösung NSX.
 
 HPE Aruba
 ---------
 
-HPE hat lange Zeit Netzwerkkomponenten unter dem Namen ProCurveangeboten
-die mit dem Betriebssystem ProVision betrieben wurden. Nach der
-Akquisition von Aruba, einem Hersteller von hauptsächlich
+HPE hat lange Zeit Netzwerkkomponenten unter dem Namen ProCurve
+angeboten, die mit dem Betriebssystem ProVision betrieben wurden. Nach
+der Akquisition von Aruba, einem Hersteller von hauptsächlich
 Wireless-Komponenten, wurden die Switche unter Aruba vermarktet und das
 Betriebssystem in ArubaOS-Switch umbenannt. Mittlerweile vertreibt HPE
 unter dem Markennamen Aruba sowohl Campus- als auch Datacenterswitche
@@ -1118,19 +1229,24 @@ Betriebssystem Comware unter eigenem Namen.
 
 Das Betriebssystem ArubaOS-CX ist konfigurierbar über eine klassische
 CLI sowie eine Rest-API, welche laut Hersteller alle Funktionen der CLI
-abdeckt.
+abdeckt [@arubacx].
 
 Während die ProCurve Geräte von HPE mit ProVision noch OpenFlow
 unterstützt haben, haben die aktuell vertriebenen Comware- und Aruba
-gebrandeten Netzwerkkomponenten keine Unterstützung von OpenFlow.
+gebrandeten Netzwerkkomponenten keine Unterstützung für OpenFlow.
+
+Mit dem CX 10000 hat Aruba einen Switch auf Basis der AMD Pensando DPU
+im Programm, welcher sich mit P4 programmieren lässt. Der Hersteller
+bezeichnet diesen Switch als SmartSwitch.
 
 ### HPE VAN SDN Controller
 
 ![HPE VAN SDN Controller 2.0 WebGui](media/hpe-van.jpg){width="100%"}
 
 Der Controller, der später umbenannt wurde zu Aruba VAN SDN Controller,
-ist ein Controller auf Basis von OpenFlow. Das Produkt ist abgekündigt.
-[@hpevan]
+ist ein Controller auf Basis von OpenFlow. Das Produkt ist abgekündigt,
+und wird nur zur Einordnung der OpenFlow-Technologie vorgestellt
+[@hpevan].
 
 ### Aruba Central
 
@@ -1138,13 +1254,11 @@ Aruba Central ist ein Controller zur Konfiguration und Administration
 von Aruba Komponenten. Der Controller kann On-Premise und in der Cloud
 betrieben werden. Der Controller spricht per HTTP mit den angebundenen
 Aruba-CX Geräten. Aruba Central NetConductor unterstützt bei der
-Implementierung von [uo]{acronym-label="uo"
-acronym-form="singular+short"}-Netzwerkarchitekturen mittels einem
+Implementierung von Underlay/Overlay-Netzwerkarchitekturen mittels einem
 Fabric Wizard, bietet eine Telemetrie mit Network Insights und Dienste
-wie [nac]{acronym-label="nac" acronym-form="singular+short"}. Als
-mögliche Architekturen werden Konzepte auf Basis von
-[vx]{acronym-label="vx" acronym-form="singular+short"} und BGP-EVPN
-unterstützt [@arubac].
+wie NAC (Network-Admission-Control). Als mögliche Architekturen werden
+Konzepte auf Basis von [vx]{acronym-label="vx"
+acronym-form="singular+short"} und BGP-EVPN unterstützt [@arubac].
 
 DELL
 ----
@@ -1166,15 +1280,14 @@ Ableger DNOS10.
     übernommen und weiterentwickelt.
 
 -   **DNOS10** - Dell eigenentwickeltes und Linuxbasiertes Smart
-    Fabric[nos]{acronym-label="nos" acronym-form="singular+short"}.
+    FabricBetriebssystem.
 
 Ein Großteil des Netzwerk Portfolios von DELL basiert auf Broadcom
-Hardware. Dell hat einige [on]{acronym-label="on"
-acronym-form="singular+short"}-Switche mit [onie]{acronym-label="onie"
-acronym-form="singular+short"} im Portfolio die teilweise offiziell für
-Cumulus Linux sowie für SONiC unterstützt werden. DELL bewirbt aktiv den
-Einsatz von SONiC auf den eigenen Switchen. Cumulus wird bei neuen
-Geräten nicht mehr unterstützt.
+Hardware [@dellto]. Dell hat einige ON-Switche (Open-Networking) mit
+ONIE im Portfolio die teilweise offiziell für Cumulus Linux sowie für
+SONiC unterstützt werden. DELL bewirbt aktiv den Einsatz von SONiC auf
+den eigenen Switchen. Cumulus wird bei neuen Geräten nicht mehr
+unterstützt.
 
 Das aktuellste DELL OS10 unterstützt OpenFlow, allerdings nicht auf
 allen Hardwareplattformen. Dell hat keinen eigenen OpenFlow-Controller
@@ -1188,14 +1301,14 @@ Dell bietet mit SmartFabric ebenfalls eine eigene Fabric Lösung an.
 Dieser läuft nicht als dedizierter Controller, sondern ist las
 verteiltes System auf mehreren DELL OS10 Instanzen implementiert. Die
 einzelnen Switche bilden einen Cluster und wählen einen Master. Die
-Switche müssen dafür in einen speziellen L3FABRICBetriebsmodus
+Switche müssen dafür in einen speziellen L3FABRIC Betriebsmodus
 geschaltet werden. Auf Basis dessen kann eine Fabric mit einem Layer-3
 BGP Transportnetzwerk und einem VXLAN Overlays provisioniert werden. Die
 Rollen Leaf und Spine werden statisch zugewiesen. Die Leaf Pärchen
 werden per VLT in einem [mlag]{acronym-label="mlag"
 acronym-form="singular+short"}-Cluster gekoppelt. Die Lösung ist eng
-integriert in Dells [hci]{acronym-label="hci"
-acronym-form="singular+short"} Plattform VXRail.
+integriert in Dells HCI (Hyper-Converged-Infrastructure) Plattform
+VXRail [@dellsf].
 
 EXTREME
 -------
@@ -1203,61 +1316,59 @@ EXTREME
 Extreme bietet über den Zukauf vieler Hersteller über die Jahre ein
 breites Portfolio von Lösungen. Aktuell vermarktet Extreme für den
 Campus Bereich hauptsächlich Universal-Switche, welche in der Lage sind
-zwei verschiedene hauseigene Betriebssysteme auszuführen. Im standard
-wird EXOSeingesetzt, ein Extreme eigenes Betriebssystem was durch die
+zwei verschiedene hauseigene Betriebssysteme auszuführen. Primär wird
+EXOS eingesetzt, ein Extreme eigenes Betriebssystem, welches durch die
 Jahre durch zugekaufte Betriebssysteme wie EOS von Enterasys profitiert
-hat. Das Betriebssystem wird mittlerweile Switching Engine genannt und
-ist auf traditionellere Netzwerke spezialisiert.
+hat. Das Betriebssystem wird mittlerweile Switch Engine genannt und ist
+auf traditionelle Netzwerk-Konzepte spezialisiert.
 
 Die Extreme Switche basieren auf Broadcom Hardware. Die aktuellen
-Universall-Switche nutzen ONIE, erlauben allerdings nicht die
-Installation von dritten [sos]{acronym-label="sos"
-acronym-form="singular+short"}
+Universal-Switche nutzen ONIE, erlauben allerdings nicht die
+Installation von dritten Betriebssystemen.
 
 Extreme hatte zeitweise eine Unterstützung für OpenFlow in EXOS, sowie
-einen eigenen Controller im Portfolio [@exofc].
+einen eigenen Controller im Portfolio [@exofc]. Extreme hat Zeitweise
+die Technologie OpenFlow mit beworben [@exof].
 
 Es findet sich im Portfolio mit dem Extreme 9920 eine Plattform auf
-Basis des Intel Tofino 2. Hierbei handelt es sich um einem modularen
-Core-Switch. Auch hier wird die Programmierbarkeit lediglich intern
-verwendet, es werden keine Schnittstellen wie die P4Runtime
-bereitgestellt. [@exp4]
+Basis des Intel Tofino 2. Dieser wird für spezielle Anwendungsfälle
+genutzt und wird von Extreme als Packet-Broker bezeichnet. Zu diesen
+Anwendungsfälle gehört die Replikation und Filterung von Datenverkehr
+für Monitoring-Anwendungen oder Load-Balancing [@exp4].
 
 ### Extreme Fabric
 
-Zusätzlich gibt es VOSS, ein von Avaya dazugekaufte Plattform welches
+Zusätzlich gibt es VOSS, eine von Avaya dazugekaufte Plattform welches
 für eine Fabric auf Basis von Shortest Path Bridging, kurz SPB,
-optimiert ist. Als Enkapsulierungprotokoll wird IEEE 802.1ah - Provider
-Backbone Bridging genutzt. Pfadberechnungen und die Verteilung von
-Erreichbarkeitsinformationen werden durch ISIS durchgeführt. Diese
-Architektur gilt als technologischer Nachfolger von Spanning-Tree, hat
-aber obwohl sie in weiten Teilen standardisiert ist nur eine geringe
-Marktdurchdringung.
+spezialisiert ist. Das Betriebssystem trägt aktuell bei Extreme die
+Bezeichnung Fabric Engine. Als Enkapsulierungs-Protokoll wird IEEE
+802.1ah - Provider Backbone Bridging genutzt. Pfadberechnungen und die
+Verteilung von Erreichbarkeitsinformationen werden mittels ISIS
+durchgeführt. Diese Architektur gilt als technologischer Nachfolger von
+Spanning-Tree, hat aber, obwohl sie in weiten Teilen standardisiert ist,
+nur eine geringe Marktdurchdringung.
 
 ### Extreme IP Fabric
 
 Mit der Extreme IP Fabric hat auch Extreme ein Lösungsansatz auf Basis
 von [vx]{acronym-label="vx" acronym-form="singular+short"} und BGP-EVPN
 im Portfolio. Die IP-Fabric wird allerdings nur auf einer speziellen
-Hardware-Serie angeboten die mit einem eigenen Betriebssystem - SLX-OS -
-laufen, welches durch die Akquisition von Brocades Datacenter-Networking
-Sparte hinzugewonnen wurde.
+Hardware-Serie angeboten, die mit einem eigenen Betriebssystem - SLX-OS
+- laufen, welches durch die Akquisition von Brocades
+Datacenter-Networking Sparte hinzugewonnen wurde [@exbro].
 
 OpenFlow Controller
 -------------------
 
-Bei der Suche nach OpenFlow-basierten Controllern fällt auf, dass
-gefundene Webseiten und Dokumentationen größtenteils veraltet sind.
-Kommerzielle Produkte bekannter Hersteller wie HPE VANoder Cisco XNC
-sind allesamt abgekündigt. Mit Lumina, einem Anbieter einer
-kommerziellen OpenDayLight Version, hat einer der letzten Anbieter im
-Jahr 2020 das Geschäft eingestellt. Lumina ging als Ausgliederung der
-[sdn]{acronym-label="sdn" acronym-form="singular+short"}-Sparte von
-Brocade hervor.[@lumina]
+Bekannte kommerzielle Produkte wie HPE VAN oder Cisco XNC sind
+abgekündigt. Mit Lumina, einem Anbieter einer kommerziellen OpenDayLight
+Version, hat einer der letzten Anbieter im Jahr 2020 das Geschäft
+eingestellt. Lumina ging als Ausgliederung der [sdn]{acronym-label="sdn"
+acronym-form="singular+short"}-Sparte von Brocade hervor [@lumina].
 
-Die derzeit populären drei offenen Projekte sind OpenDayLight, FAUCETund
-ONOS. Die Projekte haben unterschiedliche Fokussierungen in ihrer
-Anwendung. Faucet ist ein auf Basis von dem Framework RYUentwickelter
+Die derzeit populären drei offenen Projekte sind OpenDayLight, FAUCET
+und ONOS. Die Projekte haben unterschiedliche Fokussierungen in ihrer
+Anwendung. Faucet ist ein auf Basis von dem Framework RYU entwickelter
 einfach gehaltener Controller. Er stellt die grundlegend notwendigen
 Funktionen für einfache Netzwerke bereit. OpenDayLight ist ein deutlich
 größeres und modulares Projekt, welches im speziellen für eine
@@ -1289,7 +1400,7 @@ gepflegt.
 Open-Networking
 ---------------
 
-In diesem Kapitel werden in knapper Form Hardware-Plattformen
+In diesem Abschnitt werden in knapper Form Hardware-Plattformen
 vorgestellt, die den Betrieb dritter Betriebssysteme erlauben.
 
 ### Open-Networking Hardwareplattformen
@@ -1301,7 +1412,7 @@ vorgestellt, die den Betrieb dritter Betriebssysteme erlauben.
     Arista     einige DCS-7000er    Broadcom diverse       Aboot                SONiC             
     Arista         DCS-7170er         Intel Tofino         Aboot                SONiC             
    HPE Aruba           \-                  \-               \-                    \-              
-   HPE Aruba     S, Z, E Serie      Broadcom diverse.      ONIE         SONiC, Cumulus, Picos     
+     DELL        S, Z, E Serie      Broadcom diverse.      ONIE         SONiC, Cumulus, Picos     
     EXTREME            \-           Broadcom diverse.      ONIE                   \-              
     NVIDIA          SN-Serie         Nvidia Spectrum       ONIE             Cumulus, SONiC        
    EdgeCore           Alle          Broadcom diverse       ONIE       SONiC, Cumulus, Picos uvm.  
@@ -1316,25 +1427,24 @@ Tomahawks aus der QFX Serie offiziell SONiC.
 **Arista** bietet für eine große Anzahl seiner Netzwerkkomponenten eine
 entsprechende SAI Implementierung und Treiber in ihrem Github, es gibt
 aber auch fertige Images im SONiC Repository. Auf den eigenen Geräten
-setzt Arista kein ONIE sondern Aboot ein. Interessanterweise gibt es für
-Arista EOS eine Version für ONIE die ebenfalls SAI unterstützt.
-[@aristaon]
+setzt Arista kein ONIE, sondern Aboot ein. Es gibt für Arista EOS eine
+Version für ONIE, die ebenfalls SAI unterstützt [@aristaon].
 
-**HPE** verkauft viele Netzwerkkomponenten von Fremdherstellern die
+**HPE** verkauft viele Netzwerkkomponenten von Fremdherstellern, die
 verschiedene Betriebssysteme unterstützen. Die aktuellen HPE Aruba
 Komponenten unterstützen keine Installation von dritten
 Betriebssystemen. Da Aruba aktuell in vielen Geräten eigene eng
-integrierte ASICs einsetzt ist eine Unterstützung für offene
+integrierte ASICs einsetzt, ist eine Unterstützung für offene
 Betriebssysteme in näherer Zukunft auf diesen Plattformen
 unwahrscheinlich.
 
-**Dell** unterstützt in der aktuellen Serie die den Namenszusatz ON
-(Open-Networking) tragen viele Betriebssysteme. Dell setzt fast
+**Dell** unterstützt in der aktuellen Serie, die den Namenszusatz ON
+(Open-Networking) tragen, mehrere Betriebssysteme. Dell setzt fast
 ausschließlich Broadcom Chips ein, eine technischer Unterstützung durch
 viele offene Betriebssysteme ist damit gegeben.
 
 Obwohl die aktuellen **Extreme Networks** Switche auf Broadcom Chips
-basieren sowie ONIE unterstützen erlaubt Extreme keine fremden
+basieren, sowie ONIE unterstützen, erlaubt Extreme keine fremden
 Betriebssysteme auf Ihren Netzwerkkomponenten.
 
 Die ehemaligen Mellanox Netzwerkkomponenten, welche von **NVIDIA**
@@ -1343,7 +1453,7 @@ Netzwerkkomponenten unterstützen in der Regel Cumulus, SONiC und ONYX.
 ONYX ist der neue Name der ursprünglichen MLNX-OS, welches von Mellanox
 übernommen wurde.
 
-**Edgecore** gehört zu den Whitebox Herstellern die Switche auf Basis
+**Edgecore** gehört zu den Whitebox Herstellern, die Switche auf Basis
 von Broadcom Chips und ONIE ohne eigenes Betriebsystem vertreiben.
 Dadurch sind die vorallem auf die Unterstützung von offenen
 Betriebsystemen angewiesen und unterstützen alle gängigen
@@ -1356,8 +1466,10 @@ Protokollimplementationen
 -------------------------
 
 In diesem Abschnitt soll eine tabellarische Übersicht über die
-Implementation in dieser Thesis genannten Protokolle und Technologien in
-den relevanten Software-Plattformen gegeben werden.
+Implementation in dieser Thesis genannter Protokolle und Technologien in
+den relevanten Software-Plattformen gegeben werden. In den Feldern der
+Tabelle sind dabei jeweils die Software-Stände des jeweiligen
+Betriebssystems aufgeführt.
 
 ::: {#tab:dpp}
        Plattform          OpenFlow       P4Runtime   BGP-EVPN     
@@ -1366,7 +1478,7 @@ den relevanten Software-Plattformen gegeben werden.
      CISCO IOS-XR         Latest^1^      Latest^1^    Latest      
        Junos OS        14.2R-Latest^1^      \-        Latest      
       Arista EOS          4.15-4.29         \-        Latest      
-   ArubaOS-Switch^2^       Latest           \-          ?         
+   ArubaOS-Switch^2^       Latest           \-          \-        
       ArubaOS-CX             \-          Latest^1^    Latest      
    HPE Comware(H3C)          \-             \-        Latest      
        DELL OS10          Latest^1^         \-        Latest      
@@ -1377,7 +1489,7 @@ den relevanten Software-Plattformen gegeben werden.
         Stratum              \-            Nativ        \-        
       OpenvSwitch          Latest         Geplant       \-        
 
-  : Dataplane SDN Protokolle
+  : Protokollimplementationen ausgewählter Plattformen
 :::
 
 -   1 - Hardware-Plattform abhängig
@@ -1385,38 +1497,37 @@ den relevanten Software-Plattformen gegeben werden.
 -   2 - Ehemaliges HPE Provision
 
 In der Tabelle [3.1](#tab:dpp){reference-type="ref" reference="tab:dpp"}
-werden die aktuellen Implementierungen von Protokollen die in den
-weiterhin vorgestellten Konzepten verwendet werden gezegit. Es fällt
+werden die aktuellen Implementierungen von Protokollen, die in den
+weiterhin vorgestellten Konzepten verwendet werden gezeigt. Es fällt
 auf, dass sowohl Arista als auch Extreme OpenFlow nicht mehr in den
 aktuellen Betriebssystemen unterstützt. Auch sehr neue Betriebssysteme
-wie SONiC haben keinen OpenFLow-Implementierung. P4Runtime Unterstützung
+wie SONiC haben keine OpenFLow-Implementierung. P4Runtime Unterstützung
 findet sich bei den Enterprise-Herstellern bei Cisco und Arista,
 allerdings nur auf einigen wenigen Plattformen die auf spezieller
 programmierbarer Hardware basieren. Bei Cisco ist dies der SiliconOne,
-bei Arista der Intel Tofino. Für den OpenVSwitch finden sich im Internet
+bei Arista der Intel Tofino. Für den OpenvSwitch finden sich im Internet
 Vorschläge [@ovsp4], für SONiC wurde es in den aktuellsten Versionen
 bereits über PINS implementiert [@sonicpins]. Mit PINS - P4 Integrated
 Network Stack wird versucht P4Runtime auch auf Geräten mit nicht
-unmittelbar programmierbarer Hardware wie den Broadcom ASICs zu
-implementieren.
+programmierbarer Hardware wie den Broadcom ASICs zu implementieren.
 
 Evaluation und Simulation ausgewählter Konzepte
 ===============================================
 
-In den folgenden Kapiteln werden mehrere [sdn]{acronym-label="sdn"
+In den folgenden Abschnitten werden mehrere [sdn]{acronym-label="sdn"
 acronym-form="singular+short"}-Konzepte erläutert sowie auf Basis
-virtualisierte Netzwerkkomponenten in GNS3 simuliert. Für die
+virtualisierter Netzwerkkomponenten in GNS3 simuliert. Für die
 Implementierung eines Designs wird, wenn möglich, die Referenztopologie
 aus [4.1](#sec:ref){reference-type="ref" reference="sec:ref"} genutzt.
 
 Begonnen wird mit jeweils zwei Architekturen auf Basis von OpenFlow,
 welche sich in ihrer Logik zur Weiterleitung von Paketen unterscheiden.
-Der erste Ansatz zeigt eine Netzwerkarchitektur die auf traditionellen
-Ethernet-Mechaniken auf Basis von Broadcasts zur Weiterleitung von
-Paketen basiert. Der Zweite Ansatz nutzt einen Flow-basierten Ansatz.
+Der erste Ansatz zeigt eine Netzwerkarchitektur, die auf traditionellen
+Ethernet-Mechaniken mit Broadcasts zur Weiterleitung von Paketen
+basiert. Der Zweite Ansatz nutzt einen Flow-basierten Mechanik.
 
 In einem dritten Lab werden die Möglichkeiten eines mit P4
-programmierbaren Switches sowie die Steuerung von diesem über eine
+programmierbaren Switches, sowie die Steuerung von diesem über eine
 abgesetzte Controlplane mit P4Runtime gezeigt. In diesem Lab wird ein
 einzelner Layer-2 Switch auf Basis des offenem Betriebssystems Stratum
 simuliert. Der Fokus von diesem Lab liegt auf der Programmierung einer
@@ -1429,14 +1540,15 @@ Layer-2 und Layer-3 Services in der gezeigten Referenztopologie
 bereitgestellt. Eingesetzt wird hierfür eine virtuelle Variante des
 offenen Netzwerk-Betriebssystems SONiC.
 
-In dem letzten Lab wird eine Architektur gezeigt die Traffic-Engineering
-ermöglicht. Das Konzept basiert auf Segment-Routing und MPLS. Als
-virtuelle Netzwerk-Plattform wird EOS von Arista eingesetzt.
+In dem letzten Lab wird eine Architektur gezeigt, die
+Traffic-Engineering ermöglicht. Das Konzept basiert auf Segment-Routing
+und MPLS. Als virtuelle Netzwerk-Plattform wird EOS von Arista
+eingesetzt.
 
 Referenztopologie {#sec:ref}
 -----------------
 
-In diesem Kapitel wird eine Referenztopologie beschrieben, die ein
+In diesem Abschnitt wird eine Referenztopologie beschrieben, die ein
 typisches Netzwerk eines mittelständischen Unternehmens zeigen soll.
 
 ![Referenzkunde](media/customer.png){width="100%"}
@@ -1444,7 +1556,7 @@ typisches Netzwerk eines mittelständischen Unternehmens zeigen soll.
 Das Unternehmen erstreckt sich über fünf Standorte. In den Standorten
 und sind Serverräume mit Business-Anwendungen wie ERP-Systeme (Enterpise
 Ressource Planning) angesiedelt. Weiterhin gibt es in Gebäude 3
-Produktionsanlagen die einen hochverfügbaren Zugang zu den
+Produktionsanlagen, die einen hochverfügbaren Zugang zu den
 Business-Anwendungen benötigen, da sie bei Abbruch der Verbindung nicht
 produzieren können. Weiterhin gibt es ein abgelegenes Büro (2) sowie ein
 Training-Zentrum zur Schulung von Kunden (5).
@@ -1461,43 +1573,42 @@ ein Standort als ein einzelner Switch repräsentiert. Dies entspricht
 Netzwerkkomponenten zumindest doppelt ausgelegt. Technologien für die
 doppelte Auslegung von logisch einzelnen Netzwerkkomponenten wie MLAG,
 Stacking und EVPN Multihoming werden in den Simulationen nicht
-betrachtet. Fokus liegt auf der effizienten und resilienten
+betrachtet. Der Fokus liegt auf der effizienten und resilienten
 Provisionierung von Netzwerk-Services in einem vermaschten Netzwerk.
 
 Allgemeines Ziel ist es die Standorte untereinander zu vernetzen und dem
-Unternehmen die in Kapitel [2.3](#sec:services){reference-type="ref"
+Unternehmen die in Abschnitt [2.5](#sec:services){reference-type="ref"
 reference="sec:services"} erläuterten Services bereitzustellen.
 Gleichzeitig sollen die Glasfaserstrecken dabei zum einen optimal
 ausgenutzt werden und zur gegenseitigen Redundanz genutzt werden. Der
 Ausfall einer Strecke soll den Betrieb des Netzwerken nicht
 beeinflussen. Die Provisionierung von neuen Services als tägliche
-administrative Aufgabe soll dabei hoch automatisierbar und aus diesem
-Grund möglichst trivial gehalten sein.
+administrative Aufgabe soll dabei automatisierbar und aus diesem Grund
+möglichst trivial gehalten sein.
 
-Für die einfache Vernetzung von Geräten in einem Netzwerk reichen
-eigentlich grundlegende Layer-3 Services aus, die keiner
-Netzwerkvirtualisierung bedürfen. Die Notwendigkeit von Layer-2 und
-Layer-1 Services bedingt sich historisch und aus spezifischen
-Anwendungen. Der Bedarf nach Stretched Layer-2 Netzwerken, also
-Ethernet-Netzwerken die an verschiedenen Bereichen des Campus verfügbar
-sind entsteht durch zwei Anwendungsfälle. Zum einen basiert die
-Hochverfügbarkeit vieler Anwendungen darauf, das sie im Falle eines
-Ausfalles eines Server-Raums an einer anderen Stelle des Campus,
-beispielsweise in einem zweiten Serverraum, mit der selben IP-Adresse
-wieder hergestellt werden. Andere Anwendungen bilden ein verteiltes
-Cluster und teilen sich eine virtuelle IP-Adresse, wofür ebenfalls das
-gleiche Layer-2 Subnetz an zwei Stellen des Campus benötigt wird. Ein
-zweiter Grund besteht in der historischen Beschaffenheit von Netzwerken,
-das Regelwerke mit Subnetzen beziehungsweise VLANs verknüpft werden.
-Beispielsweise wird ein VLAN für einen Geschäftsbereich wie die
-Personalabteilung erstellt und entsprechende Firewall-Regeln an diesem
-VLAN aufgehangen. Der Wunsch ist nun das ein Mitarbeiter der
-Personalabteilung an allen Stellen des Campus auf sein VLAN und den
-damit verknüpften Regeln zugreifen kann. Zuletzt existieren viele
-Spezialanwendungen in einem Netzwerk wie Türsteuerungen oder
-Zeiterfassungsterminals, die konzeptuell eine direkte Layer-2 Verbindung
-zu einem zentralen Controller benötigen weil sie zum Beispiel Broadcasts
-zur Kommunikation einsetzen.
+Für die Vernetzung von Geräten in einem Netzwerk reichen eigentlich
+grundlegende Layer-3 Services aus, die keiner Netzwerkvirtualisierung
+bedürfen. Die Notwendigkeit von Layer-2 und Layer-1 Services bedingt
+sich historisch und aus spezifischen Anwendungen. Der Bedarf nach
+Stretched Layer-2 Netzwerken, also Ethernet-Netzwerken, die an
+verschiedenen Bereichen des Campus verfügbar sind, entsteht durch zwei
+Anwendungsfälle: Zum einen basiert die Hochverfügbarkeit vieler
+Anwendungen darauf, das sie im Falle eines Ausfalles eines Server-Raums
+an einer anderen Stelle des Campus, beispielsweise in einem zweiten
+Serverraum, mit der selben IP-Adresse wieder hergestellt werden. Viele
+Anwendungen bilden ein verteiltes Cluster und teilen sich eine virtuelle
+IP-Adresse, wofür ebenfalls das gleiche Layer-2 Subnetz an zwei Stellen
+des Campus benötigt wird. Ein zweiter Grund besteht in der historischen
+Beschaffenheit von Netzwerken, das Regelwerke mit Subnetzen
+beziehungsweise VLANs verknüpft werden. Beispielsweise wird ein VLAN für
+einen Geschäftsbereich, zum Beispiel Personalabteilung, erstellt und
+entsprechende Firewall-Regeln an diesem VLAN aufgehangen. Anforderung
+ist dann, dass ein Mitarbeiter der Personalabteilung an allen Stellen
+des Campus auf sein VLAN und den damit verknüpften Regeln zugreifen
+kann. Zuletzt existieren viele Spezialanwendungen in einem Netzwerk wie
+Türsteuerungen oder Zeiterfassungsterminals, die konzeptuell eine
+direkte Layer-2 Verbindung zu einem zentralen Controller benötigen, weil
+sie zum Beispiel Broadcasts zur Kommunikation einsetzen.
 
 Seltener benötigt werden Layer-1 Services. Diese sind zum Beispiel in
 Entwicklungslaboren von Hochschulen zu finden, bei denen die
@@ -1509,7 +1620,7 @@ Auswahl virtueller Switche
 
 Für die Simulation der weiterhin genannten Konzepte wird jeweils ein
 virtueller Switch mit einer Implementierung der eingesetzten
-Technologien OpenFlow, BGP-EVPN, P4Runtime und d)MPLS Segment-Routing
+Technologien OpenFlow, BGP-EVPN, P4Runtime und MPLS Segment-Routing
 benötigt. An dieser Stelle wird kurz die Auswahl der entsprechend
 eingesetzten Plattformen begründet.
 
@@ -1521,10 +1632,10 @@ werden aber nicht umgesetzt. Bei den Hardware-Appliances werden die
 Regeln direkt in die Hardware programmiert. Eine Umsetzung in den
 virtuellen Versionen ist daher komplex und bedarf Entwicklungsaufwand.
 Aus diesem Grund wird für die OpenFlow-basierten Konzepte der
-OpenVSwitch eingesetzt. Dieser wird in OpenStack Umgebungen eingesetzt.
-Da der OpenStack Netzwerk-Stack in Form von Neutron auf OpenFlow
-basiert, ist die Implementierung von OpenFlow im OpenVSwitch als
-vollständig anzunehmen.
+OpenvSwitch eingesetzt. Dieser wird unter anderem in OpenStack und
+Nutanix Umgebungen verwendet. Da der OpenStack Netzwerk-Stack in Form
+von Neutron auf OpenFlow basiert, ist die Implementierung von OpenFlow
+im OpenvSwitch als vollständig anzunehmen.
 
 #### BGP-EVPN
 
@@ -1533,19 +1644,19 @@ unterstützt werden derzeit Anycast-Gateways sowie EVPN-Multihoming.
 
 #### P4Runtime
 
-Für P4Runtime wird die Referenzimplementierung Stratum auf Basis der
-P4-Referenzimplementierung bmv2verwendet. Bei SONiC wird P4Runtime über
-PINS implementiert, ist allerdings aktuell nicht in der virtuellen
-Variante umgesetzt. Eine Umsetzung in der virtuellen Variante mittels
-DPDK befindet sich im Backlog - SONiC with P4 DPDK (PNA architecture) --
-Basic SoftSwitch with DPDK - Deferred from 202205 release der SONiC
-Roadmap. [@sonicroadmap].
+Für P4Runtime wird die Open-Networking-Foundation Thin-OS
+Referenzimplementierung Stratum auf Basis der P4-Referenzimplementierung
+bmv2 verwendet. Bei SONiC wird P4Runtime über PINS implementiert, ist
+allerdings aktuell nicht in der virtuellen Variante umgesetzt. Eine
+Umsetzung in der virtuellen Variante mittels DPDK befindet sich im
+Backlog - SONiC with P4 DPDK (PNA architecture) -- Basic SoftSwitch with
+DPDK - Deferred from 202205 release der SONiC Roadmap [@sonicroadmap].
 
 #### MPLS
 
-Gesucht wurde eine Plattform die MPLS-Routing in seiner virtuellen
-Variante implementiert. SONiC unterstützt in der aktuellen Version
-Segment-Routing lediglich mit IPv6 als Transportprotokoll. Als
+Benötigt wird eine Plattform die MPLS-Routing in seiner virtuellen
+Variante implementiert. SONiC unterstützt in der aktuellen Variante kein
+MPLS, dieses wird nur in HLD (High-Level-Designs) erwähnt. Als
 Kandidaten konnten ausgemacht werden:
 
 -   Cisco IOS-XE
@@ -1565,9 +1676,9 @@ OpenFlow Lab I - Broadcastbasiertes Forwarding mit FAUCET
 Architektur und Technologien {#sec:of1}
 ----------------------------
 
-In diesem erstem Lab wird versucht die in Kapitel
+In diesem erstem Lab wird die in Abschnitt
 [4.1](#sec:ref){reference-type="ref" reference="sec:ref"} gezeigte
-Referenztopologie sowie die beschriebenen Netzwerkservices mittels einem
+Referenztopologie sowie die beschriebenen Netzwerkservices mittels eines
 zentralen Controller der als zentralisierte Controlplane agiert
 abzubilden. Als Kommunikationsprotokoll zwischen Control- und Dataplane
 wird OpenFlow verwendet. In diesem ersten OpenFlow-Lab kommt der
@@ -1577,7 +1688,7 @@ meisten anderen OpenFlow-basierten Controllern nicht Pfad-basiert.
 ![Faucet Netzwerktopologie](media/faucet-top.png){#fig:fauarch
 width="100%"}
 
-Es wird die im Kapitel [4.1](#sec:ref){reference-type="ref"
+Es wird die im Abschnitt [4.1](#sec:ref){reference-type="ref"
 reference="sec:ref"} gezeigte Topologie umgesetzt. Es werden insgesamt
 vier simulierte Endgeräte an das Netzwerk angeschlossen, welche sich in
 zwei verschiedenen Subnetzen befinden. Dies erfordert einen Layer-2 und
@@ -1586,13 +1697,13 @@ können.
 
 ### Faucet
 
-Faucet ist ein quelloffenes Projekt welches auf dem ebenfalls
+Faucet ist ein quelloffenes Projekt, welches auf dem ebenfalls
 quelloffenem Python-Framework für OpenFlow Ryu basiert. Faucet bietet
 die Konfiguration von VLANs sowie ein dezentrales Routing. Mit dem
 Projekt chewie, welches ebenfalls von Faucet betrieben wird, gibt es
-einen integrierten Authentifizierungsdienst Endgeräte an einem Port
-authentifizieren kann. Faucet bietet ein fertiges Konzept Metriken in
-dem Netzwerk zu erheben und über Grafana zu visualisieren.
+einen integrierten Authentifizierungsdienst, der Endgeräte an einem Port
+authentifizieren kann [@chewie]. Faucet bietet ein fertiges Konzept
+Metriken in dem Netzwerk zu erheben und über Grafana zu visualisieren.
 
 Faucet bietet die Möglichkeit mehrere Switche zu stacken um das
 Verhalten eines einzelnen großen Switches zu simulieren. Primärer Grund
@@ -1620,17 +1731,17 @@ zur Kommunikation zwischen einer [cp]{acronym-label="cp"
 acronym-form="singular+short"} und [dp]{acronym-label="dp"
 acronym-form="singular+short"} um diese physikalisch und logisch
 voneinander trennen zu können. Das Protokoll spezifiziert die
-Nachrichten die zwischen den Einheiten ausgetauscht werden. Durch diese
+Nachrichten, die zwischen den Einheiten ausgetauscht werden. Durch diese
 Nachrichten werden von dem Controller generierte Flow-Regeln auf die
 jeweilige Dataplane programmiert. OpenFlow kann vielseitig eingesetzt
 werden, so kann mittels des Protokoll die Controlplane eines Netzwerkes
 vollständig zentralisiert werden. OpenFlow kann auch dafür genutzt
 werden nur bestimme Flows umzuleiten, beispielsweise für die
 Realisierung eines Traffic-Engineerings oder zur Durchsetzung von
-Regelwerken. [@ofs]
+Regelwerken [@ofs].
 
-![OpenFlow Architektur](media/openflow-medium.png){#fig:evpncli
-width="80%"}
+![OpenFlow Architektur Quelle: Aria Zhu -
+medium.com](media/openflow-medium.png){#fig:evpncli width="80%"}
 
 Auf einem Interface eingehende Pakete werden auf Basis der
 implementierten Flow-Regeln weitergeleitet.
@@ -1647,7 +1758,7 @@ fs.com](media/openflow-fs.jpg){#fig:evpncli width="70%"}
 Die Regeln können in mehrere untereinander verkette Tabellen geschrieben
 werden. Die Tabellen werden mittels eine ID identifiziert. Die Pakete
 durchlaufen nicht automatisch alle Tabellen, die Pakete werden den
-Tabellen mittels Regeln zugewiesen. [@ofs]
+Tabellen mittels Regeln zugewiesen [@ofs].
 
 Das Protokoll basiert auf einer Menge von definierten Nachrichten,
 welche über den normalen TCP/IP Stack übertragen werden:
@@ -1670,15 +1781,15 @@ welche über den normalen TCP/IP Stack übertragen werden:
 
 OpenFlow ist kein abgeschlossener Standard. Das Protokoll ist unter
 stetiger Weiterentwicklung. Seit dem initialen Release mit Version 1.1
-ist eine Vielzahl von Versionen erschienen. Aktuell veröffentlicht ist
-die version 1.6. Hinzu kam zum Beispiel die Möglichkeit mehrere Tabellen
-zu definieren oder die Möglichkeit auf neue Header zu matchen. Seit
-Version 1.5.0 ist es zum Beispiel möglich Regeln auf TCP-Flags
-anzuwenden. Diese stetige Weiterentwicklung stellt Netzwerk-Ausrüster
-vor die Herausforderung diese Funktionen kontinuierlich zu
-implementieren. Teilweise treffen sie hier auf durch die Hardware
-gegeben Limitationen, so dass Funktionen modifiziert implementiert
-werden oder weggelassen werden.
+im Jahr 2011 ist eine Vielzahl von Versionen erschienen. Aktuell
+veröffentlicht ist die version 1.6. Hinzu kam zum Beispiel die
+Möglichkeit mehrere Tabellen zu definieren oder die Möglichkeit auf neue
+Header zu matchen. Seit Version 1.5.0 ist es zum Beispiel möglich Regeln
+auf TCP-Flags anzuwenden. Diese stetige Weiterentwicklung stellt
+Netzwerk-Ausrüster vor die Herausforderung, diese Funktionen
+kontinuierlich zu implementieren. Teilweise treffen sie hier auf durch
+die Hardware gegeben Limitationen, so dass Funktionen modifiziert
+implementiert werden oder weggelassen werden.
 
 ### Virtueller Switch: OpenvSwitch
 
@@ -1691,33 +1802,34 @@ Switch implementiert Layer-2 Funktionen wie VLANs,
 [stp]{acronym-label="stp" acronym-form="singular+short"} sowie
 komplexere Technologien wie VXLAN.
 
-![OpenVSwitch Architektur](media/ovs_architecture_01.png){width="100%"}
+![OpenvSwitch Architektur - Quelle:
+hustcat.github.io](media/ovs_architecture_01.png){width="100%"}
 
 OpenvSwitch nutzt unter Linux ein eigenes Kernel-Modul für die
 Weiterleitung von Paketen. Die Weiterleitungsregeln werden durch den
 Dienst vswitchd programmiert, der als Controlplane fungiert und im Falle
 von OpenFlow die Regeln entsprechend konvertiert und abstrahiert. Die
 Netlink Kommunikation erfolgt mittels Flow Keys, welche Regeln zur
-Weiterleitung von Paketen definieren. [@ovsdp].
+Weiterleitung von Paketen definieren [@ovsdp].
 
-![OpenVSwitch Datapath Regeln](media/ovs-dp.png){#fig:ovsdp
+![OpenvSwitch Datapath Regeln](media/ovs-dp.png){#fig:ovsdp
 width="100%"}
 
 Über den in der Abbildung [5.4](#fig:ovsdp){reference-type="ref"
 reference="fig:ovsdp"} gezeigten Befehl lassen sich die in das
 Kernel-Modul implementierten Regeln ausgeben. In diesem Fall sind zwei
 Hosts an den Switch angebunden, die untereinander Kommunizieren. Es
-existiert für jeweils jede Richtung eine Regel welche auf die Pakete
+existiert für jeweils jede Richtung eine Regel, welche auf die Pakete
 greift und als entsprechende Aktion an den entsprechenden Port
 weiterleitet.
 
 Alternativ kann Data Plane Development Kit, kurz DPDK, als Controlplane
 genutzt werden, welches im Linux-Userspace ausgeführt wird und aufgrund
 einer anderen Architektur höhere Übertragungsraten als das OpenvSwitch
-Kernel-Modul erreicht. DPDK unterstützt weiterhin die Auslagerung von
-Funktionen auf die physikalische Netzwerkkarte um weitere
-Performance-Optimierungen zu erreichen. Ein detaillierter Vergleich
-zwischen der Performance verschiedener Technologien unter dem
+Kernel-Modul erreicht [@ovsdpdk]. DPDK unterstützt weiterhin die
+Auslagerung von Funktionen auf die physikalische Netzwerkkarte um
+weitere Performance-Optimierungen zu erreichen. Ein detaillierter
+Vergleich zwischen der Performance verschiedener Technologien unter dem
 OpenvSwitch findet sich unter [@ovsdpperf].
 
 OpenFlow Regelwerk I - Statisch
@@ -1725,10 +1837,10 @@ OpenFlow Regelwerk I - Statisch
 
 In diesem Abschnitt soll die Funktionsweise der Paketweiterleitung mit
 Faucet an Beispielhaften Regeln generisch erläutert werden. Als Beispiel
-werden die ausgelesenen Regeln aus dem Switch OpenVSwitch-5 betrachtet.
-Zuerst werden die wichtigsten initialen Regeln nach der Initialisierung
-von Faucet betrachtet. Die Regeln sind im mehreren Tabellen kaskadiert.
-Nachfolgend steht UNI für User-Network-Interface und NNI für
+werden die ausgelesenen Regeln aus dem Switch OpenvSwitch-5 betrachtet.
+Zuerst werden die relevanten Regeln nach der Initialisierung von Faucet
+betrachtet. Die Regeln sind im mehreren Tabellen kaskadiert. Nachfolgend
+steht UNI für User-Network-Interface und NNI für
 Network-Network-Interface. Um die weiteren Regeln einordnen zu können
 werden folgende Informationen gegeben:
 
@@ -1738,7 +1850,7 @@ werden folgende Informationen gegeben:
 
 -   **eth5** - Client-Interface mit VLAN-Tag 100
 
--   **eth2** - Client-Interface mit VLAN-Tag 200
+-   **eth6** - Client-Interface mit VLAN-Tag 200
 
 -   **VLAN 100** - 192.168.0.1/24 / 00:00:00:00:00:11 virtuelle MAC
 
@@ -1781,7 +1893,7 @@ In dieser Tabelle wird die Behandlung von Broadcasts ersichtlich.
 Broadcasts werden nur an [uni]{acronym-label="uni"
 acronym-form="singular+short"}s sowie über Interfaces die Teil eins
 durch Faucet berechneten Baumes sind weitergeleitet. Dies verhindert die
-Bildung von Schleifen und den daraus resultierenden Broadcast-Storms
+Bildung von Schleifen und den daraus resultierenden Broadcast-Storms.
 
 ![Faucet Regeln Initial - Switch 1 Table
 5](media/faucet-rule-1-5.png){width="100%"}
@@ -1793,8 +1905,9 @@ Broadcast-Pakete an alle aktiven Interfaces weiter.
 
 In der Abbildung ist die in diesem Labor konfigurierte Baumstruktur
 dargestellt. Als Root-Bridge nutzt Faucet die Bridge mit der kleinsten
-ID. Es kann sinnvoll sein diese zentral in einem Netzwerk zu
-positionieren.
+ID. Es ist sinnvoll, diese anders als in diesem Lab zentral in einem
+Netzwerk zu positionieren. Die Root-Bridge wurde mit Absicht dezentral
+platziert um hieraus entstehend Nachteile hervorzuheben.
 
 OpenFlow Regelwerk II - Dynamisch
 ---------------------------------
@@ -1854,11 +1967,11 @@ Simulation
 
 Für die Simulation kann das vorbereitete Template OpenFlow-Lab auf dem
 GNS3-Server-Manager der Hochschule genutzt werden. In diesem sind die
-Docker-Container für Faucet und den OpenVSwitch bereits vorbereitet.
+Docker-Container für Faucet und den OpenvSwitch bereits vorbereitet.
 Zusätzlich ist bereits ein Projekt erstellt, in dem die
 Referenztopologie angelegt ist.
 
-Der **OpenVSwitch** wird als Docker-Container in die
+Der **OpenvSwitch** wird als Docker-Container in die
 Simulations-Umgebung implementiert. Es wird ein fertiger Container aus
 dem öffentlichen Dockerhub Repository verwendet -
 gns3/openvswitch:latest. Der OpenvSwitch ist vorgefertigt in dem
@@ -1877,7 +1990,7 @@ im GNS3-Kontextmenü der jeweiligen Switche gesetzt werden. Auf den
 OpenvSwitchen muss über das Terminal eine OpenFlow-Bridge erstellt,
 konfiguriert sowie Ports zu dieser hinzugefügt werden.
 
-``` {caption="Faucet OpenVSwitch Konfiguration 1"}
+``` {caption="Faucet OpenvSwitch Konfiguration 1"}
 # Configure OpenFlow Bridge
 ovs-vsctl add-br of
 ovs-vsctl set bridge of protocols=OpenFlow13
@@ -1888,7 +2001,7 @@ ovs-vsctl set-controller of tcp:10.0.0.250:6653
 
 Es wird das verwendete Protokoll, OpenFlow in der Version 1.3,
 festgelegt. Der fail\_mode=secure sorgt dafür das der OpenvSwitch keine
-Pakete weiterleitet wenn er keine Verbindung zum Controller hat. Die
+Pakete weiterleitet, wenn er keine Verbindung zum Controller hat. Die
 Datapath-ID identifiziert die einzelnen OpenvSwitch-Instanz eindeutig
 gegenüber dem Faucet Controller. Die OpenFlow-Kommunikation wird aktiv
 durch den Switch aufgebaut. Dafür wird die IP-Adresse des Controllers an
@@ -1897,7 +2010,7 @@ dieser Stelle konfiguriert.
 Im Anschluss werden die genutzten Interfaces von der Standard-Bridge
 entfernt und der OpenFlow-Bridge hinzugefügt.
 
-``` {caption="Faucet OpenVSwitch Konfiguration 2"}
+``` {caption="Faucet OpenvSwitch Konfiguration 2"}
 ovs-vsctl del-port eth1
 ovs-vsctl add-port of eth1
 ovs-vsctl set Interface eth1 ofport_request=1
@@ -1924,14 +2037,14 @@ ovs-vsctl add-port of eth8
 ovs-vsctl set Interface eth8 ofport_request=8
 ```
 
-Mittels dem ofport\_requestwird den Schnittstellen eine feste
+Mittels dem ofport\_request wird den Schnittstellen eine feste
 OpenFlow-ID zugewiesen. Wird dieser Befehl nicht gesetzt, kann der
 OpenFlow-ID von der Interface-ID abweichen, was prinzipiell nicht
-problematisch ist aber die Komplexität erhöht.
+problematisch ist, aber die Komplexität unnötig erhöht.
 
 Die Konfiguration lässt sich wie folgt überprüfen:
 
-``` {caption="Faucet OpenVSwitch Konfiguration überprüfen"}
+``` {caption="Faucet OpenvSwitch Konfiguration überprüfen"}
 / # ovs-vsctl show
 {...}
     Bridge of
@@ -2016,7 +2129,7 @@ konfiguriert wird, welche Faucet nutzt um diese der Router-IP
 zuzuordnen.
 
 Für ein Routing zwischen den VLANs müssen Router-Instanzen konfiguriert
-werden und die jeweiligen VLANs zwischen denen geroutet werden soll
+werden und die jeweiligen VLANs, zwischen denen geroutet werden soll,
 spezifiziert werden.
 
 ``` {caption="Faucet: Routing Konfiguration"}
@@ -2060,9 +2173,9 @@ Beispiel wird das VLAN server als VLAN zugeordnet.
 
 ### Start des Netzwerkes
 
-Zum Start des Netzwerkes wird nun der FaucetDienst gestartet. Dafür wird
-in der Konsole für Faucet folgender Befehl abgesetzt um den Prozess im
-Hintergrund zu starten:
+Zum Start des Netzwerkes wird nun der Faucet-Dienst gestartet. Dafür
+wird in der Konsole für Faucet folgender Befehl abgesetzt um den Prozess
+im Hintergrund zu starten:
 
     $ faucet &
 
@@ -2106,7 +2219,7 @@ ovs-ofctl -O OpenFlow13 dump-flows br0
 
 Die Logs von Faucet lassen sich mit folgendem Befehl anzeigen:
 
-``` {caption="'Faucet: Logs anzeigen'"}
+``` {caption="Faucet: Logs anzeigen"}
 cat /var/log/faucet/faucet.log
 ```
 
@@ -2124,7 +2237,7 @@ ihn im Anschluss wieder starten zu können.
 Fazit
 -----
 
-Faucet ist eine solide OpenFlow-basierte Controller-Lösung welche ein
+Faucet ist eine solide OpenFlow-basierte Controller-Lösung, welche ein
 Netzwerk mit Layer-2 und Layer-3 Services bereitstellen kann. Faucet
 zeigt die Vorteile eines zentral konfigurierbaren Netzwerkes mit dem
 Potential zur einfachen Automatisierung, macht sich aber mögliche
@@ -2140,63 +2253,64 @@ OpenFlow Lab II - Pfadbasiertes Forwarding mit ONOS
 In diesem Lab wird ein Netzwerk auf Basis des OpenFlow-Controllers ONOS
 simuliert. Dieser arbeitet Pfad-basiert und implementiert für jede
 Kommunikationsbeziehung einen eigenen Datenpfad. ONOS erkennt
-automatisch die eingesetzte Netzwerktopologie durch mitschneiden von
+automatisch die eingesetzte Netzwerktopologie durch das Mitschneiden von
 LLDP-Paketen.
 
 ![ONOS Topology](media/onos-top-detection.png){#fig:onostop
 width="100%"}
 
 Die Konfiguration der OpenvSwitche sowie die eingesetzte Topologie ist
-identisch zum OpenFlow Lab I und kann dort nachgelesen werden.
+identisch zum OpenFlow Lab I, siehe Abschnitt
+[5.1](#sec:of1){reference-type="ref" reference="sec:of1"}, und kann dort
+nachgelesen werden.
 
 ### ONOS
 
 ONOS wird entwickelt unter der [onf]{acronym-label="onf"
 acronym-form="singular+short"} und ist dessen Referenzimplementierung
-eines Netzwerk-Controllers. ONOS basiert auf Modulen und lässt sich
-dadurch beliebig in seiner Funktionalität erweitern. ONOS ist
-spezialisiert für Backbone-Netzwerke und ist nicht für den Einsatz in
-Campus-Netzwerken bestimmt. ONOS zeigt allerdings wie ein Pfad-basiertes
-Netzwerk aufgebaut werden kann.
+eines Netzwerk-Controllers. ONOS ist modular aufgebaut und lässt sich
+dadurch in seiner Funktionalität erweitern. ONOS ist spezialisiert für
+Backbone-Netzwerke und ist nicht für den Einsatz in Campus-Netzwerken
+entwickelt, zeigt allerdings die Funktionsweise eines Pfad-basierten
+Netzwerkes.
 
-ONOS wird bis heute durch neue Module erweitert und von der ONF genutzt
+ONOS wird bis heute durch neue Module erweitert und von der ONF genutzt,
 um neue Technologien wie zum Beispiel P4Runtime zu demonstrieren. ONOS
 ist zentraler Bestandteil der aktuellen SD-Fabric auf Basis von
-P4Runtime und MPLS-Segment Routing, was aber nichts mehr mit OpenFlow zu
-tuen hat. In diesem Lab wird lediglich das Plugin Reactive Forwarding
-eingesetzt, welches Layer-2 Dienste in einem Netzwerk anbietet.
+P4Runtime und MPLS-Segment Routing, welche allerdings kein OpenFlow mehr
+einsetzt. In diesem Lab wird lediglich das Plugin Reactive Forwarding
+verwendet, welches Layer-2 Dienste in einem Netzwerk anbietet.
 
 #### Layer-2 Fabric - Reactive Forwarding
 
 Mit dem Plugin *Reactive Forwarding* lässt sich ein über mehrere Switche
 verteiltes Layer-2 Netzwerk implementieren. Die Switche können dabei
 redundant untereinander vernetzt werden. Der Weg der Pakete durch dieses
-Netzwerk erfolgt entlang von durch den Controller berechneten Pfaden.
-Bei dieser Implementierung werden keine Broadcasts weitergeleitet.
-ARP-Pakete werden durch den Controller abgefangen und entsprechend
-beantwortet.
+Netzwerk erfolgt entlang von Pfaden, die durch den Controller berechnet
+werden. Bei dieser Implementierung werden keine Broadcasts
+weitergeleitet. ARP-Pakete werden durch den Controller abgefangen und
+entsprechend beantwortet.
 
-Sobald sich die Switche mit dem ONOS Controller per
-[of]{acronym-label="of" acronym-form="singular+short"} verbunden haben
-werden folgende Regeln in die Switche programmiert:
+Sobald sich die Switche mit dem ONOS Controller per OpenFlow verbunden
+haben, werden folgende Regeln in die Switche programmiert:
 
 ![ONOS Flowtable Initial](media/onos-flowtable-init.png){width="100%"}
 
-Jeder Regel besteht aus einem Kriterium für die Pakete auf die sie
-angewendet werden sollen, dem Match Criteria, und einer Aktion die im
-Anschluss mit dem Paket ausgeführt werden soll, der Action. Die hier
-gezeigten drei Regeln sorgen dafür, dass alle ARP, LLDP und BDDP Pakete
-an den Controller geschickt werden. BDDP ist ein nicht standardisiertes
-Protokoll welches ähnlich wie LLDP funktioniert, allerdings spezifisch
-bei OpenFlow-Controllern eingesetzt wird. Vorteil ist das diese Pakete
-in der Regel von dritten Ethernet-Switchen im nicht verworfen werden.
-Durch die LLDP Pakete lernt ONOS die Topologie. Durch die abgefangenen
-ARP Requests gewinnt der Controller die Information über den Ort eines
-Hosts mit dessen MAC und IP-Adresse. Mit dieser Tabelle kann der
-Controller die ARP-Requests weitere Netzwerkteilnehmer beantworten.
-Sobald ein Host nun kommunizieren möchte kennt ONOS den Ort beider
-involvierten MAC-Adressen und kann entsprechend einen Pfad durch das
-Netzwerk programmieren.
+Jede Regel besteht aus einem Kriterium zur Identifizierung von Paketen,
+dem Match Criteria, und einer Aktion, die im Anschluss auf dem Paket
+ausgeführt werden soll, der Action. Die hier gezeigten drei Regeln
+sorgen dafür, dass alle ARP, LLDP und BDDP Pakete an den Controller
+gesendet werden. BDDP (Ethertype 0x8942) ist ein nicht standardisiertes
+Protokoll, welches ähnlich wie LLDP funktioniert, allerdings spezifisch
+bei OpenFlow-Controllern eingesetzt wird. Vorteil ist, dass diese Pakete
+in der Regel von dritten Ethernet-Switchen im Normalfall nicht verworfen
+werden. Durch die LLDP Pakete lernt ONOS die Topologie. Durch die
+abgefangenen ARP-Pakete gewinnt der Controller die Information über den
+Ort eines Hosts mit dessen MAC und IP-Adresse. Mit dieser Tabelle kann
+der Controller weitere ARP-Anfragen beantworten. Sobald ein Host nun
+kommunizieren möchte, kennt ONOS den Ort beider involvierten
+MAC-Adressen und kann entsprechend einen Pfad durch das Netzwerk
+programmieren.
 
 ![ONOS Flowtable Forwarding](media/onos-flowtable-fwd.png){width="100%"}
 
@@ -2207,22 +2321,55 @@ drei neue Regeln in dem Switch-1 ersichtlich. Es sind zwei Regeln für
 beide Kommunikationsrichtungen implementiert. Broadcasts werden nicht
 weitergeleitet.
 
+Wie an den Regeln erkennbar, werden Pakete lediglich aufgrund ihrer
+MAC-Adresse weitergeleitet. Das Plugin bietet keine Möglichkeiten
+zwischen verschiedenen Verbindungen aufgrund anderer Header, wie zum
+Beispiel eines DSCP-Wertes, zu unterscheiden. Der Ausfall einer
+Netzwerkstrecke wird über BDDPs zyklisch erkannt. Obwohl diese Pakete
+circa viermal in der Sekunde gesendet werden, wurde im Lab eine
+Konvergenz-Zeit von circa 4 Sekunden festgestellt.
+
+Die implementierte ARP-Mechanik erfolgt vierstufig:
+
+-   OFPF\_PACKET\_OUT: Der Switch sendet die empfangende ARP-Anfrage an
+    den Controller.
+
+-   OFPT\_PACKET\_IN: Da ONOS die Adresse nicht kennt, weist er alle
+    Switche an, die ARP-Anfrage auf allen Ports zu fluten.
+
+-   OFPF\_PACKET\_OUT: Der Switch der eine Antwort erhält, sendet diese
+    wieder an den Controller.
+
+-   OFPT\_PACKET\_IN: Der Controller sendet die ARP-Antwort an den
+    Client zurück.
+
+![OpenFlow: ARP Antwort über den
+Controller](media/openflow-arp-flood.png){width="70%"}
+
+In der Abbildung ist ein Paket dargestellt, welches eine Übertragung
+einer ARP-Nachricht von dem Controller an einen Switch zeigt. Der Switch
+wird angewiesen, das Paket auf allen Interfaces zu fluten, dies ist zu
+erkennen an der Action - Port: OFPP\_FLOOD. Diese Anfrage hat der
+Controller zuvor von einem Switch übermittelt bekommen. Da er sie nicht
+aus seiner Datenbank heraus beantworten kann, flutet er die Nachricht in
+das gesamte Netzwerk.
+
 #### Layer-2 Fabric - VPLS
 
-Mit dem Plugin *vpls* lassen sich Layer-2 Domänen spezifizieren die zum
+Mit dem Plugin *vpls* lassen sich Layer-2 Domänen spezifizieren, die zum
 einen voneinander abgekapselt sind und zum anderen Broadcasts
-ermöglichen. Die hier gezeigte Technologie hat nichts mit der
-gleichnamigen Technologie VPLS in Zusammenhang mit MPLS zu tun, ähnelt
-dieser nur in Teilen funktionell.
+ermöglichen. Das hier gezeigte Plugin hat nichts mit der gleichnamigen
+Technologie VPLS in Zusammenhang mit MPLS zu tun, ähnelt dieser nur in
+Teilen funktionell.
 
 ![ONOS Flowtable VPLS](media/onos-flowtable-vpls.png){width="100%"}
 
 Die Konfiguration des VPLS-Plugins resultiert in einem erweiterten
 Regelwerk. Die ersten vier Regeln bleiben identisch. Bei den Regeln für
 die eingehenden Pakete auf Port eth5 wird als erste Aktion das Paket mit
-dem Wert 0x8100 markiert, was ein nach IEEE 802.1Q (VLANS) getagtes
-Paket spezifiziert. Anschließend wird die VLAN-ID in das entsprechende
-Feld geschrieben. Mit Regel 6 wird eine die Weiterleitung von Broadcasts
+dem Wert 0x8100 markiert, was ein nach IEEE 802.1Q (VLANs) markiertes
+Paket kennzeichnet. Anschließend wird die VLAN-ID in das entsprechende
+Feld geschrieben. Mit Regel 6 wird die Weiterleitung von Broadcasts
 implementiert.
 
 #### Netzwerk Visibilität
@@ -2230,7 +2377,7 @@ implementiert.
 ![ONOS Routing Topology](media/onos-metering.png){#fig:onosperf
 width="100%"}
 
-Ein konzeptioneller Vorteil von dieser Art von Netzwerken ist, dass der
+Ein konzeptioneller Vorteil dieses Netzwerk-Konzeptes ist, dass der
 Zustand des Netzwerkes dem Controller bekannt ist. Die Abbildung
 [6.2](#fig:onosperf){reference-type="ref" reference="fig:onosperf"}
 zeigt ein Ausschnitt der WebGUI von ONOS mit der visualisierten
@@ -2241,11 +2388,14 @@ Simulation
 ----------
 
 Für die Simulation kann das vorbereitete Template OpenFlow-Lab auf dem
-GNS3-Server-Manager der Hochschule genutzt werden. In diesem sind die
-Docker-Container für Faucet und den OpenVSwitch bereits vorbereitet.
-Zusätzlich ist bereits ein Projekt erstellt, in dem die
-Referenztopologie angelegt ist. Die Konfiguration der OpenvSwitche ist
-identisch zum OpenFlow Lab I und kann dort nachgelesen werden.
+GNS3-Server-Manager der Hochschule genutzt werden. Dies ist das
+identische Template, welches auch im Versuch OpenFlow Lab I, siehe
+Abschnitt [5.1](#sec:of1){reference-type="ref" reference="sec:of1"},
+verwendet wird. In diesem sind die Docker-Container für ONOS und den
+OpenvSwitch bereits vorbereitet. Zusätzlich ist bereits ein Projekt
+erstellt, in dem die Referenztopologie angelegt ist. Die Konfiguration
+der OpenvSwitche ist identisch zum OpenFlow Lab I und kann dort
+nachgelesen werden.
 
 ### Konfiguration ONOS
 
@@ -2254,28 +2404,30 @@ direkt aus dem GNS3-Marktplatz installiert werden.
 
 ONOS kann über eine integrierte Weboberfläche, einer Kommandozeile und
 über eine REST-API konfiguriert werden. Zentrales Konfigurationselement
-ist eine JSON-Datei welche sich über eine Rest-API ausgeben und
+ist eine JSON-Datei, welche sich über eine Rest-API ausgeben und
 modifizieren lässt.
 
 Im ersten Schritt werden die notwendigen Module aktiviert. Dies erfolgt
 am komfortabelsten über die Web-GUI. Die Management-IP von ONOS kann im
 Kontextmenü von GNS3 unter Edit config bearbeitet werden. Im
-vorbereitetem Template hat ONOS dafür mehrere Interfaces. Eines wird zur
+vorbereiteten Template hat ONOS mehrere Schnittstellen. Eines wird zur
 Kommunikation mit den OpenvSwitchen verwendet und ein weiteres wird
 mittels dem Cloud-Knoten über den VPN erreichbar gemacht. Die Management
 IP-Adresse sollte also innerhalb des GNS3-Server IP-Adressbereich
 liegen.
 
-Anschließend kann die Web-GUI über folgende URL aufgerufen werden. Zur
-Anmeldung werden die Zugangsdaten onos/rocks verwendet.
+Anschließend kann die Web-GUI über folgende URL aufgerufen werden:
 
     http://<mgmt-ip>:8181/onos/ui/
+
+Zur Anmeldung werden die Zugangsdaten onos/rocks verwendet.
 
 Die CLI ist erreichbar über SSH mit folgenden Terminal-Befehl:
 
     ssh -p 8101 onos@<mgmt-ip>
 
-Unter dem Menüpunkt Applikationen werden nun folgende Plugins aktiviert:
+Unter dem Menüpunkt Applikationen müssen folgende Plugins aktiviert
+werden:
 
 -   OpenFlow Provider Suite
 
@@ -2286,11 +2438,11 @@ Notwendige Abhängigkeiten werden automatisch aktiviert.
 ![ONOS: Aktivierte Applikationen](media/onos-apps.png){#fig:evpncli
 width="100%"}
 
-Wechselt man nun zu dem Menüpunkt Topology sollten die Switche angezeigt
-werden und die Verbindungen zwischen diesen eingezeichnet sein. Ein Ping
-sollte nun zwischen den Endgeräten im gleichen Subnetz möglich sein.
-Durch drücken der Taste H werden erkannte Hosts auch in der Webgui von
-ONOS angezeigt.
+Wechselt man nun zu dem Menüpunkt Topology, sollten die Switche
+angezeigt werden und die Verbindungen zwischen diesen eingezeichnet
+sein. Ein Ping sollte nun zwischen den Endgeräten im gleichen Subnetz
+möglich sein. Durch drücken der Taste H werden erkannte Hosts auch in
+der Webgui von ONOS angezeigt.
 
 ### Konfiguration ONOS VPLS
 
@@ -2319,11 +2471,11 @@ in diesem Lab genutzte Konfiguration liegt im Versuchsordner ab.
         }
 ```
 
-Die Konfiguration der VLANS erfolgt durch gezeigte beispielhafte
-JSON-Datei. Die für dieses Lab notwendige Konfiguration findet sich im
-Versuchsordner. Jedes Interface in dem OpenFlow Netzwerk ist
-spezifiziert durch eine Bridge-ID und einer Port-Nummer. Den Ports wird
-ein jeweiliges VLAN-Tag zugewiesen.
+Die Konfiguration des VLANS ist beispielhaft in der gezeigten JSON-Datei
+im vorhergehendem Listing dargestellt. Die für dieses Lab notwendige
+Konfiguration findet sich im Versuchsordner. Jedes Interface in dem
+OpenFlow-Netzwerk ist spezifiziert durch eine Bridge-ID und einer
+Port-Nummer. Den Ports wird ein jeweiliges VLAN-Tag zugewiesen.
 
 ![ONOS: Konfiguration per
 REST-API](media/onos-postman.png){width="100%"}
@@ -2336,8 +2488,8 @@ Abgeändert werden muss die IP-Adresse im URL-Pfad nach folgendem Schema:
 ![ONOS: Konfiguration per REST-API -
 Hinweis](media/onos-postman-json.png){width="100%"}
 
-Wichtig ist, dass der Application-Typekorrekt gesetzt wird. Anderenfalls
-schlägt der Aufruf fehl.
+Wichtig ist, dass der Application-Type korrekt gesetzt wird.
+Anderenfalls schlägt der Aufruf fehl.
 
 ![ONOS: VPLS Intents](media/vpls-intents.png){width="100%"}
 
@@ -2355,11 +2507,13 @@ berechnet und installiert für jede Kommunikationsbeziehungen spezifische
 Pfade durch das Netzwerk. Dies vereinfacht die Konfiguration eines
 Netzwerkes massiv und bildet die ideale Grundlage für
 Traffic-Engineering oder die Implementierung von Regelwerken direkt im
-Datenpfad. Im aktuellen Zustand kann Aufgrund mangelnder Reife der
-Plugins sowie der Dokumentation ONOS nicht für den produktiven Einsatz
-in Enterprise-Netzwerken empfohlen werden. Zusätzlich ergibt sich aus
-der Marktanalyse, dass das Protokoll OpenFlow eine immer geringere
-Verbreitung findet.
+Datenpfad. Derartige Funktionen müssten im derzeitigen Zustand von ONOS
+allerdings selbst implementiert werden. Im aktuellen Zustand kann
+Aufgrund mangelnder Reife der Plugins sowie der Dokumentation ONOS nicht
+für den produktiven Einsatz in Enterprise-Netzwerken genutzt werden.
+Zusätzlich ergibt sich aus der in dieser Thesis durchgeführten
+Marktanalyse, dass das Protokoll OpenFlow eine immer geringere
+Verbreitung auf Netzwerkkomponenten findet.
 
 P4Runtime Lab - Programmierbare Dataplane
 =========================================
@@ -2369,28 +2523,28 @@ Architektur und Technologien {#architektur-und-technologien}
 
 P4Runtime ist ein Protokoll für die Kommunikation einer abgesetzten
 Controlplane und einer Netzwerkkomponente. Im Unterschied zu OpenFlow
-ist die Implementierung auf Seite der Dataplane nicht durch einen
-Standard vorgegeben.
+ist die funktionale Implementierung nicht durch einen Standard
+vorgegeben.
 
-P4 und P4Runtime stellen damit mehr ein Framework zur Verfügung um
+P4 mit P4Runtime stellt damit eher ein Framework zur Verfügung, um
 Technologien wie VXLAN zu implementieren. Die Art und Weise der
 Implementierung, welche Funktionen auf eine externe Controlplane
-ausgelagert wird und wie diese kommunizieren liegen damit vollständig in
-Händen des Entwicklers. Eine beispielhafte Referenzimplementierung zeigt
-die Open-Networking-Foundation mit der SD-FABRIC. Mittels P4
+ausgelagert wird und wie diese kommunizieren, liegen damit vollständig
+in Händen des Entwicklers. Eine beispielhafte Referenzimplementierung
+zeigt die Open-Networking-Foundation mit der SD-FABRIC. Mittels P4
 programmierbarer Switche mit Stratum als Betriebssystem wird ein
 Netzwerk auf Basis der Technologien Segment-Routing und IPv6 errichtet.
-Über P4Runtime wird eine externe Controlplane angebunden welche
+Über P4Runtime wird eine externe Controlplane angebunden, welche
 Applikationen die direkte Steuerung des Netzwerkes ermöglicht. Dies kann
 zum Beispiel in 5G Mobilfunknetzwerken eingesetzt werden, wo jedem
 einzelnen Nutzer gewisse Datenkontingente zugestanden werden und
 entsprechend die Verbindung gedrosselt wird.
 
-P4Runtime benötigt im Gegensatz zu OpenFlow eine durch den Nutzer
-gegebene Dataplane-Definition. In diesem Lab soll ein virtueller Switch
-über P4 programmiert werden und eine abgesetzte Controlplane über
-P4Runtime angebunden werden. Da dies an einem einfachem Beispiel gezeigt
-werden soll wird ein einzelner Layer-2 Switch mit zwei angeschlossenen
+P4Runtime benötigt im Gegensatz zu OpenFlow eine vorgegebene
+Dataplane-Definition. In diesem Lab soll ein virtueller Switch über P4
+programmiert werden und eine abgesetzte Controlplane über P4Runtime
+angebunden werden. Da dies an einem einfachem Beispiel gezeigt werden
+soll, wird ein einzelner Layer-2 Switch mit zwei angeschlossenen
 Endgeräten gezeigt. Es wird keine komplexe Topologie und kein Layer-3
 Routing implementiert.
 
@@ -2398,45 +2552,44 @@ P4
 --
 
 P4 ist eine durch ein Konsortium entwickelte Programmiersprache zur
-Beschreibung des Verhaltens einer Dataplane. [@p4] P4 ist aktuell durch
+Beschreibung des Verhaltens einer Dataplane [@p4]. P4 ist aktuell durch
 kein RFC standardisiert, die Nutzung der Sprache in RFCs wird lediglich
 in einem Draft erwähnt [@p4rfc]. Das Projekt steht als freies Projekt
 unter der Linux Foundation.
 
-P4 benötigt einen Compiler für das jeweilige Ziel auf dem das Programm
+P4 benötigt einen Compiler für das jeweilige Ziel, auf dem das Programm
 ausgeführt werden soll. Verfügbare Compiler sind zum Beispiel:
 
--   Intel P4 Studio - beinhaltet Compiler für Intel Tofino.
+-   Intel P4 Studio - beinhaltet Compiler für Intel Tofino Hardware.
 
 -   p4c-bm2-ss - Compiler für bmv2, eine Referenz Softwareswitch
     Implementierung für P4.
 
--   p4c-ebpf - Compiler für eBPF - ein Linux Kernelmodul zur
-    performanten Paketverarbeitung
+-   p4c-ebpf - Compiler für eBPF - ein Linux Kernelspace-Modul zur
+    performanten Paketverarbeitung.
 
--   p4c-dpdk - Compiler für dpdk - ein Linux Modul zur performanten
-    Paketverarbeitung
+-   p4c-dpdk - Compiler für dpdk - ein Linux Userspace-Modul zur
+    performanten Paketverarbeitung.
 
 -   Xilinx P4-SDNet - Compiler für Xilinx FPGAs
 
 -   AMD Pensando SSDK - Compiler für AMD Pensando DPUs
 
-P4 ist Protokollunabhängig und hat damit keinen nativen Support für
-bestimmte Technologien wie VXLAN. Header von eingehenden Paketen können
-nach belieben geparsed werden und entsprechend verarbeitet werden. Zu
-diesem Zwecke können Parser, Tabellen und entsprechende Aktionen
-definiert werden. Damit liegt die Pipeline der Paketverarbeitung
-vollständig in den Händen des Entwicklers.
+P4 ist protokollunabhängig und hat damit keinen nativen Support für
+bestimmte Technologien wie zum Beispiel VXLAN. Header von eingehenden
+Paketen können nach Belieben geparsed und entsprechend verarbeitet
+werden. Zu diesem Zwecke können Parser, Tabellen und entsprechende
+Aktionen definiert werden. Damit liegt die Pipeline der
+Paketverarbeitung vollständig in den Händen des Entwicklers.
 
 ![P4 Architektur Quelle: P4.org](media/p4-parts.png){#fig:p4arch
 width="100%"}
 
-Ein P4 Programm besteht aus mehreren Komponenten. Während die Sprache
-selbst und viele Funktionen aus der Core Library zum Standard gehören
-und auf allen Plattformen verfügbar sind, sind die möglichen
-Architektur-Komponenten durch den Compiler vorgegeben. Die
-entsprechenden Compiler bringen Architekturen mit, beziehungsweise
-müssen die jeweiligen Architekturen unterstützen.
+Ein P4-Programm besteht aus mehreren Komponenten. Während viele
+Funktionen aus der Core Library zum Standard gehören und auf allen
+Plattformen verfügbar sind, sind Pipeline-Modelle durch den Compiler
+vorgegeben. Die einzelnen Compiler bringen eigene Architekturen mit,
+oder unterstützen allgemein verfügbare Architekturen.
 
 ![Verschiedene P4 Architekturen Quelle:
 P4.org](media/p4archs.jpeg){width="100%"}
@@ -2444,7 +2597,7 @@ P4.org](media/p4archs.jpeg){width="100%"}
 In der Abbildung sind verschiedene Architekturen gezeigt. Die
 Architektur V1Model wird häufig eingesetzt und unter anderem auch durch
 den bmv2 Softwareswitch genutzt. Die Idee hinter PSA ist die Schaffung
-einer Architektur welche sich allgemein auf verschiedener Hardware
+einer Architektur, welche sich allgemein auf verschiedener Hardware
 abstrahieren lässt. Der Compiler für den Intel Tofino zum Beispiel
 unterstützt die Architekturen V1Model, PSA und die eigene Architektur
 TNA.
@@ -2459,9 +2612,9 @@ Netzwerkkomponente. Mit dem Protokoll können zum einen P4-Programme auf
 Netzwerkkomponenten übertragen werden und zum anderen auf Objekte wie
 Tabellen zugegriffen werden. Die zugreifbaren Objekte werden bereits in
 dem P4-Programm definiert und müssen sowohl dem P4Runtime-Server aus
-auch dem Client bekannt sein. Sie werden gespeichert in einer .p4info
-Datei. gRPC wiederum basiert auf protobufs, welches Daten im
-Binär-Format seriell überträgt. Bei protobufs ist es im allgemeinen
+auch dem Client bekannt sein. Sie werden in einer .p4info Datei
+gespeichert. gRPC wiederum basiert auf protobufs, welches Daten im
+Binär-Format seriell überträgt. Bei protobufs ist es im Allgemeinen
 notwendig, das die übertragenen Datenformate vorab beiden Seiten bekannt
 sind.
 
@@ -2472,54 +2625,53 @@ einer per P4 programmierbaren Hardware basieren. Dazu gehört zum
 Beispiel Intels Tofino. Mit dem Projekt PINS wird die Schnittstelle auch
 auf nicht P4-basierter Hardware implementiert. Die Freiheiten in der
 Programmierung durch die Beschreibungssprache P4 sind hierbei stärker
-eingeschränkt durch vorgegebene Blöcke in der Pipeline, die in
+durch vorgegebene Blöcke in der Pipeline eingeschränkt, die in
 unveränderlicher Hardware abgebildet sind.
 
 ![P4Runtime: PINS Quelle: OCP Summit](media/p4sai.png){width="100%"}
 
-PINS dockt dabei oberhalb der Abstraktionsschicht SAI an.
+PINS dockt dabei oberhalb der Abstraktionsschicht SAI an [@p4brcm].
 
 ### Virtueller Switch: Stratum-bmv2
 
-Stratum ist ein Betriebssystem für Switche welches fundamentaler
+Stratum ist ein Betriebssystem für Switche, welches fundamentaler
 Bestandteil aktueller Konzepte der [onf]{acronym-label="onf"
 acronym-form="singular+short"} ist. Beispiele sind die Projekte TRELLIS,
 welches neben dem Einsatz von P4Runtime noch OpenFlow unterstützt sowie
-das aktuelle Projekt SD-FABRIC, welches vollständig auf dem Einsatz von
-Stratum basiert. Das Betriebssystem wird auch als Thin-os bezeichnet und
-fokussiert sich auf die Bereitstellung einer P4Runtime Schnittstelle zur
-Programmierung der Dataplane. Stratum bietet neben der P4Runtime noch
-die Schnittstellen gNMI und gNOI. Es gibt keine CLI abseits der
-Linux-Boardmittel, als Schnittstellen sind lediglich die P4Runtime, gNOI
-und gNMI implementiert. Stratum unterstützt Plattformen auf Basis von
-Intels Tofinos, Broadcoms Tomahawk, sowie den Software-Switch bmv2.
-[@stratum]
+das aktuelle Projekt SD-FABRIC, welches vollständig auf Stratum basiert.
+Das Betriebssystem wird auch als Thin-os bezeichnet und fokussiert sich
+auf die Bereitstellung einer P4Runtime Schnittstelle zur Programmierung
+der Dataplane. Es gibt keine CLI abseits der Linux-Boardmittel, als
+Schnittstellen sind lediglich die P4Runtime, gNOI und gNMI
+implementiert. Stratum unterstützt Plattformen auf Basis von Intels
+Tofinos, Broadcoms Tomahawk, sowie den Software-Switch bmv2[@stratum].
 
-![Stratum Architektur](media/stratum-architecture.png){#fig:faucettop
-width="100%"}
+![Stratum Architektur Quelle: Open Networking
+Foundation](media/stratum-architecture.png){width="100%"}
 
 Stratum integriert die Peripherie über entsprechende Treiber. Die
 eigentliche Forwarding-Hardware wird über entsprechende SDKs
-angesprochen. Die hier gezeigte SDKLT, Software Development Kit Logical
-Table ist eine Schnittstelle von Broadcom zur Programmierung der
-Broadcom eigenen ASICs. *These goals are best achieved by having a
-networking stack that is efficient, customizable and open at all layers,
-including the layer configuring the switch ASIC. SDKLT enables hardware
-vendors, Network OS vendors and end users to build tailored,
-highly-automated, high-quality, high-performance networking solutions
-that meet the needs of both distributed control-plane and centralized
-SDN-controller environments. In table-based programming, all the device
-physical resources such as MAC Address Tables, L3 route tables, TCAMs,
-etc. are exposed as logical tables.* [@sdklt]
+angesprochen. Die hier gezeigte Alternative zur TOFINO-Plattform SDKLT,
+Software Development Kit Logical Table, ist eine Schnittstelle von
+Broadcom zur Programmierung der Broadcom eigenen ASICs. Broadcom
+beschreibt diese mit:
+
+> *SDKLT enables hardware vendors, Network OS vendors and end users to
+> build tailored, highly-automated, high-quality, high-performance
+> networking solutions that meet the needs of both distributed
+> control-plane and centralized SDN-controller environments. In
+> table-based programming, all the device physical resources such as MAC
+> Address Tables, L3 route tables, TCAMs, etc. are exposed as logical
+> tables[@sdklt].*
 
 ### P4Runtime Go Controller {#sec:go-client}
 
-Dieser Controller ist ein privat entwickeltes und quelloffenes Projekt
-gefunden auf Github. Es handelt sich um ein kleines P4-Programm welches
+Dieser Controller ist ein privates quelloffenes Projekt, welches auf
+Github gehostet ist. Es handelt sich um ein kleines P4-Programm welches
 einige wenige *tables* und *actions* zur Weiterleitung von
 Ethernet-Paketen implementiert. Mittels eines abgesetzten und in GO
-geschriebenen Controllers wird das Lernen von MAC-Adressen implementiert
-sodass der Switch sich wie eine Bridge verhält. [@p4go]
+geschriebenen Controllers wird das Lernen von MAC-Adressen
+implementiert, sodass der Switch sich wie eine Bridge verhält [@p4go].
 
 Im weiteren werden die beiden Komponenten auf Basis ihres Quellcodes
 erläutert.
@@ -2531,20 +2683,20 @@ In diesem P4-Pogramm wird die Dataplane des Switches definiert.
     #include <core.p4>
     #include <v1model.p4>
 
-Zu Beginn wird die Bibliothek *core.p4* geladen, welches weiterhin
+Zu Beginn wird die Bibliothek *core.p4* geladen, welche weiterhin
 benötigte Routinen und Typdefinitionen enthält. An dieser Stelle wird
 ebenfalls die Architektur des P4-Targets geladen. Hier wird die in
-Abbildung [7.3](#fig:v1model){reference-type="ref"
+Abbildung [7.2](#fig:v1model){reference-type="ref"
 reference="fig:v1model"} gezeigte Architektur verwendet.
 
-![P4: v1model](media/v1model.png){#fig:v1model width="100%"}
+![P4: v1model - Quelle: P4.com](media/v1model.png){#fig:v1model
+width="100%"}
 
 Das Model besteht aus einer festen Pipeline-Definition. Im weiteren
 Verlauf des P4-Programms werden die einzelnen Blöcke beschrieben. Dafür
 kennt die Sprache *parser*- und *control* Blöcke.
 
 ``` {caption="l2\\_switch.p4 - ParseImpl"}
-\begin{lstlisting}[caption=l2\_switch.p4 ParseImpl]
 parser ParserImpl(packet_in packet, out headers hdr, inout metadata meta, inout standard_metadata_t standard_metadata) {
     state parse_ethernet {
         packet.extract(hdr.ethernet);
@@ -2559,25 +2711,25 @@ parser ParserImpl(packet_in packet, out headers hdr, inout metadata meta, inout 
 Im ersten Block wird das empfangene Ethernet-Paket geparsed. Der
 Funktionsblock nimmt einen komplettes Ethernet-Paket entgegen -
 *packet\_in packet* - und gibt die Metadaten wieder zurück - *out
-headers hdr*. Der Block arbeitet wie eine FSM - Finite State Mashine.
+headers hdr*. Die Blöcke arbeiten wie eine FSM - Finite State Mashine.
 Der Block startet im Zustand *start* und wechselt ohne weitere Logik in
 den Zustand *parse\_ethernet*. In diesem wird der Header extrahiert und
 anschließend in den Zustand *accept* gewechselt, das Ende der FSM. Die
 Variablen in der Definition des Funktionsblock können als *in*, *out*
-und *inout* definiert werden. Alle Variablen die als *out* oder *inout*
-definiert sind werden dabei an den nächsten Funktionsblock, also dem
-Checksum Verificator weitergegeben.
+und *inout* definiert werden. Alle Variablen, die als *out* oder *inout*
+definiert sind werden dabei an den nächsten Funktionsblock
+weitergegeben.
 
-``` {caption="'l2\\_switch.p4 - verify Checksum'"}
+``` {caption="l2\\_switch.p4 - verify Checksum"}
 control verifyChecksum(inout headers hdr, inout metadata meta) {
     apply { }
 }
 ```
 
-Dieser Block ist in diesem einfachen P4-Programm leer, die Checksumme
-wird also nicht überprüft.
+Dieser Block ist in diesem einfachem P4-Programm leer, die Checksumme
+wird nicht überprüft.
 
-``` {caption="'l2\\_switch.p4 IngressImpl'"}
+``` {caption="l2\\_switch.p4 IngressImpl"}
 control IngressImpl(inout headers hdr, inout metadata meta, inout standard_metadata_t standard_metadata) {
     action drop() {
         mark_to_drop(standard_metadata);
@@ -2623,18 +2775,18 @@ control IngressImpl(inout headers hdr, inout metadata meta, inout standard_metad
 }
 ```
 
-In diesem Block wird die eigentliche Weiterleitungsentscheidung
+In dem Block IngressImpl wird die eigentliche Weiterleitungsentscheidung
 getroffen. Dafür werden vier *actions* sowie zwei *tables* definiert.
 Bei der Definition der Tabelle werden die möglichen Aktionen sowie eine
 Standardaktion definiert. Die vier Aktionen bilden die bekannten drei
 Handlungsmöglichkeiten einer Bridge ab, ein Paket zu verwerfen (drop),
-weiterzuleiten (fwd), zu fluten (broadcast) und zusätzlich eine neue
-MAC-Adresse auf einer Schnittstelle zu lernen (learn\_mac).
+weiterzuleiten (fwd) oder zu fluten (broadcast). Zusätzlich kann eine
+neue MAC-Adresse auf einer Schnittstelle gelernt werden (learn\_mac).
 
 Die smac Tabelle hat als Beispiel als default\_action die Aktion
 learn\_mac definiert. Die Einträge der Tabelle sehen wie folgt aus:
 
-``` {caption="'l2\\_switch.p4 - textit{smac} Tabellen Eintrag'"}
+``` {caption="l2\\_switch.p4 - \\textit{smac} Tabellen Eintrag"}
 P4Runtime sh >>> for te in table_entry["IngressImpl.smac"].read():
             ...:     print(te)
             ...:
@@ -2654,10 +2806,10 @@ idle_timeout_ns: 10000000000
 {...}
 ```
 
-Sobald eine MAC-Adresse bekannt ist und in dieser Tabelle steht wird die
-Aktion *NoAction* ausgeführt und das Paket damit nicht an den Controller
-gesendet. Ist eine MAC-Adresse nicht bekannt wird die Standardaktion
-*learnmac* ausgeführt.
+Sobald eine MAC-Adresse bekannt ist und in dieser Tabelle steht, wird
+die Aktion *NoAction* ausgeführt und das Paket damit nicht an den
+Controller gesendet. Ist eine MAC-Adresse nicht bekannt wird die
+Standardaktion *learnmac* ausgeführt.
 
 ``` {caption="l2\\_switch.p4 - \\textit{dmac} Tabellen Eintrag"}
 table_id: 45595255 ("IngressImpl.dmac")
@@ -2680,11 +2832,11 @@ action {
 
 Analog dazu wird bei der Tabelle dmac verfahren. Zusätzlich wird hier
 ein Parameter zurückgegeben. In diesem Fall wird die ID der
-Schnittstelle auf dem das Ethernet-Paket weitergeleitet werden soll
+Schnittstelle, auf dem das Ethernet-Paket weitergeleitet werden soll,
 übergeben.
 
 Unter dem Schlüsselwort apply werden die in dem Block durchgeführten
-Aktionen definiert, in gezeigten Beispiel wird erst ein Counter
+Aktionen definiert. Im gezeigten Beispiel wird erst ein Counter
 inkrementiert, die smac-Tabelle mit entsprechender Aktion und
 abschließend die dmac-Tabelle mit entsprechender Aktion aufgerufen.
 
@@ -2714,10 +2866,10 @@ Blöcken erstellt.
 
 #### main.go
 
-Pakete mit unbekannter Quell-Macadressen werden wie im vorherigen
-Kapitel gezeigt an den Controller gesendet. In dem GO Programm wird
-dafür eine eine gRPC Verbindung aufgebaut, eine P4Runtime Session auf
-Basis der gRPC Verbindung instanziiert und mittels einer go-Routine auf
+Pakete mit unbekannter Quell-Macadressen werden, wie im vorherigen
+Abschnitt gezeigt, an den Controller gesendet. In dem GO Programm wird
+dafür eine gRPC Verbindung aufgebaut, eine P4Runtime Session auf Basis
+der gRPC Verbindung instanziiert und mittels einer go-Routine auf
 eingehende Nachrichten reagiert.
 
 ``` {caption="main.go - Aufbau einer P4Runtime Sesssion"}
@@ -2728,19 +2880,19 @@ c := p4_v1.NewP4RuntimeClient(conn)
 p4RtC := client.NewClient(c, deviceID, electionID)
 ```
 
-Der Aufbau einer P4Runtime Session wird in dem Listing vereinfacht
-dargestellt. Es resultiert ein Objekt mit dem die Verbindung auf
+Der Aufbau einer P4Runtime-Session wird in dem Listing vereinfacht
+dargestellt. Es resultiert ein Objekt, mit dem die Verbindung auf
 eingehende Nachrichten abgehört werden kann. Die P4Runtime-Session wird
 auf Basis einer bestehenden gRPC-Session aufgebaut.
 
-``` {caption="'main.go - GO-routine zur Verarbeitung eingehender Nachrichten'"}
+``` {caption="main.go - GO-routine zur Verarbeitung eingehender Nachrichten"}
 go func() {
         ctx := context.Background()
         handleStreamMessages(ctx, p4RtC, messageCh)
     }()
 ```
 
-Mittels eine GO-Routine welche asynchron im Hintergrund läuft wird auf
+Mittels eine GO-Routine, welche asynchron im Hintergrund läuft, wird auf
 eingehende Pakete reagiert.
 
 ``` {caption="main.go - Aufruf der Funktion learnMacs"}
@@ -2784,12 +2936,35 @@ func learnMacs(ctx context.Context, p4RtC *client.Client, digestList *p4_v1.Dige
 ```
 
 In diesem Ausschnitt der *learnmacs*-Funktion wird die Instanziierung
-eines neuen Tabellen-Eintrags sowie die anschließende Übertragung des
+eines neuen Tabellen-Eintrags, sowie die anschließende Übertragung des
 Eintrags auf den Stratum-Switch gezeigt. Hierbei handelt es sich um
 einen Eintrag in der Tabelle *smac* mit der Aktion *NoAction*.
 
 Simulation
 ----------
+
+Der entsprechende Versuchsordner ist wie folgt aufgebaut:
+
+``` {caption="P4Runtime-Lab: Versuchsordner"}
+|-- GNS3-Portable-Project
+|   `-- p4stratum.gns3project
+|-- p4runtime-controller
+|   |-- Dockerfile
+|   |-- P4_LAB
+|   |   `-- l2_switch
+|   `-- p4runtime-controller.gns3a
+`-- stratum-bmv2-container
+    |-- chassis_config.pb.txt
+    |-- Dockerfile
+    |-- reset_switch.sh
+    |-- stratum_bmv2_deb.deb
+    `-- stratum-bmv2.gns3a
+```
+
+In dem Versuchsordner befindet sich ein portables GNS3-Projekt, welches
+bereits vollständig vorbereitet ist und in GNS3 importiert werden kann.
+Die beiden weiteren Ordner enthalten alle Abhängigkeiten für die im
+weiteren gezeigten Docker-Container.
 
 ### Stratum-bmv2 Container
 
@@ -2797,7 +2972,7 @@ Der Switch wird in Form eines Docker-Containers virtualisiert. Der
 Software Switch Stratum-bmv2 wird über ein Debian-Paket installiert,
 welches selbst aus entsprechendem Quellcode kompiliert werden muss. Die
 Vorgehensweise für die Erstellung des Debian-Pakets ist in dem
-entsprechenden Github Repository dokumentiert.[@stratum-git]. Das
+entsprechenden Github Repository dokumentiert [@stratum-git]. Das
 bereits kompilierte Debian-Paket, ein Dockerfile sowie eine zugehörige
 GNS3-Appliance Beschreibungsdatei (\*.gns3a) liegen im Versuchsordner
 ab.
@@ -2805,9 +2980,9 @@ ab.
     $ docker build . -t nlab4hsrm/stratum-bmv2:<tag>
 
 Der Container wird mit gezeigtem Befehl erstellt. Der Befehl muss im
-Verzeichnis in dem das Dockerfile sowie das Debian-Paket abliegt
+Verzeichnis, in dem das Dockerfile sowie das Debian-Paket abliegt,
 ausgeführt werden. Als Basis-Image wird das ältere Debian Buster
-verwendet. Ein Versuch mit dem aktuellerem Bookworm schlug fehl
+verwendet. Ein Versuch mit dem aktuellerem Bookworm schlug fehl.
 
 Der Container kann im Anschluss in GNS3 als Applikation angelegt werden.
 In dem GNS3-Server-Manager Template Stratum\_P4\_Lab ist die Applikation
@@ -2816,9 +2991,9 @@ vorbereitet.
 ![Stratum GNS3 Appliance](media/stratum-gns3.png){#fig:evpncli
 width="100%"}
 
-Es werden 9 Schnittstellen provisioniert, wobei die erste - eth0- als
+Es werden 9 Schnittstellen provisioniert, wobei die erste - eth0 - als
 Management-Schnittstelle genutzt wird. Als Start command des Containers
-wird die Anwendung stratum\_bmv2 aufgerufen der als Parameter der Pfad
+wird die Anwendung stratum\_bmv2 aufgerufen, der als Parameter der Pfad
 zur Chassis-Konfiguration übergeben wird.
 
     root@stratum-bmv2-2:/# stratum_bmv2 -chassis-config-file=/etc/stratum/chassis_config.pb.txt
@@ -2839,10 +3014,10 @@ zur Chassis-Konfiguration übergeben wird.
     {...}
     16:09:26.049036    82 hal.cc:220] Stratum external facing services are listening to 0.0.0.0:9339, 0.0.0.0:9559, localhost:9559...
 
-Nach starten des Switches kann sich der Log durch öffnen eines Terminals
-mit einem Doppelklick auf die Netzwerkkomponente betrachten. Die sollte
-die im Listing gezeigten Zeilen enthalten. Wichtig ist, das die 8 Ports
-hinzugefügt worden sind und Stratum auf den Ports 9339 und 9559
+Nach Starten des Switches kann das Log durch Öffnen eines Terminals mit
+einem Doppelklick auf die Netzwerkkomponente betrachtet werden. Dieser
+sollte die im Listing gezeigten Zeilen enthalten. Wichtig ist, dass die
+8 Ports hinzugefügt worden sind und Stratum auf den Ports 9339 und 9559
 Verbindungen akzeptiert.
 
 ### p4runtime-controller Container
@@ -2864,12 +3039,12 @@ CMD ["/bin/bash"]
 ```
 
 Als Controller wird ein selbst erstellter Docker-Container verwendet.
-Dieser enthält die kompilierte GO-Anwendung, beschrieben in Kapitel
+Dieser enthält die kompilierte GO-Anwendung, beschrieben in Abschnitt
 [7.2.4](#sec:go-client){reference-type="ref" reference="sec:go-client"},
-sowie eine in Python geschrieben P4Runtime-Shell mit der sich dynamisch
-Objekte von einem Switch anzeigen und modifizieren lassen. Die
-GO-Anwendung beinhaltet den ebenfalls bereits kompilierten P4-Code für
-den Stratum Software-Switch.
+sowie eine in Python geschriebene P4Runtime-Shell, mit der sich Objekte
+eines Switch anzeigen und modifizieren lassen. Die GO-Anwendung
+beinhaltet den ebenfalls bereits kompilierten P4-Code für den Stratum
+Software-Switch.
 
     $ python3 -m p4runtime-sh --grpc-addr <Switch Management IP>:<gRPC Port>
 
@@ -2881,19 +3056,19 @@ Befehl als interaktive Shell aufrufen.
 ![P4Runtime GNS3 Topologie](media/p4runtime-gns3-top.png){#fig:evpncli
 width="100%"}
 
-Zur Demonstration wird eine Topologie erstellt mit einem Stratum-Switch
-sowie einem P4Runtime-Controller. Zu Beginn werden dem Controller sowie
-dem Stratum Software-Switch IP-Adressen zugewiesen. Dies kann über den
-Punkt Edit config im GNS3-Kontextmenü unter Auswahl der jeweiligen
+Zur Demonstration wird eine Topologie mit einem Stratum-Switch sowie
+einem P4Runtime-Controller erstellt. Zu Beginn werden dem Controller
+sowie dem Stratum Software-Switch IP-Adressen zugewiesen. Dies kann über
+den Punkt Edit config im GNS3-Kontextmenü unter Auswahl der jeweiligen
 Geräte durchgeführt werden. Da keine externen Verbindungen benötigt
-werden ist die Nutzung des Cloud-Knotens und die damit notwendige
-Nutzung des 172.30.0.0/24er Netzwerkes optional. Nun sollte die
-Verbindung zwischen Controller und Switch mittels Ping überprüft werden.
-Ist dies erfolgreich, kann fortgefahren werden.
+werden, ist die Nutzung des Cloud-Knotens und die damit notwendige
+Nutzung des 172.30.0.0/16 Netzwerkes optional. Nun sollte die Verbindung
+zwischen Controller und Switch mittels Ping überprüft werden. Ist dies
+erfolgreich, kann fortgefahren werden.
 
     ./P4_LAB/l2_switch -addr=172.30.240.110:9559 -device-id=1 -ports=1,2,3,4,5,6,7,8 &
 
-Im Anschluss wird eine Konsole auf dem Controller-Knoten gestartet und
+Im Anschluss wird eine Konsole auf dem Controller-Knoten geöffnet und
 der Controller mit dem gezeigten Befehl gestartet. Die gezeigte
 IP-Adresse muss entsprechend angepasst werden. Durch das nachgestellte &
 wird der Prozess im Hintergrund ausgeführt und die Linux-Konsole ist
@@ -2906,7 +3081,7 @@ gleichen Subnetz konfiguriert haben.
     $ python3 -m p4runtime-sh --grpc-addr <Switch Management IP>:<gRPC Port>
 
 Im nächsten Schritt kann auf dem Controller eine p4runtime-shell
-gestartet werden um die Tabellen auf dem Stratum Software-Switch
+gestartet werden, um die Tabellen auf dem Stratum Software-Switch
 auszulesen. Auch hier muss die IP-Adresse entsprechend angepasst werden.
 
 Über folgenden Befehl lassen sich alle verfügbaren Tabellen auflisten:
@@ -2945,7 +3120,7 @@ action_refs {
 size: 4096
 ```
 
-Um die einzelnen Einträge einer Tabelle anzuzeigen muss in der
+Um die einzelnen Einträge einer Tabelle anzuzeigen, muss in der
 Python-Shell eine Schleife konstruiert werden:
 
 ``` {caption="P4Runtime-Shell: Tabelleneinträge anzeigen"}
@@ -2957,36 +3132,32 @@ P4Runtime sh >>> for te in table_entry["IngressImpl.smac"].read():
 Fazit
 -----
 
-Das Lab zeigt in einem einfachem Beispiel die Funktionsweise und die
+Das Lab zeigt an einem einfachem Beispiel die Funktionsweise und die
 Implementierung einer P4-basierten Netzwerkkomponente und des
 zugehörigen Controllers.
 
 P4Runtime ist ein konsequenter Ansatz Netzwerkkomponenten und
 Architekturen programmierbar zu gestalten. Mit P4Runtime lassen sich
 Controller-basierte Architekturen in zentraler und dezentraler Form
-realisieren. P4 bildet weiterhin eine mächtige Abstraktionsschicht
-zwischen der Vorstellung eines Anwenders wie das Netzwerk zu
-funktionieren hat und der eigentlich eingesetzten Hardware. Portable
-P4-Programme entkoppeln hierbei konsequent die Hardware von der
-Funktion. Die Programmierbarkeit ist weiter zuträglich neue Funktionen
-einfach in bestehende Netzwerke integrieren zu können.
+realisieren. P4 ermöglicht es hierbei das Verhalten der Hardware im
+Rahmen vorgegebener Pipeline-Architekturen frei zu definieren.
 
-P4-basierte Netzwerkarchitekturen haben für Enterprise-Segment eine
-geringe Relevanz da hier Zeit und Kompetenz fehlt eigene Anwendungen zu
-schreiben, was der eigentlich primäre Vorteil von P4 ist. Eigentliche
-Vorteile der Programmierbarkeit auf diesem Level werden durch Anbieter
-im Carrier- und Cloudumfeld ausgeschöpft, die auf Basis von P4
-leistungsfähige und anwendungsspezifische Loadbalancer oder ähnliches
-entwickeln. Mögliche Vorteile im Enterprise-Segment sind die
-Implementierung neuer Funktionen im Feld was die Lebensdauer von
-Hardware erhöhen kann. Zeitgleich ist ein Unternehmen nicht auf eine
-bestimmte Hardware-Serie von einem Hersteller angewiesen und kann
-unabhängig seiner logischen Netzwerkarchitektur eine andere P4-basierte
-Hardwareplattform einkaufen.
+P4-basierte Netzwerkarchitekturen haben für das Enterprise-Segment eine
+geringe Relevanz, da hier Zeit und Kompetenz fehlen, eigene P4-Programme
+zu entwickeln, was der eigentlich primäre Vorteil von P4 ist. Vorteile
+der Programmierbarkeit auf diesem Level werden durch Anbieter im
+Carrier- und Cloudumfeld ausgeschöpft, die auf Basis von P4 eigene
+anwendungsspezifische Loadbalancer oder ähnliches entwickeln.
 
-P4 kommt damit am nächsten und konsequentesten an die Definition von SDN
-heran. Die ONF beschreibt P4 als NG-SDN -Next Generation Software
-defined Networking.
+Mögliche Vorteile im Enterprise-Segment sind die Implementierung neuer
+Funktionen seitens des Herstellers durch Software-Updates, was die
+Lebensdauer von Hardware erhöhen kann. Zusätzlich ist ein Unternehmen
+nicht auf eine bestimmte Hardware-Serie eines Hersteller angewiesen und
+kann unabhängig von seiner logischen Netzwerkarchitektur eine andere
+P4-basierte Hardwareplattform einkaufen.
+
+Die ONF beschreibt P4 als NG-SDN -Next Generation Software defined
+Networking.
 
 BGP-EVPN Lab - Netzwerkvirtualisierung mit SONiC {#sec:evpnlab}
 ================================================
@@ -2995,64 +3166,65 @@ Architektur und Technologien {#architektur-und-technologien-1}
 ----------------------------
 
 In diesem Lab wird eine Netzwerkvirtualisierung auf Basis von VXLAN und
-BGP-EVPN gezeigt. Es sollen Layer-2 und Layer-3 Services wie in Kapitel
-[2.3](#sec:services){reference-type="ref" reference="sec:services"}
-beschrieben provisioniert werden können. VXLAN wird dabei als
-Enkapsulierungsprotokoll verwendet um Datenpakete über Tunnel durch ein
-Transportnetzwerk zu übertragen. Als Controlplane zwischen den VXLAN
-Tunnelendpunkten (kurz VTEPs) wird BGP-EVPN eingesetzt. BGP-EVPN nimmt
-hierbei mehrere Funktionen war. Es macht die VTEPs untereinander bekannt
-um baut damit automatisch alle notwendigen Tunnel auf. Weiterhin werden
-Layer-2 Erreichbarkeitsinformationen zwischen den VTEPs signalisiert
-damit die Anzahl der Broadcasts reduziert werden. Für die
-provisionierung von Layer-3 Services werden ebenfalls lokal verfügbare
-IP-Prefixes an die anderen Teilnehmer des Netzwerkes signalisiert.
+BGP-EVPN gezeigt. Es sollen Layer-2 und Layer-3 Services, wie in
+Abschnitt [2.5](#sec:services){reference-type="ref"
+reference="sec:services"} beschrieben, provisioniert werden können.
+VXLAN wird dabei als Enkapsulierungsprotokoll verwendet, um Datenpakete
+über Tunnel durch ein Transportnetzwerk zu übertragen. Als Controlplane
+zwischen den VXLAN Tunnelendpunkten (kurz VTEPs) wird BGP-EVPN
+eingesetzt. BGP-EVPN übernimmt hierbei mehrere Funktionen. Es macht die
+VTEPs untereinander bekannt und baut damit automatisch alle notwendigen
+Tunnel auf. Weiterhin werden Layer-2 Erreichbarkeitsinformationen
+zwischen den VTEPs signalisiert, damit die Anzahl der notwendigen
+Broadcasts reduziert werden kann. Für die Provisionierung von Layer-3
+Services, können über EVPN lokal verfügbare IP-Prefixes an die anderen
+Teilnehmer des Netzwerkes signalisiert werden.
 
 ![BGP-EVPN Architektur](media/vxlan-arch.png){width="100%"}
 
-Die Netzwerkarchitektur erfordert hierfür die Konfiguration dreier
-voneinander größtenteils unabhängiger Schichten. Während die Schichten
-zwar voneinander unabhängig agieren bauen sie funktional aufeinander auf
-und bedingen sich gegenseitig.
+Die Netzwerkarchitektur erfordert hierfür die Konfiguration dreier,
+voneinander größtenteils unabhängiger, Schichten. Während die Schichten
+zwar voneinander unabhängig agieren, bauen sie funktional aufeinander
+auf und bedingen sich gegenseitig.
 
-### Underlay Netzwerk
+### Underlay Netzwerk: OSPF
 
 Als Underlay-Netzwerk wird ein IP-Netzwerk verwendet. Jeder Switch
-erhält eine eindeutige Loopback-Adresse und jedes NNI -
-Network-Network-Interface - eine IP-Adresse in einem Transfernetzwerk.
-Ziel dieses Netzwerk ist alle Loopback-Adressen untereinander erreichbar
-zu machen. Da eine statische Konfiguration von Routen hier komplex wäre
-und nicht auf Änderungen im Netwerk reagiert, wird ein Routing-Protokoll
-eingesetzt. In diesem Lab wird OSPF verwendet, das Routing-Protokoll ist
-beliebig ersetzbar durch andere IGPs - Interior-Gateway-Protocoll - wie
-ISIS oder EIGRP.
+erhält eine eindeutige Loopback-Adresse und jedes NNI,
+Network-Network-Interface, eine IP-Adresse in einem Transfernetzwerk.
+Ziel dieses Netzwerk ist es, alle Loopback-Adressen untereinander
+erreichbar zu machen. Da eine statische Konfiguration von Routen hier
+komplex wäre und nicht auf Änderungen im Netwerk reagiert, wird ein
+Routing-Protokoll eingesetzt. In diesem Lab wird OSPF verwendet. Das
+Routing-Protokoll ist beliebig ersetzbar durch andere IGPs -
+Interior-Gateway-Protocol - wie ISIS oder EIGRP.
 
 Die im Overlay-Netzwerk gespannten Tunnel terminieren auf den
-Loopback-Adressen im Underlay-Netzwerk. Ein VXLAN-Tunnel hat keine
+Loopback-Adressen im Underlay-Netzwerk. Ein VXLAN-Tunnel hat dabei keine
 Kenntnis über die zugrunde liegende Paketweiterleitung. Der VXLAN Tunnel
 benötigt lediglich eine per IP erreichbare Gegenstelle. Das
 Transport-Netzwerk sollte Jumbo-Frames unterstützen, da durch die
-VXLAN-Enkapsulierung ein Overhead entsteht und die Pakete größer als die
-normalen 1500-Bytes werden können.
+VXLAN-Enkapsulierung ein Overhead entsteht und die Pakete größer als,
+die normalen 1500-Bytes werden können.
 
-### Overlay Netzwerk
+### Overlay Netzwerk: VXLAN
 
-VXLAN ist eine Technologie um Ethernet-Tunnel über ein geroutetes
+VXLAN ist eine Technologie, um Ethernet-Tunnel über ein geroutetes
 Layer-3 Netz zu spannen. VXLAN steht dabei für Virtual Extensible LAN
-und ist in dem RFC 7348 standardisiert[@vxlan]. VXLAN unterscheidet
+und ist in dem RFC 7348 standardisiert [@vxlan]. VXLAN unterscheidet
 zwischen 16 Millionen Netzwerken und erlaubt in großen Umgebungen die
 doppelte Nutzung von VLAN-IDs. VXLAN kombiniert die Fähigkeit Layer-2
-Tunnel über geroutete Strecken zu ziehen mit der Fähigkeit VLANs doppelt
-zu nutzen, um eine ganzheitliche Netzwerkvirtualisierung zu schaffen.
-Die ist entscheidender Vorteil von Technologien wie IEEE 802.1ad QinQ
-oder GRE, welche nur jeweils eine der beiden Problem lösen.
+Tunnel über geroutete Strecken zu ziehen mit der Fähigkeit, VLANs
+doppelt zu nutzen, um eine ganzheitliche Netzwerkvirtualisierung zu
+schaffen. Diese ist entscheidender Vorteil von Technologien wie IEEE
+802.1ad QinQ oder GRE, welche nur jeweils eine der beiden Problem lösen.
 
 ![VXLAN Header, Quelle:
 Researchgate](media/VXLAN-Packet-Encapsulation.png){width="70%"}
 
-VXLAN Pakete werden mittels eines zusätzlichen VXLAN-Headers realisiert.
-VXLAN-Pakete werden mittels UDP versendet, um ein doppeltes TCP mit
-seinen negativen Effekten durch Slow-Congestion und Retransmission zu
+VXLAN wird mittels eines zusätzlichen Header-Feldes realisiert. Die
+Pakete werden mittels UDP versendet, um ein doppeltes TCP mit seinen
+negativen Effekten durch Slow-Congestion und Retransmission zu
 vermeiden.
 
 ![VXLAN Beispiel](media/vxlan-basis.png){#fig:vxlan1 width="100%"}
@@ -3061,11 +3233,11 @@ In Abbildung [8.1](#fig:vxlan1){reference-type="ref"
 reference="fig:vxlan1"} ist ein Beispiel für einen einfachen
 VXLAN-Tunnel gegeben. VXLAN ermöglicht es, einen Layer-2 Netzwerk über
 eine geroutete Verbindungsstrecke zu ziehen. Dafür werden auf den beiden
-gezeigten Switchen jeweils ein VTEP benötigt, welche die Pakete
-verpacken und an den jeweiligen anderen VTEP senden.
+gezeigten Switchen VTEPs benötigt, welche die Pakete verpacken und an
+den jeweiligen anderen VTEP senden.
 
-Ein Trace auf dem Verbindungsstrecke zwischen den beiden Switchen zeigt
-bei einem Ping zwischen den beiden Hosts folgende Pakete:
+Ein Mitschnitt auf der Verbindungsstrecke zwischen den beiden Switchen
+zeigt bei einem Ping zwischen den beiden Hosts folgende Pakete:
 
 ![VXLAN Paket](media/vxlan-packet.png){#fig:vxlan2 width="100%"}
 
@@ -3077,88 +3249,81 @@ Loopback-Adressen der beiden Switche.
 
 ![VXLAN Beispiel 2](media/vxlan-basis2.png){#fig:vxlan3 width="100%"}
 
-Eigentlich relevante Vorteile eines VXLAN-Overlays werden in der
-Abbildung [8.3](#fig:vxlan3){reference-type="ref"
-reference="fig:vxlan3"} ersichtlich. Physikalisch wird eine
-Dreiecks-Topologie genutzt. Für das virtueller Ethernet-Netzwerk verhält
-sich diese Topologie allerdings Sternförmig. Es muss zur Vermeidung von
-Broadcast-Storms keiner der Verbindungen geblockt werden. Dies wird
-dadurch möglich, das ein Switch ein aus einem VXLAN-Tunnel kommendes
-Paket niemals wieder in einen VXLAN-Tunnel hinein sendet. Diese Logik
-macht es allerdings ebenfalls notwendig VXLAN-Tunnel immer Full meshed
-anzulegen. Es muss zwischen jedem VTEP ein Tunnel jedem weiteren VTEP
-gespannt werden, wenn ein gemeinsamen Layer-2 Netz anliegt.
+Weitere relevante Vorteile eines VXLAN-Overlays werden in der Abbildung
+[8.3](#fig:vxlan3){reference-type="ref" reference="fig:vxlan3"}
+ersichtlich. Physikalisch wird eine Dreiecks-Topologie genutzt. Für das
+virtuelle Ethernet-Netzwerk verhält sich das Netzwerk allerdings
+sternförmig. Es muss zur Vermeidung von Broadcast-Storms keiner der
+Verbindungen geblockt werden. Dies wird dadurch möglich, dass ein Switch
+ein aus einem VXLAN-Tunnel kommendes Paket niemals wieder in einen
+VXLAN-Tunnel hinein sendet. Diese Logik macht es allerdings ebenfalls
+notwendig, VXLAN-Tunnel immer Full meshed anzulegen. Es muss zwischen
+jedem VTEP ein Tunnel zu jedem weiteren VTEP gespannt werden, wenn ein
+gemeinsamen Layer-2 Netz anliegt.
 
-Damit die VTEPs die Pakete entsprechend weiterleiten können, haben sie
-eigene Tabellen welche MAC-Adressen zu gegenüberliegenden VTEPs
-zuordnen. Zum lernen dieser Zuordnungen gibt es mehrere Methoden.
+Damit die VTEPs die Pakete entsprechend weiterleiten können, pflegen sie
+eigene Tabellen, welche MAC-Adressen zu entfernten VTEPs zuordnen. Zum
+Lernen dieser Zuordnungen gibt es mehrere Methoden.
 
-#### Head End Replication
+#### Data Plane Learning
 
-Bei dieser Methode wird [bum]{acronym-label="bum"
-acronym-form="singular+short"}-Traffic der von den Hosts ausgeht an alle
-eingetragenen Remote-VTEPs über Unicasts weitergeleitet. Der VTEPs
-lernen die MAC-Adressen durch die gleichen Broadcast-Mechanischem wie
-normale Switche. Jedem VTEP müssen alle anderen VTEPs in dem Netzwerk
-statisch bekannt gemacht werde.
-
-#### IP-Multicast
-
-Diese Methode basiert ebenso wie die vorherige auf den bekannten
-Broadcast-Mechanismen. Im Unterschied werden die entfernten VTEPs nicht
-einzeln eingetragen sondern der [bum]{acronym-label="bum"
-acronym-form="singular+short"}-Traffic wird an eine Multicast-Adresse
-geschickt die die anderen VTEPs abonnieren.
+Hierbei werden MAC-Adressen von VTEPs wie bei Bridges auf den
+Schnittstellen gelernt. Sobald ein Paket eingeht, wird die
+Quell-Macadresse der Schnittstelle zugeordnet. Pakete mit unbekannter
+Ziel-Macadresse, weil diese noch nicht auf einer Schnittstelle gelernt
+wurde, werden an alle weiteren VTEPs sowie lokalen Schnittstellen
+geflutet. Das Fluten zwischen den VTEPs kann durch Headend Replication
+oder Multicast erfolgen. Bei der ersten Variante wird das zu flutende
+Paket an alle weiteren VTEPs per Unicast übermittelt. Bei zweiter
+Variante wird das Paket an eine Multicast-Adresse geleitet, welche durch
+die anderen VTEPs abonniert ist.
 
 #### OVSDB Controller
 
 Ein Controller synchronisiert über das OVSDB-Protokoll die
 MAC-Adresstabellen zwischen den einzelnen VTEPs. Damit kann der
 [bum]{acronym-label="bum" acronym-form="singular+short"}-Traffic
-reduziert werden und das Verhalten des Netzwerken beeinflusst werden.
+reduziert werden.
 
 #### BGP-EVPN
 
 BGP-EVPN ist eine Erweiterung des Routing-Protokolls
 [bgp]{acronym-label="bgp" acronym-form="singular+short"} und eine
-weitere Variante eine Controlplane-Funktionalität für ein
-VXLAN-Overlay-Netzwerk zu implementieren. Erreichbarkeitsinformationen
-werden zwischen VTEPs über BGP ausgetauscht. EVPN, eine
-BGP-Adressfamilie, steht dabei für Ethernet Virtual Private Network.
-EVPN ist standardisiert in mehreren RFCs wie in RFC 7209, RFC 7432, RFC
-8365 und RFC 8317[@evpn]. EVPN implementiert zusätzlich weitere Features
-wie EVPN Multihoming, was es ermöglicht LAGs auf beliebige Endgeräte in
-der EVPN-Fabric zu ziehen.
+weitere Variante, eine Controlplane für ein VXLAN-Overlay-Netzwerk zu
+implementieren. Erreichbarkeitsinformationen werden zwischen VTEPs über
+BGP ausgetauscht. EVPN, eine BGP-Adressfamilie, steht dabei für Ethernet
+Virtual Private Network. EVPN ist standardisiert in mehreren RFCs wie in
+RFC 7209, RFC 7432, RFC 8365 und RFC 8317 [@evpnietf]. EVPN
+implementiert zusätzlich weitere Features wie EVPN Multihoming, was es
+ermöglicht, LAGs auf beliebige Endgeräte in der EVPN-Fabric zu ziehen.
 
 ### Overlay Controlplane
 
-Als Controlplane für das Overlay wird BGP-EVPN eingesetzt. Hierfür wird
-auf jedem Switch BGP konfiguriert sowie alle anderen Teilnehme des
-Netzwerkes eingetragen. Durch das IP-Underlay sind alle weiteren
-BGP-Instanzen direkt erreichbar, weswegen iBGP und eine einheitliche
-AS-Nummer verwendet werden kann.
+Als Controlplane für das Overlay-Netzwerk wird BGP-EVPN eingesetzt.
+Hierfür wird auf jedem Switch BGP konfiguriert, sowie alle anderen
+Switche als Nachbarn eingetragen. Durch das IP-Underlay sind alle
+weiteren BGP-Instanzen direkt erreichbar, weswegen iBGP und eine
+einheitliche AS-Nummer verwendet werden kann.
 
-Zu den EVPN-Routen, die zwischen den BGP-Instanzen ausgetauscht werden
+Zu den EVPN-Routen, die zwischen den BGP-Instanzen ausgetauscht werden,
 gehören:
 
 -   **Type 1 - Ethernet Auto-Discovery Route** - Diese Route wird hier
-    für EVPN Multihoming eingesetzt. Es wird die Erreichbarkeit einer
-    bestimmen MAC-Adresse ausgetauscht für eine Konvergenz bei Ausfall
-    eines Links.
+    für EVPN Multihoming eingesetzt.
 
--   **Type 2 - MAC/IP Route** - Diese Route wird verwendet um
+-   **Type 2 - MAC/IP Route** - Diese Route wird verwendet, um
     Informationen über lokal gelernte MAC-Adressen an die Partner zu
-    übertragen. Die IP-Adresse wird übertragen um ARP-Anfragen direkt
+    übertragen. Die IP-Adresse wird übertragen, um ARP-Anfragen direkt
     vom eingehenden VTEP beantworten zu können und diese nicht durch das
     Netzwerk fluten zu müssen. Die Adressfamilie wird für Layer-2
     Services verwendet.
 
--   **Type 3 - Inclusive Multicast Route** - Diese Route wird eingesetzt
-    um [vtep]{acronym-label="vtep" acronym-form="singular+short"}s im
-    Netzwerk bekannt zu machen um benötigte VXLAN-Tunnel automatisch
-    aufbauen zu können.
+-   **Type 3 - Inclusive Multicast Route** - Diese Route wird zum
+    Bekanntmachen von VTEPs im Netzwerk eingesetzt, um benötigte
+    VXLAN-Tunnel automatisch aufbauen zu können.
 
--   **Type 4 - Ethernet Segment Route** - Notwendig für EVPN Multihoming
+-   **Type 4 - Ethernet Segment Route** - Notwendig für EVPN
+    Multihoming.
 
 -   **Type 5 - IP Prefix Route** - IP Prefixe werden für Layer-3
     Services im Netzwerk benötigt.
@@ -3170,38 +3335,34 @@ gehören:
 SONiC steht für Software for Open Networking in the Cloud. Ursprünglich
 von Microsoft für die Azure Cloud entwickelt steht dieses Projekt nun
 unter der Linux Foundation. SONiC hat durch seinen Einsatz in der Azure
-Cloud sowie den Enterprise-Versionen von DELL oder Edge-Core eine große
-Marktdurchdringung. Die hieraus resultierende Marktmacht ist zuträglich
-für eine üppige Liste von kompatibler Hardware, einer der relevantesten
-Faktoren für den Erfolg von offenen Betriebssystemen für Switche.
+Cloud, sowie den Enterprise-Versionen von DELL oder Edge-Core eine große
+Marktdurchdringung [@sonicsp].
 
-![SONiC Architektur - [@sonarch]](media/sonarch.png){#fig:sonarch
-width="100%"}
+![SONiC Architektur - Quelle:
+[@sonarch]](media/sonarch.png){#fig:sonarch width="100%"}
 
 In Abbildung [8.4](#fig:sonarch){reference-type="ref"
 reference="fig:sonarch"} ist die Architektur von SONiC dargestellt.
-Relevanter Vorteil gegenüber früherer offener Betriebssysteme ist die
+Relevanter Vorteil gegenüber früherer offener Betriebssysteme, ist die
 Art und Weise der Integration von Forwarding-Hardware. Während bei
 früheren offenen Plattformen wie *Cumulus Linux* die einzelnen ASICs von
-oben durch das Betriebssystem integriert wurden, erfordert SAI eine
-Integration der Forwarding Hardware von unten durch die jeweiligen
-Lieferanten. *Hardware vendors are expected to provide a SAI-friendly
-implementation of the SDK required to drive their ASICs.[@saiasic]*. Für
-ein breites Angebot SAI-Kompatibler Hardware am Markt ist eine große
-Marktdurchdringung dieser offenen Schnittstellung Voraussetzung.
-Anderenfalls ist die Integration dieser Schnittstellen für
-Hardware-Lieferanten wie Broadcom uninteressant.
+oben durch das Betriebssystem integriert wurden, erfordert SAI, siehe
+Abschnitt [2.3.1](#sec:sai){reference-type="ref" reference="sec:sai"}
+eine Integration der Forwarding-Hardware von unten durch die jeweiligen
+Lieferanten.
 
-SONiC bietet eine virtuelle Variante welche auf einem speziellem
-*syncd*-Modul basiert. Dieser Prozess der in der regulären Variante für
-die Programmierung der Hardware zuständig ist bildet die Dataplane im
+> *Hardware vendors are expected to provide a SAI-friendly
+> implementation of the SDK required to drive their ASICs[@saiasic].*
+
+SONiC bietet eine virtuelle Variante, welche auf einem speziellem
+*syncd*-Modul basiert. Dieser Prozess, der in der regulären Variante für
+die Programmierung der Hardware zuständig ist, bildet die Dataplane im
 Linux-Netzwerkstack ab. Es werden virtuelle Interfaces im Linux-Kernel
 (tun/tap) verwendet. Die Pakete werden durch den *syncd*-Prozess
 zwischen den virtuellen und den virtualisierten physikalischen
-Front-Ports transferiert. Während im originalen SONiC-Wiki keinen
-erläuterten Eintrag zu Implementierten Features listet, benennt Broadcom
-zu der von ihnen Angebotenen virtuellen Enterprise-Variante folgende
-Features:
+Front-Ports transferiert. Während das originale SONiC-Wiki nicht die
+implementierten Features auflistet, nennt Broadcom zu der von ihnen
+angebotenen virtuellen Enterprise-Variante folgende Features:
 
     Features Supported with SONiC-VS Image:
         eBGP / iBGP - (underlay and overlay)
@@ -3215,15 +3376,14 @@ Features:
 
 Die hier gelisteten Funktionen konnten in der offenen virtuellen
 SONiC-Variante erfolgreich getestet werden. Nicht implementiert und hier
-ebenfalls nicht gelistet sind die EVPN-Features Anycast-Gateways und
-Multihoming. Weiterhin schreibt Broadcom: *SONiC-VS image provides users
-the ability to verify the control plane functions (for example. BGP,
-MC-LAG) on a typical data center switch. The data plane functionality
-(for example ACL, QOS, PBR) is not supported by SONiC-VS as it does not
-have underlying physical platform.* [@broadcomsonic]. Die hier genannten
-nicht verfügbaren Features wurden in diesem Lab nicht verwendet und
-wurden daher nicht getestet. Es ist nicht davon auszugehen das die
-Features in der offenen virtuellen SONiC-Variante implementiert sind.
+ebenfalls nicht aufgeführt sind die Features Anycast-Gateways und
+EVPN-Multihoming. Weiterhin schreibt Broadcom:
+
+> *SONiC-VS image provides users the ability to verify the control plane
+> functions (for example. BGP, MC-LAG) on a typical data center switch.
+> The data plane functionality (for example ACL, QOS, PBR) is not
+> supported by SONiC-VS as it does not have underlying physical
+> platform[@broadcomsonic].*
 
 SONiC selbst ist auf Basis der Container-Technologie Docker modular
 aufgebaut.
@@ -3236,30 +3396,29 @@ betrachten:
 ![SONiC Containerarchitektur](media/sonic-docker.png){#fig:sondock
 width="100%"}
 
-Durch diese Architektur kann das System durch weitere Module erweitert
+Durch diese Architektur kann das System um weitere Module erweitert
 werden. Wie in der Abbildung [8.4](#fig:sonarch){reference-type="ref"
 reference="fig:sonarch"} gezeigt, ist zentraler Bestandteil der
 Architektur eine REDIS-Datenbank. Diese wird unter anderem als zentrale
 Ablage für Informationen, Konfigurationen und als Message-Broker
 genutzt.
 
-Es stehen mehrere Methoden zur Verfügung die in der REDIS-Datenbank
+Es stehen mehrere Methoden zur Verfügung, um die in der REDIS-Datenbank
 abgelegten Konfiguration zu modifizieren:
 
 -   Direkte Manipulation mittels REDIS-CLI oder anderen
     REDIS-Schnittstellen.
 
 -   Laden von Konfigurationsartefakten aus YAML-Dateien mittels config
-    load \*.yaml
+    load \*.yaml.
 
--   Click-CLI - Eine Python-basierte CLI welche eine gewohnte
-    CLI-Semantik direkt in der Linux-Shell verfügbar macht
+-   Click-CLI - Eine Python-basierte CLI, welche eine gewohnte
+    CLI-Semantik direkt in der Linux-Shell verfügbar macht.
 
--   SONIC-CLI - Ein Management-Framework welches an die Semantik eines
-    DELL-OS 10 angelehnt ist
+-   SONIC-CLI - Ein Management-Framework, welches an die Semantik eines
+    DELL-OS 10 angelehnt ist.
 
--   Standardisierte Konfigurationsschnittstellen wie gNMI oder Restconf
-    auf Basis installierter Agenten
+-   Standardisierte Konfigurationsschnittstellen wie gNMI oder Restconf.
 
 Die REDIS-Datenbank lädt ihren Inhalt bei Initialisierung nach
 Systemstart aus der Datei etc/sonic/config\_db.json. Durch die Befehle
@@ -3268,19 +3427,19 @@ Datei schreiben beziehungsweise laden.
 
 Ein Sonderfall stellt die Konfiguration des eingesetzten
 Routingframeworks FRR dar. SONiC hat dafür drei konfigurierbare Modi
-implementiert.
+implementiert:
 
 -   **sonic-bgpcfgd** - Dieser Modus ist aktueller Standard, welcher
     ohne einen entsprechenden Eintrag konfiguriert ist. Die
     Konfiguration von FRR wird durch SONiC aus der REDIS-Datenbank
     generiert. Die Datenbank bleibt damit zentrales
     Konfigurationselement. Die Click-CLI hat lediglich wenige Show
-    Befehle, kann BGP aber nicht konfigurieren. Die Konfiguration über
-    das in der REDIS-Datenbank implementierte YANG-Modell ist kaum
-    dokumentiert und muss hauptsächlich durch lesen des Codes
+    Befehle und kann BGP nicht konfigurieren. Die Konfiguration über das
+    in der REDIS-Datenbank implementierte YANG-Modell ist schlecht
+    dokumentiert und muss hauptsächlich durch Lesen des Codes
     nachvollzogen werden.
 
--   **sonic-frrcfgd** - Dieser Konfigurationsdienst funktioniert gleich
+-   **sonic-frrcfgd** - Dieser Konfigurationsdienst funktioniert analog
     dem älteren bgpcfgd und kann als dessen Nachfolger betrachtet
     werden. Zentraler Vorteil ist eine bessere Unterstützung dynamischer
     Konfigurationsänderungen. Bei dem älteren bgpcfgd muss in der Regel
@@ -3290,26 +3449,25 @@ implementiert.
 -   **Split-Mode** - In diesem Modus wird FRR nicht von SONiC-Diensten
     konfiguriert. FRR wird über die vtysh Shell konfiguriert. Diese
     Konfiguration wird in eigenen Strukturen gespeichert und bleibt
-    Persistent. Der Hersteller Edge-Core nutzt in seiner
-    Enterprise-Distribution diesen Modus und dokumentiert diesen in den
-    eigenen Dokumenten.
+    persistent. Der Hersteller Edge-Core nutzt in seiner
+    Enterprise-Distribution diesen Modus und dokumentiert diesen.
 
 Die REDIS-DB wird außerdem als Schnittstelle zwischen den einzelnen
-Prozessen genutzt und bildet zentrales Element des
-Switch-Abstraction-Interfaces. Diese ist in Form einer Datenbank-Tabelle
-realisiert, in welche durch die Controlplane durch die SAI definierte
-Schlüssel eingetragen werden. Diese Tabelle wird durch ein
+Prozessen genutzt und bildet ein wichtiges Element des
+Switch-Abstraction-Interfaces. Diese Tabelle wird durch einen
 Plattform-spezifischen Prozess ausgelesen und die darunter liegende
 Hardware entsprechend programmiert. Im Beispiel des virtuellen SONiC
 heißt der Container des containerisierten Prozesses syncd-vs, bei einer
-Broadcom Plattform heißt dieser syncd-brcm.
+Broadcom-Plattform heißt dieser zum Beispiel syncd-brcm. Der Container
+beinhaltet den Treiber, der die Schlüssel aus der Datenbank in eine
+Hardware-Konfiguration umwandelt.
 
 Im folgenden wird der Inhalt und die Struktur der ASIC\_DB erläutert.
 Dafür werden über die REDIS-CLI, ein Kommandozeilentool für
 REDIS-Datenbanken, verschiedene Schlüssel aus der Datenbank ausgelesen.
-Als Datentyp werden allgemein Hashes eingesetzt, welche pro Schlüssel
-mehrere untergeordnete Schlüssel Paare erlauben. Der jeweilig notwendige
-Befehl wird in den folgenden Listings gegeben.
+Als Datentyp werden Hashes eingesetzt, welche pro Schlüssel mehrere
+untergeordnete Schlüsselpaare erlauben. Der jeweils notwendige Befehl
+wird in den folgenden Listings gegeben.
 
 ``` {caption="ASIC-DB - Physical Port"}
 127.0.0.1:6379[1]> hgetall "ASIC_STATE:SAI_OBJECT_TYPE_PORT:oid:0x1000000000002"
@@ -3332,10 +3490,10 @@ eindeutige ID. Folgende Informationen werden hier abgelegt:
 
 -   **Speed** - Interface-Geschwindigkeit in Mbit/s
 
--   **MTU** - Maximale größe eines Ethernet Frames - dieser Wer
+-   **MTU** - Maximale Größe eines Ethernet Frames - dieser Wert
     entspricht einem Jumbo-Frame
 
--   **VLAN-ID** - Dem Interface zugeordnetem PVID
+-   **VLAN-ID** - Dem Interface zugeordnete PVID
 
 ``` {caption="ASIC-DB - Bridge Port"}
 127.0.0.1:6379[1]> hgetall "ASIC_STATE:SAI_OBJECT_TYPE_BRIDGE_PORT:oid:0x3a000000000b6b"
@@ -3349,8 +3507,8 @@ eindeutige ID. Folgende Informationen werden hier abgelegt:
 8) "SAI_BRIDGE_PORT_FDB_LEARNING_MODE_HW"
 ```
 
-Interfaces die eine Bridge zugeordnet werden bekommen weiterhin eine
-Bridge-Port-ID zugeordnet.
+Schnittstellen, die einer Bridge zugeordnet werden, bekommen weiterhin
+eine Bridge-Port-ID zugeordnet.
 
 ``` {caption="ASIC-DB FDB Eintrag"}
 127.0.0.1:6379[1]> hgetall "ASIC_STATE:SAI_OBJECT_TYPE_FDB_ENTRY:{\"bvid\":\"oid:0x26000000000b6a\",\"mac\":\"F2:DB:FB:66:CC:B2\",\"switch_id\":\"oid:0x21000000000000\"}"
@@ -3362,7 +3520,7 @@ Bridge-Port-ID zugeordnet.
 
 Die vorig genannte Bridge-Port-ID wird unter anderem für
 [fdb]{acronym-label="fdb" acronym-form="singular+short"}-Einträge
-verwendet, in dem damit das Interface spezifiziert wird auf dem eine
+verwendet, indem damit das Interface identifiziert wird, auf dem eine
 MAC-Adresse gelernt wurde. Durch die bvid wird der Eintrag einem VLAN
 zugeordnet.
 
@@ -3372,7 +3530,7 @@ zugeordnet.
 2) "20"
 ```
 
-Jedes VLAN wird in einem eigenem Eintrag definiert, in dem einer bvid
+Jedes VLAN wird in einem eigenen Eintrag definiert, indem einer bvid
 eine VLAN-ID zugeordnet wird.
 
 ``` {caption="ASIC-DB VLAN-Member"}
@@ -3386,7 +3544,7 @@ eine VLAN-ID zugeordnet wird.
 ```
 
 Jede Mitgliedschaft eines Interface zu einem VLAN wird durch einen
-eigenen Schlüssel repräsentiert, in dem VLAN-ID, PORT-ID sowie der
+eigenen Schlüssel repräsentiert, indem VLAN-ID, PORT-ID sowie der
 Tagging-Mode spezifiziert wird.
 
 ``` {caption="ASIC-DB Trap"}
@@ -3404,7 +3562,7 @@ Tagging-Mode spezifiziert wird.
 Durch Traps wird der [dp]{acronym-label="dp"
 acronym-form="singular+short"} mitgeteilt, welche Pakete an die
 [cp]{acronym-label="cp" acronym-form="singular+short"} beziehungsweise
-der CPU weitergeleitet werden sollen. In diesem Fall werden Pakete die
+der CPU weitergeleitet werden sollen. In diesem Fall werden Pakete, die
 Teil des Routing-Protokoll [bgp]{acronym-label="bgp"
 acronym-form="singular+short"} sind an die CPU weitergeleitet.
 
@@ -3427,10 +3585,10 @@ root@SONiC-41:/home/admin# ip link
 
 Das Interface *eth1* ist hier das physikalische Interface, das Interface
 *Ethernet4* das zugehörige virtuelle Interface. Die virtuellen
-Interfaces werden durch den Dienst *syncd* angelegt sowie die Pakete
+Interfaces werden durch den Dienst *syncd* angelegt, sowie die Pakete
 zwischen diesen Interface jeweilig weitergeleitet.
 
-Das eigentliche Paketweiterleitung zwischen den virtuellen
+Die eigentliche Paketweiterleitung zwischen den virtuellen
 Schnittstellen basiert auf Linux-Bridges, die entsprechend MAC-Adressen
 lernen.
 
@@ -3450,8 +3608,8 @@ vtep-40           40 PVID Egress Untagged
 ```
 
 Die [vtep]{acronym-label="vtep" acronym-form="singular+short"}s werden
-als virtuelle Linux-Interfaces angelegt um entsprechend Pakete in den
-VLANs anzunehmen beziehungsweise in diesen zu versenden. Auf diesen
+als virtuelle Linux-Interfaces angelegt, um entsprechend Pakete in den
+VLANs anzunehmen, beziehungsweise in diesen zu versenden. Auf diesen
 virtuellen Interfaces werden die über EVPN signalisierten MAC-Adressen
 statisch gelernt.
 
@@ -3485,9 +3643,9 @@ ergab eine Performance von circa **3Mbit/s**.
 
 In der virtuellen SONiC-Version wird als Netzwerkadapter ein *Intel
 82549EM Gigabit Ethernet* Adapter virtualisiert. Dieser ist theoretisch
-in der Lage 1 Gbit/s zu übertragen.
+in der Lage, 1 Gbit/s zu übertragen.
 
-Um den Durchsatzes zu optimieren wurde mit *ethtool* die aktivierten
+Um den Durchsatz zu optimieren, wurde mit *ethtool* die aktivierten
 Features auf dem virtuellen Netzwerkadapter ausgelesen:
 
     admin@SONiC-41:~$ ethtool -k eth4 | grep ' on'
@@ -3504,14 +3662,13 @@ Features auf dem virtuellen Netzwerkadapter ausgelesen:
     rx-vlan-filter: on [fixed]
 
 Die beiden Features *tcp-segmentation-offload* und
-*generic-receive-offload* sind derzeit aktiviert.
-*generic-receive-offload* schreibt eingehende Ethernet Pakete eines
-Streams in einen Puffer und verpackt diese anschließend in einen
-größeren Frame, der an die CPU weitergegeben wird. Dadurch wird eine
-Entlastung der CPU durch eine geringe Anzahl von Interrupts durch die
-Netzwerkkarte erreicht. Bei Netzwerkkomponenten ist dieses Verhalten
-nicht erwünscht, Pakete sollen ohne Veränderung weitergeleitet werden.
-Deshalb wird das Feature abgeschaltet.
+*generic-receive-offload* sind aktiviert. *Generic-receive-offload*
+schreibt eingehende Ethernet Pakete eines Streams in einen Puffer und
+verpackt diese anschließend in einen größeren Frame, der an die CPU
+weitergegeben wird. Dadurch wird eine Entlastung der CPU durch eine
+geringe Anzahl von Interrupts erreicht. Bei Netzwerkkomponenten ist
+dieses Verhalten nicht erwünscht, Pakete sollen ohne Veränderung
+weitergeleitet werden. Deshalb wird das Feature abgeschaltet.
 
 Nach Abschaltung des Features *generic-receive-offload* erreicht die
 Iperf3-Messung ein deutlich besseres Ergebnis:
@@ -3523,7 +3680,7 @@ Iperf3-Messung ein deutlich besseres Ergebnis:
 ```
 
 Die Abschaltung der Funktion *tcp-segmentation-offload* erbrachte
-hingegen keine Messbaren Verbesserungen.
+hingegen keine messbaren Verbesserungen.
 
 ``` {caption="SONiC: CPU Auslastung Switch"}
 admin@SONiC-41:~$ top
@@ -3539,36 +3696,34 @@ MiB Swap:      0.0 total,      0.0 free,      0.0 used.   1825.7 avail Mem
   22075 root      20   0       0      0      0 Z   1.7   0.0   0:00.32 python3
 ```
 
-Eine Betrachtung der CPU Auslastung des Switches während einer Messung
+Eine Betrachtung der CPU-Auslastung des Switches während einer Messung
 mit Iperf3 zeigt eine hohe Auslastung der CPU durch den *syncd* Prozess.
-In diesem läuft die Funktion die Pakete von dem physikalischem Interface
-an das virtuelle Interface zu übertragen. Es wäre prinzipiell möglich
-die Leistung des Switches durch die Provisionierung von mehr
+In diesem läuft die Funktion, die Pakete von dem physikalischem
+Interface an das virtuelle Interface überträgt. Es wäre prinzipiell
+möglich, die Leistung des Switches durch die Provisionierung von mehr
 Rechenleistung zu steigern. Relevante Erkenntnis ist, dass die
-Netzwerkperformance nun maßgeblich durch die bereitstehende
+Netzwerkperformance nun maßgeblich von der bereitstehenden
 CPU-Performance des GNS3-Servers abhängt. Diese kann je nach Nutzung
-durch andere Studenten beziehungsweise Prozesse variieren, was
-Performance-Vergleiche auf Grundlage dieser Plattform schwer
-nachvollziehbar und kaum aussagekräftig macht.
+durch andere Studenten beziehungsweise Prozesse variieren.
 
 Simulation
 ----------
 
 Zur Simulation ist ein GNS3-Server-Manager Template BGP-EVPN-Lab
-vorbereitet. In diesem sind die als Appliances SONiC, ein Versuchs-PC
-Netlab sowie ein Management-Container vorbereitet. Der Versuchs-PC wird
-an das BGP-EVPN Netzwerk angeschlossen um die Konnektivität durch das
-Netzwerk zu testen. Der Management-Container wird zur zentralen
-Konfiguration der SONiC-Komponenten genutzt. Zu diesem Zweck wurde ein
-kleines interaktives CLI-Tool entwickelt welches die Konfiguration von
-den SONiC-Switchen vornimmt und diverse Informationen aus den Switchen
-ziehen und kompakt darstellen kann.
+vorbereitet. In diesem sind die Appliances SONiC, ein Versuchs-PC Netlab
+sowie ein Management-Container vorbereitet. Der Versuchs-PC wird an das
+BGP-EVPN Netzwerk angeschlossen, um die Konnektivität durch das Netzwerk
+zu testen. Der Management-Container wird zur zentralen Konfiguration der
+SONiC-Komponenten genutzt. Zu diesem Zweck wurde ein kleines
+interaktives CLI-Tool entwickelt, welches die Konfiguration von den
+SONiC-Switchen vornimmt und diverse Informationen aus den Switchen
+auslesen und kompakt darstellen kann.
 
 ### Topologie
 
 ![EVPN-CLI Tool](media/bgp-evpn-top.png){width="100%"}
 
-Es wird die in dem Kapitel [4.1](#fig:reftop){reference-type="ref"
+Es wird die in dem Abschnitt [4.1](#fig:reftop){reference-type="ref"
 reference="fig:reftop"} gezeigte Topologie simuliert. Die lilafarbenen
 Verbindungen verbinden die Management-Interfaces mit dem Cloud-Knoten
 sowie dem Management Controller. Werden für die Management-Interfaces
@@ -3576,8 +3731,8 @@ IP-Adressen im Subnetz des GNS3-Server verwendet, was bei der Plattform
 der Hochschule 172.30.0.0/16 entspricht, können die Netzwerkkomponente
 über die OpenVPN-Verbindung erreicht werden. Über das Transport-Netzwerk
 werden Layer-2 und Layer-3 Gastnetzwerke gespannt. Dafür werden jeweils
-zwei Teilnehmer in zwei verschiedenen Subnetzen angeschlossen, um eben
-die Services testen zu können.
+zwei Teilnehmer in zwei verschiedenen Subnetzen angeschlossen, um die
+Services testen zu können.
 
 Der Versuchsordner BGP-EVPN-Network-Virtualization-Lab baut sich dabei
 wie folgt auf:
@@ -3587,6 +3742,7 @@ wie folgt auf:
 |   |-- BGP_EVPN_LAB
 |   |   |-- evpn
 {...}
+|   |   |   `-- sonictoolset.py
 |   |   |-- evpn-cli.py
 |   |   |-- files
 |   |   |   |-- vtysh-fix.cmd
@@ -3595,6 +3751,8 @@ wie folgt auf:
 |   |   |-- temp.json
 |   |   `-- topology.csv
 |   `-- Dockerfile
+|-- GNS3-Portable-Project
+|   `-- evpn-full.gns3project
 |-- Konfigurationen
 |   |-- SONiC-41.json
 |   |-- SONiC-42.json
@@ -3610,22 +3768,23 @@ wie folgt auf:
     `-- sonic-gns3a.sh
 ```
 
-Alle weiter genutzten und generierten Konfigurationen sind in dem Ordner
-*Konfigurationen* abgelegt, werden aber für die Versuchsdurchführung
-nicht benötigt. Die Konfigurationen werden durch die im weiteren
-erläuterte *evpn-cli* im Ordner *evpn-management-controller* generiert.
+Alle verwendeten Konfigurationen sind in dem Ordner *Konfigurationen*
+abgelegt, werden aber für die Versuchsdurchführung nicht benötigt. Die
+Konfigurationen werden durch die im weiteren erläuterte *evpn-cli* im
+Ordner *evpn-management-controller* generiert. Zusätzlich liegt ein
+vorbereitetes portables GNS3-Projekt ab, welches importiert werden kann.
 
 ### SONiC
 
-Verwendete Scripte und Konfigurationen liegen im Versuchsordner ab.
+Alle verwendeten Scripte und Konfigurationen liegen im Versuchsordner.
 Fertige SONiC-Builds für verschiedene Softwarestände werden auf der
 Webseite <https://sonic.software/> zum Download angeboten.
 
-Nach Download eines aktuellen SONIC-VS Images kann mittels dem Script
+Nach Download eines aktuellen SONIC-VS Images kann mit dem Script
 sonic-gns3a.sh eine entsprechende GNS3-Appliance Datei für den Upload in
 GNS3 erstellt werden. Das Script basiert auf einer Vorlage aus dem
 originalen SONiC-Repository. Angepasst wurden der zugewiesene
-Arbeitsspeicher sowie die Anzahl der virtuellen CPUs. Die im original
+Arbeitsspeicher sowie die Anzahl der virtuellen CPUs. Die im Original
 spezifizierten 2 Gigabyte haben sich in Versuchen als zu wenig erwiesen
 und für Prozessabstürze gesorgt.
 
@@ -3655,25 +3814,25 @@ aufgebaut:
     |-- run-cli.py
     |-- topology.csv
 
-In der *hosts* Datei werden die Management-IP-Adressen der SONiC Switche
-eingetragen. In der *topology.csv* ist die Verbindung der Switche
+In der *hosts*-Datei werden die Management-IP-Adressen der SONiC Switche
+eingetragen. In der *topology.csv* ist die Verkabelung der Switche
 untereinander definiert, wobei eine Zeile der Tabelle für einen Link
-steht und die Switche über ihr letztes IP-Tupel der Management-IP
-spezifiziert werden. Gestartet werden kann das Tool mit dem Befehl
+steht und die Switche über ihr letztes IP-Byte der Management-IP
+spezifiziert werden. Gestartet werden kann das Tool mit dem Befehl:
 
     $ ./run-cli.py
 
 ![EVPN-CLI Tool](media/evpn-cli.png){#fig:evpncli width="100%"}
 
 Das Tool führt über SSH Befehle auf den SONiC-Switchen aus und überträgt
-per SCP Konfigurationsdateien im JSON Format. Die Konfigurationen
-speichert das Tool in lokalen temporären Python-Dictionarys. Diese
-können initial mit bestehenden Konigurationen aus den Switchen befüllt
-werden. Auf Grundlage dieser initialen Konfigurationsdatei sowie der
-Topologie-Beschreibung im CSV Format kann das Tool jeweils
+Konfigurationsdateien im JSON Format. Die Konfigurationen speichert das
+Tool in temporären Python-Dictionarys. Diese können initial mit
+bestehenden Konfigurationen aus den Switchen befüllt werden. Auf
+Grundlage dieser initialen Konfigurationsdatei sowie der
+Topologie-Beschreibung im CSV-Format, kann das Tool jeweils
 Konfigurationen für BGP-EVPN erstellen und diese anschließend wieder auf
 die SONiC-Switche aufspielen. Weiterhin sind einige
-Konfigurationsvorgänge wie das Anlagen von VLANs und entsprechenden
+Konfigurationsvorgänge, wie das Anlegen von VLANs und entsprechenden
 VXLAN-Mappings als Funktionen implementiert.
 
 ### Konfiguration SONiC
@@ -3681,26 +3840,27 @@ VXLAN-Mappings als Funktionen implementiert.
 #### Grundlegende Einrichtung
 
 Nachdem die SONiC-Switche gestartet sind, kann in der GNS3-GUI ein
-Telnet-Terminal zu den einzelnen Switchen gestartet werden und mit den
-Zugangsdaten [admin/YourPaSsWoRd]{.smallcaps} sich angemeldet werden. Im
-ersten Schritt wird die Management-IP-Adresse konfiguriert, was mit
-Linux-Tool iproute2 möglich ist:
+Telnet-Terminal zu den einzelnen Switchen gestartet werden, um sich mit
+den Zugangsdaten *admin/YourPaSsWoRd* anzumelden. Im ersten Schritt wird
+die Management-IP-Adresse konfiguriert, was mit dem Linux-Tool iproute2
+möglich ist:
 
     $ sudo ip addr add 172.30.240.41/16 dev eth0
 
 Es wird eine IP-Adresse innerhalb des Subnetzes der GNS3-Umgebung der
 Hochschule verwendet. Damit lässt sich später der Switch auch von
-außerhalb erreichbar machen.
+außerhalb erreichen.
 
 Im Anschluss kann optional noch *generic-receive-offload* auf allen
-Interfaces deaktiviert werden, wie in Kapitel
+Interfaces deaktiviert werden, wie in Abschnitt
 [8.1.4.1](#sec:sonicperf){reference-type="ref"
 reference="sec:sonicperf"} beschrieben, um die Performance zu
-verbessern. Die EVPN-CLI bietet eine entsprechende Option um
-*generic-receive-offload* später auf allen Interfaces zu deaktivieren.
+verbessern. Die EVPN-CLI bietet eine entsprechende Option, um
+*generic-receive-offload* auf allen Interfaces zu deaktivieren.
 
-Im nächsten Schritt werden alle Management-IP Adressen die im vorherigen
-Schritt gesetzt worden sind in die *hosts*-Datei eingetragen.
+Im nächsten Schritt werden alle Management-IP-Adressen, die im
+vorherigen Schritt gesetzt worden sind, in die *hosts*-Datei
+eingetragen.
 
 ``` {caption="Hosts-Konfiguration im EVPN-CLI Tool"}
 172.30.240.41
@@ -3725,17 +3885,17 @@ hinterlegt werden.
 
 Jede virtuelle Kabelverbindung ist durch eine Zeile repräsentiert und
 wird durch jeweils zwei Geräte definiert, welche selbst durch ihr
-letztes Tupel der Management-Adresse identifiziert werden. Die
-Reihenfolge der Einträge ist dahingehende Entscheidend, das für das
+letztes Byte der Management-Adresse identifiziert werden. Die
+Reihenfolge der Einträge ist dahingehende entscheidend, dass für das
 erste vorkommen eines Switches das erste Interface genutzt wird, für das
 zweite Vorkommen das zweite Interface, weitere Vorkommen der Logik
 entsprechend.
 
-Bevor die EVPN-CLI genutzt werden kann, muss auch diesem eine
+Bevor die EVPN-CLI genutzt werden kann, muss auch dem Container eine
 IP-Adressen zugewiesen werden. Da es sich um einen Docker-Container
-handelt, funktioniert dies am komfortabelsten über den Menüpunkt Edit
-configim GNS3-Kontextmenü. Im Anschluss kann dieser gestartet werden und
-mittels Ping die Erreichbarkeit der Management-Interfaces der
+handelt, geschieht dies am komfortabelsten über den Menüpunkt Edit
+config im GNS3-Kontextmenü. Im Anschluss kann dieser gestartet werden
+und mittels Ping die Erreichbarkeit der Management-Interfaces der
 SONiC-Switche überprüft werden. Dies ist Voraussetzung für die weiteren
 Schritte.
 
@@ -3759,18 +3919,18 @@ Die grundlegende Konfiguration der SONiC-Switche für BGP-EVPN erfolgt
     Virtualisierung sowie BGP-EVPN.
 
 -   Option **\[5\]** - Hierdurch werden die soeben generierten
-    Konfigurationen auf die Switche übertragen sowie entsprechende
+    Konfigurationen auf die Switche übertragen, sowie entsprechende
     Dienste auf den Switchen neu gestartet.
 
 #### Erläuterung Konfiguration
 
 Die erstellte und hochgeladene Konfiguration lässt sich unter Option im
 EVPN-CLI Tool oder direkt auf dem Switch betrachten. Die Konfigurationen
-liegen auf dem Switch im JSON Format ab. Ein hilfreiches Werkzeug um
-diese zu analysieren ist das Linux-Tool jq, welches im weiteren
+liegen auf dem Switch im JSON Format ab. Ein hilfreiches Werkzeug, um
+diese zu analysieren ist das Linux-Tool jq, welches im Weiteren
 verwendet wird.
 
-Um die Konfiguration zu betrachten wird eine SSH-Session zu dem 41-er
+Um die Konfiguration zu betrachten, wird eine SSH-Session zu dem 41-er
 SONiC Switch gestartet. Mit folgendem Befehl werden die einzelnen
 Konfigurationselemente aus der JSON Datei ausgegeben:
 
@@ -3808,15 +3968,15 @@ Konfigurationselemente aus der JSON Datei ausgegeben:
       "VXLAN_TUNNEL"
     ]
 
-Relevante Konfigurationselement die deren Schlüssel BGP, INTERFACE,
-OSPFV2 sowie VXLAN enthalten. Diese werden der Reihenfolge nach
-Erläutert.
+Relevante Konfigurationselemente sind die, deren Schlüssel BGP,
+INTERFACE, OSPFV2 oder VXLAN enthalten. Diese werden der Reihenfolge
+nach erläutert.
 
 ``` {caption="SONiC-Konfig: BGP\\_GLOBALS"}
 admin@SONiC-42:~$ cat /etc/sonic/config_db.json | jq '.BGP_GLOBALS'
 {
   "default": {
-    "local\_asn": "64020"
+    "local_asn": "64020"
   }
 }
 ```
@@ -3826,7 +3986,7 @@ In dieser Sektion wird die AS-Nummer für die BGP Session festgelegt.
 ``` {caption="SONiC-Konfig: BGP\\_GLOBALS\\_AF"}
 admin@SONiC-42:~$ cat /etc/sonic/config_db.json | jq '.BGP_GLOBALS_AF'
 {
-  "default|l2vpn\_evpn": {
+  "default|l2vpn_evpn": {
     "advertise-all-vni": "true"
   }
 }
@@ -3837,19 +3997,19 @@ dass alle lokalen VTEPs per BGP an die Nachbarn propagiert werden
 sollen.
 
 ``` {caption="SONiC-Konfig: BGP\\_NEIGHBOR"}
-admin@SONiC-42:~$ cat /etc/sonic/config\_db.json | jq '.BGP_NEIGHBOR'
+admin@SONiC-42:~$ cat /etc/sonic/config_db.json | jq '.BGP_NEIGHBOR'
 {
   "default|10.0.3.41": {
-    "admin\_status": "true",
-    "local\_addr": "10.0.3.42",
+    "admin_status": "true",
+    "local_addr": "10.0.3.42",
     "name": "SONiC41",
-    "peer\_type": "internal"
+    "peer_type": "internal"
   },
   "default|10.0.3.43": {
-    "admin\_status": "true",
-    "local\_addr": "10.0.3.42",
+    "admin_status": "true",
+    "local_addr": "10.0.3.42",
     "name": "SONiC43",
-    "peer\_type": "internal"
+    "peer_type": "internal"
   },
   "default|10.0.3.44": {
     "admin_status": "true",
@@ -3868,9 +4028,9 @@ admin@SONiC-42:~$ cat /etc/sonic/config\_db.json | jq '.BGP_NEIGHBOR'
 
 Jeder BGP-Nachbarschaft muss explizit durch einen eigenen Eintrag
 konfiguriert werden. Als lokale Adresse wird die dafür angelegte
-Loopback-Adresse verwendet. Wird diese nicht spezifiziert wird die
+Loopback-Adresse verwendet. Wird diese nicht spezifiziert, wird die
 IP-Adresse des jeweiligen ausgehenden Interfaces genutzt, wodurch eine
-Nachbarschaft nicht erfolgreich aufgebaut werden kann. Durch setzen des
+Nachbarschaft nicht erfolgreich aufgebaut werden kann. Durch Setzen des
 peer\_types auf internal wird iBGP verwendet. Dies setzt identisch
 konfigurierte AS-Nummern bei allen BGP-Nachbarn voraus.
 
@@ -3885,7 +4045,7 @@ admin@SONiC-42:~$ cat /etc/sonic/config_db.json | jq '.INTERFACE'
 ```
 
 IP-Adressen auf Interfaces werden durch Schlüssel in dieser Sektion
-konfiguriert. Diese IP-Adressen liegen in kleinen 30er Netzen und dienen
+konfiguriert. Diese IP-Adressen liegen in kleinen 30er-Netzen und dienen
 als Transfernetzwerke auf den NNIs (Network-Network-Interfaces). Eine
 Überschneidung der Subnetze mit Nutzdaten ist unproblematisch, da diese
 in eigenen VRFs geroutet werden.
@@ -3898,7 +4058,7 @@ admin@SONiC-42:~$ cat /etc/sonic/config_db.json | jq '.LOOPBACK_INTERFACE'
 }
 ```
 
-Loopback-Interface haben die technische Besonderheit gegenüber normalen
+Loopback-Interfaces haben die technische Besonderheit gegenüber normalen
 Interfaces, dass sie jederzeit aktiv sind. Bei vielen Netzwerkgeräten
 werden reguläre IP-Interfaces oft erst aktiv, wenn das jeweilige VLAN
 oder das Interface aktiv ist. Dies wiederum kann einen aktiven Port in
@@ -3918,7 +4078,7 @@ admin@SONiC-42:~$ cat /etc/sonic/config_db.json | jq '.OSPFV2_ROUTER'
 
 In diesem Segment wird eine OSPF-Instanz aktiviert und eine Router-ID
 vergeben. Die Router-ID kann frei gewählt werden. Die ID entsprechend
-der verwendeten Loopback-Adresse gilt als gängige Konvention.
+der verwendeten Loopback-Adresse zu setzen, gilt als gängige Konvention.
 
 ``` {caption="SONiC-Konfig: OSPFV2\\_ROUTER\\_AREA"}
 admin@SONiC-42:~$ cat /etc/sonic/config_db.json | jq '.OSPFV2_ROUTER_AREA'
@@ -3956,10 +4116,9 @@ admin@SONiC-42:~$ cat /etc/sonic/config_db.json | jq '.VXLAN_TUNNEL'
 ```
 
 Für die Konfiguration von VXLAN wird ein [vtep]{acronym-label="vtep"
-acronym-form="singular+short"} für das VXLAN Protokoll angelegt und
-diesem ein vorhandenes IP-Interface zugewiesen. Verkapselte Pakete
-werden von dieser Adresse aus versendet. Es wird die jeweilige
-Loopback-Adresse verwendet.
+acronym-form="singular+short"} angelegt und diesem ein vorhandenes
+IP-Interface zugewiesen. Verkapselte Pakete werden von dieser Adresse
+aus versendet. Es wird die jeweilige Loopback-Adresse verwendet.
 
 ``` {caption="SONiC-Konfig: VXLAN\\_EVPN\\_NVO"}
 admin@SONiC-42:~$ cat /etc/sonic/config_db.json | jq '.VXLAN_EVPN_NVO'
@@ -3971,8 +4130,8 @@ admin@SONiC-42:~$ cat /etc/sonic/config_db.json | jq '.VXLAN_EVPN_NVO'
 ```
 
 Das im vorherigem Segment erzeugte [vtep]{acronym-label="vtep"
-acronym-form="singular+short"} muss abschließend der hier konfigurierten
-Netzwerkvirtualisierung zugeordnet werden. nvo steht hier für network
+acronym-form="singular+short"} muss abschließend der hier angelegten
+Netzwerkvirtualisierung zugeordnet werden, nvo steht hier für network
 virtualization overlay. Der Name für dieses Overlay kann frei gewählt
 werden, nvo-hsrm hat keine relevante Bedeutung.
 
@@ -3987,15 +4146,15 @@ weiteren Loopback-Adresse im Netzwerk versucht.
 
 #### Validierung BGP-Konfiguration
 
-Sollte alle Ping-Tests erfolgreich sein, können die BGP-Instanzen
-überprüft werden. Dafür wird ein Show-Kommando auf den SONiC Switchen
-ausgeführt. Das EVPN-CLI Tool bietet die Möglichkeit dieses
+Sollten alle Ping-Tests erfolgreich sein, können die BGP-Instanzen
+überprüft werden. Dafür wird ein Show-Kommando auf den SONiC-Switchen
+ausgeführt. Das EVPN-CLI Tool bietet die Möglichkeit, dieses
 Show-Kommando auf allen Switchen auszuführen und anzuzeigen.
 
 ![EVPN-CLI Tool: BGP Show Ausgabe](media/show-bgp.png){width="100%"}
 
 Hier sollten bei jedem angezeigten Gerät alle weiteren Nachbarn
-auftauchen sowie im Status UPsein.
+auftauchen, sowie im Status UP sein.
 
 Weiterhin können die bereits gelernten Routen der BGP-Instanz auf
 Vollständigkeit untersucht werden.
@@ -4039,12 +4198,12 @@ gegeben hat. Dies entspricht dem erwarteten Verhalten.
 
 ### EVPN Layer-2 Fabric
 
-Nachdem die Grundkonfiguration durchgeführt und getestet wurde können
+Nachdem die Grundkonfiguration durchgeführt und getestet wurde, können
 Layer-2 Services in Form von Gäste-VLANs provisioniert werden. Im ersten
 Schritt werden die VLANs auf den jeweiligen Geräten lokal erstellt und
 auf UNIs (User-Network-Interfaces) gelegt. Dies lässt sich zentral mit
 der EVPN-CLI für alle Switche durchführen. Es wird nach Nutzereingaben
-ein Konfigurationssegment erzeugt, welches nach Kontrolle und
+im Tool ein Konfigurationssegment erzeugt, welches nach Kontrolle und
 Bestätigung durch den Anwender auf die Switche geladen wird.
 
 Durch Auswahl von Option **\[10\] - Configure User-Interfaces** wird der
@@ -4092,10 +4251,10 @@ VXLAN VNI: 1030
 Write to all devices ?[y/n]
 ```
 
-Im Anschluss sollte ein Ping zwischen den beiden NLAB-PCs die am 41er
-und 45er SONiC-Switch am Interface mit der ID 12 angeschlossen sind
-möglich sein. Die dadurch gelernten auf VTEPs gelernten entfernetn
-MAC-Adressen lassen sich für alle Switche im EVPN-CLI Tool anzeigen:
+Im Anschluss sollte ein Ping zwischen den beiden NLAB-PCs, die am 41er
+und 45er SONiC-Switch am Interface mit der ID 12 angeschlossen sind,
+möglich sein. Die hierfür gelernten MAC-Adressen lassen sich für alle
+Switche im EVPN-CLI Tool anzeigen:
 
 ``` {caption="EVPN-CLI: Auf VTEPs gelernte MAC-Adressen"}
 28
@@ -4121,8 +4280,9 @@ show vxlan remotemac all
 {...}
 ```
 
-Die Ausgabe des 42er Switches zeigt, dass auch unbeteiligte Switche an
-denen aber das entsprechende VLAN anliegt die beide MAC-Adressen lernen.
+Die Ausgabe des 42er-Switches zeigt, dass auch unbeteiligte Switche, an
+denen aber das entsprechende VLAN anliegt, die beide MAC-Adressen
+lernen.
 
 ``` {caption="EVPN-CLI: BGP EVPN Layer 2 Routen"}
 vtysh -c 'show bgp l2vpn evpn'
@@ -4154,7 +4314,7 @@ Displayed 7 out of 7 total prefixes
 ```
 
 Die MAC-Adressen wurden zwischen den BGP-Instanzen über Routen vom Typ 2
-bekannt gemacht. Diese Routen lassen sich über die auf den Switchen mit
+bekannt gegeben. Diese Routen lassen sich über die auf den Switchen mit
 dem Show-Kommando vtysh -c 'show bgp l2vpn evpn' betrachten.
 
 ### EVPN Layer-3 Fabric
@@ -4166,7 +4326,7 @@ sondern zwischen [vrf]{acronym-label="vrf"
 acronym-form="singular+short"}-Instanzen. Diese Router-Instanzen können
 beliebig im Netzwerk platziert werden. Die Daten werden zwischen den
 VRFs über ein eigenes Transfer-Netzwerk übertragen, welches durch eine
-eigene VXLAN-VNI definiert wird. Dafür ist eine Erweiterung der
+eigene VXLAN-VNI identifiziert wird. Dafür ist eine Erweiterung der
 Basiskonfiguration notwendig. Für ein verteiltes Routing wären
 Anycast-Gateways notwendig, welche im virtuellen SONiC derzeit nicht
 unterstützt werden.
@@ -4221,7 +4381,7 @@ Transfer VNI/VLAN?:1000
 }
 ```
 
-Grundlegend wird auf jedem Switch ein virtueller Router angelegt und die
+Es wird auf jedem Switch ein virtueller Router angelegt und die
 Signalisierung lokaler Prefixe zu den BGP-Nachbarn eingerichtet. Folgend
 werden die Konfigurationssegmente aus dem vorherigen Listing erläutert:
 
@@ -4238,11 +4398,11 @@ werden die Konfigurationssegmente aus dem vorherigen Listing erläutert:
 -   **ROUTE\_ADVERTISE** - Die Adressfamilie IPV4\_UNICAST wird für EVPN
     aktiviert.
 
-Im Gegensatz zu der Enterprise Version von DELL, werden in dem aktuellen
+Im Gegensatz zu der Enterprise-Version von DELL werden in dem aktuellen
 Version der offenen Variante derzeit noch nicht alle hier gezeigten
 Konfigurationsartefakte in eine entsprechende FRR-Konfigurationen
 umgesetzt. Folgende Konfigurationszeilen werden nicht aus der
-REDIS-Datenbank in die FRR-Konfiguration übernommen.
+REDIS-Datenbank in die FRR-Konfiguration übernommen:
 
     router bgp 65100 vrf Vrf01 
         address-family l2vpn evpn                                          
@@ -4252,7 +4412,7 @@ REDIS-Datenbank in die FRR-Konfiguration übernommen.
 Als aktueller Workaround ist die Funktion **\[15\]** im EVPN-CLI Tool
 implementiert, welche die Konfiguration auf allen Switchen nachholt. Da
 die FRR-Konfigurationen allerdings bei Konfigurationsvorgängen durch den
-frrcfgd überschrieben werden bleibt die Konfiguration nicht persistent
+frrcfgd überschrieben werden, bleibt die Konfiguration nicht persistent
 und muss entsprechend gelegentlich erneut eingefügt werden.
 
 Im Anschluss können über die EVPN-CLI VLAN-Interfaces erstellt werden,
@@ -4312,31 +4472,31 @@ Route Distinguisher: 192.168.1.1:4
 ```
 
 Die Prefixes der einzelnen VRFs werden über Routen vom Typ 5
-ausgetauscht. In der Ausgabe ist zu erkennen, dass jeweils der Host 41
-und 42 ein Netzwerk propagieren. Im Anschluss sollte ein Ping zwischen
-allen vier Netlab PCs möglich sein.
+ausgetauscht. In der Ausgabe ist zu erkennen, dass jeweils die Hosts und
+ein Netzwerk propagieren. Im Anschluss sollte ein Ping zwischen allen
+vier Netlab PCs möglich sein.
 
 Fazit
 -----
 
-In diesem Versuch wurde eine Netzwerk für die Provisionierung von
-Layer-2 und Layer-3 Services mittels Netzwervirtualisierung gezeigt. Als
+In diesem Lab wurde eine Netzwerk für die Provisionierung von Layer-2
+und Layer-3 Services mittels Netzwerkvirtualisierung gezeigt. Als
 virtuelle Switch-Plattform kam SONiC zum Einsatz. Durch die
-Standardisierung und Verbreitungsgrad verwendeter Protokolle sowie der
-vergleichsweise einfachen Konfiguration ist der Ansatz derzeit sehr
-beliebt und verbreitet. Die Art und Weiße der Konfiguration bietet sich
-für Automatisierungsansätze an da zum Beispiel Port-Konfigurationen
-generisch erstellt werden können und keine Abhängigkeiten im Netzwerk
-wie die Verfügbarkeit eines VLANs durch ein Netzwerk hindurch beachtet
-werden muss. Ein Beispiel für ein kaufbares Konfigurations- und
-Managementtool ist Racksnet. Viele Hersteller nutzen BGP-EVPN in ihren
-Fabric-Lösungen wie zum Beispiel Aruba Central oder Juniper Apstra.
+Standardisierung und Verbreitungsgrad verwendeter Protokolle, sowie der
+vergleichsweise einfachen Konfiguration ist der Ansatz derzeit
+verbreitet. Die Art und Weiße der Konfiguration bietet sich für
+Automatisierungsansätze an, da zum Beispiel Port-Konfigurationen
+generisch erstellt werden können und keine Abhängigkeiten im Netzwerk,
+wie die Verfügbarkeit eines VLANs, beachtet werden müssen. Viele
+Hersteller nutzen BGP-EVPN in ihren Fabric-Lösungen, wie zum Beispiel
+Aruba Central oder Juniper Apstra.
 
 Netzwerkvirtualisierung ist eine wichtige Komponente für programmierbare
 und möglichst autonome Netzwerke, da die Komplexität der Provisionierung
-von Netzwerkdiensten in die zugrunde liegende Architektur abgebildet
-wird und die tägliche Administration wie die Bereitstellung eines neuen
-VLANs an zwei Stellen des Campus trivial wird.
+von Netzwerkdiensten in der zugrunde liegende Architektur abgebildet
+wird, und die Administration im operativen Tagesgeschäft, wie die
+Bereitstellung eines neuen VLANs an zwei Stellen des Campus, damit
+trivial wird.
 
 MPLS-SR Lab - Traffic-Engineering
 =================================
@@ -4347,7 +4507,7 @@ Architektur und Technologien {#architektur-und-technologien-2}
 In diesem GNS3-Lab wird eine Architektur zur Implementierung von
 Traffic-Engineering gezeigt. Es werden Pfade durch ein Netzwerk
 definiert und im Anschluss Datenverkehr diesen Pfaden zugewiesen. Die
-Konfiguration von Pfaden und den Policys erfolgt statisch. Die für eine
+Konfiguration von Pfaden und den Policies erfolgt statisch. Die für eine
 potentielle Regelung notwendigen Telemetrie-Daten werden über sFlow
 erfasst. Für die Bereitstellung von Gastnetzwerken wird EVPN eingesetzt,
 welches aber in diesem Lab keine relevante Rolle besetzt. Eine genauere
@@ -4359,14 +4519,14 @@ Betrachtung von EVPN erfolgt in dem Lab
 #### MPLS
 
 Bei Multiprotocol-Label-Switching, kurz MPLS und spezifiziert in RFC
-3031[@mpls], werden Pakete auf Basis von Labeln weitergeleitet. MPLS
+3031 [@mpls], werden Pakete auf Basis von Labeln weitergeleitet. MPLS
 Netzwerke sind eigene abgetrennte Systeme und werden über Router mit der
 IP-Außenwelt verbunden. An diesen Übergabepunkten werden die eingehenden
-Paket mit Labeln markiert, beziehungsweise die Label von ausgehenden
+Pakete mit Labeln markiert, beziehungsweise die Label von ausgehenden
 Paketen wieder entfernt. Relevante Eigenschaft von MPLS ist ein
 vereinfachter Lookup-Prozess, welche weniger Ressourcen erfordert als
-ein IPv4-Lookup. Während ein MPLS Label eindeutig ist, muss für ein
-IPv4-Lookup immer die ganze Tabelle überprüft werden um die Route mit
+ein IPv4-Lookup. Während ein MPLS-Label eindeutig ist, muss für ein
+IPv4-Lookup immer die ganze Tabelle überprüft werden, um die Route mit
 der größten Übereinstimmung zu finden. Diese Eigenschaft basiert auf dem
 Longest-Prefix-Match, kurz LPM. Durch geschickte Programmierung kann ein
 MPLS-Label direkt auf einen Speicherbereich zeigen in dem die
@@ -4378,24 +4538,24 @@ Sinne nicht gesucht werden sondern kann direkt gefunden werden.
 ![MPLS Forwarding mit LDP, Quelle: Peter Egli,
 indigoo.com](media/mpls-slide.png){width="100%"}
 
-In einem MPLS Netzwerk müssen Erreichbarkeitsinformationen im Netzwerk
+In einem MPLS-Netzwerk müssen Erreichbarkeitsinformationen im Netzwerk
 signalisiert werden. Für gewöhnlich wird dafür LDP - Label Distribution
-Protocoll eingesetzt. Dieses Arbeitet ähnlich einem IGP. Nachbarschaften
+Protocol eingesetzt. Dieses arbeitet ähnlich einem IGP. Nachbarschaften
 werden zwischen den physikalisch benachbarten Hosts geschlossen. In ein
 MPLS-Netzwerk eingehende Pakete werden einer Forwarding Equivalence
 Class, kurz FEC, zugeordnet. FECs können zum Beispiel auf ein Ziel
-IP-Subnetz korrespondieren. Für jede FEC wird ein Pfad -
+IP-Subnetz referenzieren. Für jede FEC wird ein Pfad -
 *Label-Switched-Path*, kurz LSP - durch das Netzwerk signalisiert. Auf
 dem Eingangsrouter erhält das Paket ein dem FEC entsprechendes Label.
 Auf dem nächsten Router entspricht die ID des Labels der ID des
 Tabelleneintrags mit dem nächsten Label. Das Label wird auf jedem Host
-getauscht, zu englisch geswitcht. Diese Mechanik ist namensgebend für
-MPLS. RSVP-TE ist eine Erweiterung diesen Konzeptes. Hierbei werden für
-die einzelnen FECs und ihren zugehörigen LSPs über ein Protokoll
-Bandbreiten auf dem gesamten Pfad angefragt und anschließend reserviert.
+geswitcht. Diese Mechanik ist namensgebend für MPLS. RSVP-TE ist eine
+Erweiterung diesen Konzeptes. Hierbei werden für die einzelnen FECs und
+ihren zugehörigen LSPs über ein Protokoll Bandbreiten auf dem gesamten
+Pfad angefragt und anschließend reserviert.
 
 Als dritte und modernste Methode kann Segment-Routing verwendet werden,
-welches im RFC 8660 spezifiziert ist[@sr]. Segment Routing basiert auf
+welches im RFC 8660 spezifiziert ist [@sr]. Segment Routing basiert auf
 ISIS oder OSPF und ist damit eine Erweiterung dieser Protokolle. Im
 Unterschied zu LDP werden global gültige Labels für die am Rand
 sitzenden Router vergeben. Pakete erhalten das Label des Ziel-Routers
@@ -4403,30 +4563,31 @@ und werden auf Basis dessen durch das Netzwerk geleitet. Das Label wird
 in diesem Fall nicht gewechselt. Neben den Routern am Rand erhalten auch
 die einzelnen Verbindungen Labels. Pakete können wahlweise nur mit dem
 Label des Endpunktes oder mit einem Stack aus Labeln versehen werden.
-Der Label-Stack wird dabei abgearbeitet, ein Label wird bei erreichen
+Der Label-Stack wird dabei abgearbeitet, ein Label wird bei Erreichen
 des jeweiligen Ziel-Abschnitts vom Stack entfernt. Dadurch kann einem
 Paket ein dedizierten Pfad zugewiesen werden, was wiederum
 Traffic-Engineering ermöglicht.
 
 ![Segment Routing - Global gültige Label - Quelle: Leonir Hoxha,
-BRKSPG-2021, Cisco](media/sr-cisco.png){width="50%"}
+BRKSPG-2021, Cisco](media/sr-cisco.png){#fig:sr-cisco width="50%"}
 
-In der Abbildung sind die Global gültigen MPLS-Label dargestellt. Jeder
-teilnehmende Router kennt alle globalen Labels der einzelnen Router
-sowie den kürzesten Weg zu diesen. Der kürzeste Pfad wird hierbei durch
-das jeweilig verwendete IGP berechnet.
+In der Abbildung [9.1](#fig:sr-cisco){reference-type="ref"
+reference="fig:sr-cisco"} sind die global gültigen MPLS-Label
+dargestellt. Jeder teilnehmende Router kennt alle globalen Labels der
+einzelnen Router sowie den kürzesten Weg zu diesen. Der kürzeste Pfad
+wird hierbei durch das jeweilig verwendete IGP berechnet.
 
-Um alternative Pfade zu berechnen kann ein PCE - Path Computation
-Elementgrqq - eingesetzt werden. Dies ist ein abgesetzter Controller
-welcher auf Basis von Metriken optimierte Pfade berechnen. Diese
-optimierten Pfade werden dem Router mitgeteilt auf dem das Paket in das
+Um alternative Pfade zu berechnen, kann ein PCE - Path Computation
+Elementgrqq - eingesetzt werden. Dies ist ein abgesetzter Controller,
+welcher auf Basis von Metriken optimierte Pfade berechnet. Diese
+optimierten Pfade werden dem Router mitgeteilt, auf dem das Paket in das
 MPLS-Netzwerk eintritt. Dieser Router ist dafür zuständig das Paket für
 einen bestimmten Pfad zu klassifizieren und anschließend das Paket mit
 einem entsprechendem Label-Stack zu versehen. Die weiteren Router
 benötigen keine Kenntnis über den Pfad und arbeiten stupide den Stack
-ab. Dadurch sind nur wenige Zustände notwendig die im Netzwerk
-synchronisiert werden müssen, was ein architektonischer Vorteil
-gegenüber anderer Ansätze ist.
+ab. Dadurch sind nur wenige Zustände notwendig, die im Netzwerk
+synchronisiert werden müssen. Dies ist ein architektonischer Vorteil
+gegenüber anderen Ansätzen.
 
 ### MPLS/IPv4 Underlay
 
@@ -4436,7 +4597,7 @@ Loopback-Adresse und es werden Transfernetzwerke auf den
 [nni]{acronym-label="nni" acronym-form="singular+short"}s konfiguriert.
 Als IGP wird ISIS eingesetzt. Ziel ist eine volle Erreichbarkeit aller
 Loopback-Adressen zwischen den Routern. Für die Loopback-Adressen werden
-die in Abbildung [9.1](#fig:mplstop){reference-type="ref"
+die in Abbildung [9.2](#fig:mplstop){reference-type="ref"
 reference="fig:mplstop"} gezeigten Adressen im **10.0.0.0/24** Netz mit
 einer **/32** Subnetzmaske verwendet. Für die Transfernetze werden
 **/30**-Subnetze aus dem Adressbereich **10.200.0.0/24** verwendet.
@@ -4447,9 +4608,9 @@ Aufbau des MPLS-Netzwerkes in Form von Einträgen in den MPLS-Tabellen.
 Ziel ist das jede Loopback-Adresse ein global eindeutiges MPLS-Label
 besitzt und den anderen Switchen das MPLS-Label zu den jeweiligen
 Loopback-Adressen bekannt ist. Weiterhin berechnet ISIS einen direkte
-Pfad zu allen bekannten Routern die ein globales Label tragen. Die
+Pfad zu allen bekannten Routern, die ein globales Label tragen. Die
 Global eindeutigen Label setzten sich zusammen aus **9000** und dem
-letzten Tupel der Loopback-Adresse. Für den ersten Switch mit der
+letzten Byte der Loopback-Adresse. Für den ersten Switch mit der
 Loopback-Adresse **10.0.0.41** wäre das entsprechende Label **900041**.
 
 ### EVPN-Overlay
@@ -4459,7 +4620,7 @@ BGP-EVPN eingesetzt. BGP-EVPN trägt in diesem Lab keine tragende Rolle
 und ist beliebig austauschbar durch L3VPN oder VPLS. BGP-EVPN wird als
 Adressfamilie auf allen Routern aktiviert. In der hier gezeigten
 Topologie wird BGP auf allen Switch konfiguriert, da keine Router
-existieren die lediglich Teil des MPLS-Netzwerkes sind. Die Gastnetze
+existieren, die lediglich Teil des MPLS-Netzwerkes sind. Die Gastnetze
 müssen auf den Routern später in VRFs angelegt werden.
 
 ### Traffic-Engineering Controlplane
@@ -4481,14 +4642,15 @@ die anderen beiden Varianten. In diesem Lab werden die Tunnel statisch
 
 #### Traffic-Steering
 
-Es gibt mehrere Varianten Datenverkehr den Tunneln zuzuweisen. Arista
-beschreibt folgende Arten des Traffic-Steerings
+Es gibt mehrere Varianten, Datenverkehr den Tunneln zuzuweisen. Arista
+beschreibt folgende Arten des Traffic-Steerings:
 
 -   **bsid** - Ein dem Tunnel zugewiesenes MPLS-Label.
 
 -   **color** - Ein über BGP signalisiertes Attribut einer Route.
 
--   **DSCP** - Differentiated Services Code Point - Gesetzter DSCP Wert
+-   **DSCP** - Differentiated Services Code Point - Ein gesetzter DSCP
+    Wert.
 
 Jedem Tunnel muss bei Konfiguration ein global eindeutiges MPLS-Label,
 die sogenannte *b-sid*, zugewiesen werden. Geht auf einem Router mit
@@ -4497,7 +4659,7 @@ MPLS-Label ein, wird dieses Paket in diesen Tunnel weitergeleitet. Dafür
 müssen Pakete vorab mit entsprechenden MPLS-Labeln markiert werden.
 
 Die präferierte Variante um Datenverkehr anwendungsspezifisch und
-symmetrisch Tunneln zuzuweisen ist die Zuordnung über DSCP-Werte. Zu
+symmetrisch Tunneln zuzuweisen, ist die Zuordnung über DSCP-Werte. Zu
 diesem Zweck können Zuordnungen zwischen DSCP-Werten und Tunneln
 konfiguriert werden. Der Lookup des DSCP-Wertes sowie die anschließende
 Überschreibung der Routing-Entscheidung konnte mit der vorliegenden vEOS
@@ -4507,7 +4669,7 @@ ist.
 
 Die dritte Variante ist die Zuordnung über ein Attribut der Route mit
 dem Namen *color*. Entspricht die hier signalisierte Farbe der Farbe
-eines anliegenden Tunnels wird das Paket über diesen Tunnel geroutet.
+eines anliegenden Tunnels, wird das Paket über diesen Tunnel geroutet.
 Das Attribut kann durch statisch definierte Route-Maps gesetzt werden.
 Attribute können sowohl für über BGP empfangene Routen sowie selbst
 signalisierte Routen gesetzt werden.
@@ -4519,17 +4681,17 @@ Attribute werden durch statische Route-Maps gesetzt.
 ### Virtueller Switch: Arista vEOS
 
 Für dieses Lab wird die virtuelle Variante von Aristas EOS eingesetzt.
-Die Appliance ist im GNS3-Markplatz frei verfügbar. Zum herunterladen
+Die Appliance ist im GNS3-Markplatz frei verfügbar. Zum Herunterladen
 des benötigten Images ist eine kostenfreie Registrierung bei Arista
 notwendig. Es muss zwischen Arista vEOS und Arista vEOS-lab
 unterschieden werden. Arista vEOS ist eine kostenpflichtige Lösung für
 den Einsatz in produktiven Umgebungen. vEOS unterstützt zur
-Paketweiterleitung die beiden Technologien *kernel* und *dpdk* und wird
+Paketweiterleitung die beiden Varianten *kernel* und *dpdk* und wird
 explizit als Router beschrieben, was auf fehlende Layer-2 Features
 schließen lässt. vEOS-lab hingegen ist eine Version für die Simulation
 von Netzwerken. Die Paketweiterleitung basiert auf einem eigenem Prozess
 mit dem Namen *etba*. Dieser Prozess bildet die Dataplane des Switches
-ab. Mehr Informationen zu Aristas EOS findet sich im Kapitel
+ab. Mehr Informationen zu Aristas EOS findet sich im Abschnitt
 [3.3](#sec:arista){reference-type="ref" reference="sec:arista"}.
 
 vEOS ist ein Linux-basiertes Betriebssystem für Switche und Router.
@@ -4544,9 +4706,9 @@ VLAN-Bridging, Layer-3 Routing, VXLAN sowie eine MPLS-Dataplane
 implementiert sind. Nicht oder nur teilweise funktioniert haben Lookups
 auf DSCP-Werte für Traffic-Engineering sowie die Errichtung eines
 Layer-2 VPN über MPLS. Werden in den Endgeräten statische MAC-Adressen
-eingetragen funktioniert die Kommunikation, der eigentlich dafür
-zuständige ARP-Mechanismus funktioniert aber nicht Aufgrund mangelndem
-Broadcast oder einem alternativem ARP-Proxy.
+eingetragen, funktioniert die Kommunikation. Der eigentlich dafür
+zuständige ARP-Mechanismus funktioniert aber nicht, vermutlich aufgrund
+mangelnder Broadcast-Behandlung oder einem alternativem ARP-Proxy.
 
 #### Virtuelle Performance {#virtuelle-performance}
 
@@ -4556,7 +4718,7 @@ einem modernerem Arfa-Modus - Arista Forwarding Agent, oder in einen
 Legacy Python-Modus gestartet werden. Ab vEOS Version 4.30.1.F ist Arfa
 standardmäßig aktiviert. Während Arfa eine bessere Performance bieten
 soll, fehlen diesem Modus im Vergleich noch einige wenigen Funktionen
-wie Multicast oder Q-in-Q. [@arfa]
+wie Multicast oder Q-in-Q [@arfa].
 
 Bei einer einfachen Messung zwischen zwei Interfaces innerhalb eines
 VLANs erreicht die Datenübertragung mit Iperf3 eine Geschwindigkeit von
@@ -4578,11 +4740,11 @@ Erkennbar ist, dass zu jedem Front-Port des Switches zwei
 Kernel-Interface existieren. Hierbei ist jeweils das *vmnicet\**
 Interface das physikalische Interface und das *et\** Interface das
 virtuelle interne Interface. Durch ein Mitschnitt mit *tcpdump* wird
-ersichtlich das sämtlicher Datenverkehr der über die Front-Ports fliest
-über die Kernel-Interfaces vmnic\* läuft. Auf dem internen Interface et5
-sind nur Pakete die von der Controlplane des Switches stammen oder an
-diese gesendet werden, wie zum Beispiel Spanning-Tree Pakete,
-ersichtlich.
+ersichtlich, dass sämtlicher Datenverkehr, der über die Front-Ports
+fließt über die Kernel-Interfaces vmnic\* läuft. Auf dem internen
+Interface et5 sind nur Pakete, die von der Controlplane des Switches
+stammen oder an diese gesendet werden, wie zum Beispiel Spanning-Tree
+Pakete, ersichtlich.
 
 Die Performance lässt sich durch Deaktivieren von *Generic Receive
 Offload* erheblich steigern.
@@ -4594,10 +4756,10 @@ Hintergründe hierzu werden in
 reference="sec:sonicperf"} erläutert.
 
 Weiterhin lässt sich beobachten, dass die Paketverlustrate auf 100%
-steigt sobald Pakete eine gewisse Größe überschreiten. Dieses Phänomen
-tritt nur auf wenn die Pakete über MPLS-Strecken geroutet werden.
+steigt, sobald Pakete eine gewisse Größe überschreiten. Dieses Phänomen
+tritt nur auf, wenn die Pakete über MPLS-Strecken geroutet werden.
 
-Eine Messung mit Iperf über eine MPLS Strecke verdeutlicht das Phänomen:
+Eine Messung mit Iperf über eine MPLS-Strecke verdeutlicht das Phänomen:
 
     root@netlab-192-168-1-2:/# iperf3 -c 192.168.2.2
     Connecting to host 192.168.2.2, port 5201
@@ -4621,10 +4783,10 @@ Eine Messung mit Iperf über eine MPLS Strecke verdeutlicht das Phänomen:
 Die ersten Pakete, welche Aufgrund von TCP slow start noch eine geringe
 Größe aufweisen, werden erfolgreich übertragen. Die weiteren Pakete
 kommen nicht an der Gegenstelle an. Da Iperf3 die Übertragung
-erfolgreich abschließt werden auch die Iperf3-Steuernachrichten
-erfolgreich übertragen.
+erfolgreich abschließt, werden auch die Iperf3-Steuernachrichten
+offenbar erfolgreich übertragen.
 
-Ein Lösungsansatz ist es die maximale Paketgröße des Sendern zu
+Ein Lösungsansatz ist, die maximale Paketgröße des Senders zu
 reduzieren. Die lässt sich zum einen bei *iperf3* für die jeweilige
 Übertragung setzen:
 
@@ -4638,12 +4800,12 @@ unit reduzieren.
 
     ip link set dev eth0 mtu 1484
 
-Hierbei haben sich 1484 Bytes als maximale Größe ohne hohe Paketverluste
-erwiesen wenn MPLS-Strecken involviert sind.
+Hierbei haben sich 1484 Bytes als maximale Größe erwiesen, wenn
+MPLS-Strecken involviert sind.
 
-Nachdem deaktiviertem *gro* und auf 1484 Bytes reduzierter *mtu* ist
-eine Übertragungsrate über mehrere Hops und MPLS-Strecken mit circa 20
-Mbit/s möglich.
+Mit deaktiviertem *gro* und auf 1484 Bytes reduzierter *mtu* ist eine
+Übertragungsrate über mehrere Hops und MPLS-Strecken mit circa 20 Mbit/s
+möglich.
 
     root@netlab-192-168-1-2:/# iperf3 -c 192.168.2.2
     Connecting to host 192.168.2.2, port 5201
@@ -4682,51 +4844,81 @@ Paketweiterleitungsagent *Etba* eine Auslastung von über 70% der CPU.
         1 root      20   0   14700   8416   6804 S   0.0   0.4   0:06.06 systemd
         2 root      20   0       0      0      0 S   0.0   0.0   0:00.00 kthreadd
 
-Das erhöhen der virtuellen CPU Cores des virtuellen Arista-Switches auf
+Das erhöhen der virtuellen CPU-Cores des virtuellen Arista-Switches auf
 insgesamt 2 vCPUs erbrachte eine weitere geringfügige
 Leistungssteigerung auf einen Durchsatz von insgesamt circa 30 Mbit/s.
 Aufgrund der Architektur in Form von Paketweiterleitung auf Basis eines
-zentralen Prozessen verhält sich der Switch blocking. Eine
+zentralen Prozesses verhält sich der Switch blocking. Eine
 Datenübertragung zwischen zwei Interfaces beeinflusst die
 Datenübertragung zwischen zwei weiteren unabhängigen Interfaces auf dem
 gleichen Gerät. Vor allem bei paralleler Messungen verschiedener Pfade
 durch ein Netzwerk, welche sich aber an einzelnen Punkten im Netzwerk
-kreuzen muss dieses Verhalten beachtet werden. Bei dem in diesem Versuch
-betrachtetem Traffic-Engineering, wo die Bandbreite durch die Nutzung
-mehrerer Pfade erhöht werden soll, führt dies zu einem spezifischem
-Verhalten was nur in der virtualisierten Form des Netzwerkes auftritt.
-Physikalische Geräte arbeiten typischerweise non-blocking, was bedeutet
-das die Dataplane die Kapazität hat alle Interfaces mit voller
-Bandbreite zu versorgen. Weiterhin ist die Übertragungsgeschwindigkeit
-der simulierten Switche abhängig der Gesamtlast beziehungsweise
-Leistungsfähigkeit des jeweiligen GNS3-Servers.
+kreuzen, muss dieses Verhalten beachtet werden. Bei dem in diesem
+Versuch betrachtetem Traffic-Engineering, wo die Bandbreite durch die
+Nutzung mehrerer Pfade erhöht werden soll, führt dies zu einem
+spezifischem Verhalten, was nur in der virtualisierten Variante des
+Netzwerkes auftritt. Physikalische Geräte arbeiten typischerweise
+non-blocking, was bedeutet, dass die Dataplane die Kapazität hat, alle
+Interfaces mit voller Bandbreite zu versorgen. Weiterhin ist die
+Übertragungsgeschwindigkeit der simulierten Switche abhängig der
+Gesamtlast, beziehungsweise Leistungsfähigkeit, des jeweiligen
+GNS3-Servers.
 
 Simulation
 ----------
 
 ### Topologie
 
-Als Topologie wird der in Kapitel [4.1](#sec:ref){reference-type="ref"
+Als Topologie wird der in Abschnitt [4.1](#sec:ref){reference-type="ref"
 reference="sec:ref"} gezeigte Netzwerkaufbau in GNS3 genutzt.
 
 ![GNS3 MPLS-SR Topologie](media/mpls-top.png){#fig:mplstop width="100%"}
 
-Grün eingezeichnet hier sind die Verbindungen hin zu den
+Grün eingezeichnet sind die Verbindungen hin zu den
 Management-Interfaces der Switche. Es kommt ein Management-Container zum
 Einsatz mit dem Namen mpls-sr-mgmt, welcher eine interaktive CLI zur
 Konfiguration der Switche enthält. An zwei Punkten des MPLS-Netzwerkes
 werden Endgeräte angeschlossen. In diesem Lab werden nur Layer-3
-Services provisioniert um die Möglichkeiten für Traffic-Engineering
+Services provisioniert, um die Möglichkeiten für Traffic-Engineering
 durch Segment-Routing und MPLS zu zeigen.
+
+Der zugehörige Versuchsordner ist wie folgt strukturiert:
+
+``` {caption="MPLS-SR: Versuchsordner"}
+|-- GNS3-Portable-Project
+|   `-- mpls-sr.gns3project
+|-- Konfigurationen
+|   |-- 172.30.240.41.txt
+|   |-- 172.30.240.42.txt
+|   |-- 172.30.240.43.txt
+|   |-- 172.30.240.44.txt
+|   `-- 172.30.240.45.txt
+|-- mpls-sr-controller
+|   |-- configs
+|   |-- hosts
+|   |-- mpls
+{...}
+|   |-- mpls-cli.py
+|   `-- topology.csv
+|-- MPLS-SR_-_Traffic-Engineering.md
+`-- sflow-client
+    `-- Dockerfile
+```
+
+Es liegt ein vollständig vorbereitetes portables GNS3-Projekt ab.
+Weiterhin liegen alle finalen Konfigurationen ab, welche aber nicht
+benötigt werden, da diese im weiteren generiert werden. In dem Ordner
+*mpls-sr-controller* liegen alle notwendigen Dateien für den im
+Folgenden beschriebenen Management-Controller ab.
 
 ### Konfiguration Arista vEOS
 
 #### Grundkonfiguration
 
-Damit die Switche nachfolgend durch eine Python-API konfiguriert werden
-können müssen sie dementsprechend vorbereitet werden. Es müssen eine
-IP-Adresse für das Management-Interface, ein Nutzer mit Passwort
-angelegt und die in diesem Lab verwendete API aktiviert werden.
+Damit die Switche nachfolgend über eine Python-API konfiguriert werden
+können, müssen sie vorbereitet werden. Es müssen eine IP-Adresse für das
+Management-Interface konfiguriert, ein Nutzer mit Passwort angelegt und
+die in diesem Lab verwendete API aktiviert werden.
 
 ``` {caption="Arista vEOS: Grundkonfiguration"}
 localhost login: admin
@@ -4763,16 +4955,16 @@ localhost#write
 ```
 
 Die notwendigen Schritte sind im gezeigten Listing dokumentiert. Die
-Management IP-Adresse sollte bei Nutzung des Cloud Knotens mit anderen
+Management IP-Adresse sollte bei Nutzung des Cloud-Knotens mit anderen
 Nutzern der GNS3-Plattform abgestimmt sein. Bei Nutzung der
 GNS3-Plattform des NLABs der Hochschule muss sie in dem
-**172.30.0.0/15**-Subnetz liegen um per VPN von außerhalb erreicht
+**172.30.0.0/16**-Subnetz liegen, um per VPN von außerhalb erreicht
 werden zu können.
 
 #### Konfiguration von MPLS-SR und EVPN
 
 Die weitere Konfiguration kann über die *mpls-cli* erfolgen, welche im
-Management-Container *nlab4hsrm/mpls-eos-management* enthalten ist.
+Management-Container *nlab4hsrm / mpls-eos-management* enthalten ist.
 Alternativ können die Geräte auf Basis der folgenden Erläuterung auch
 manuell konfiguriert werden. Die Anwendung liegt in folgender
 Ordnerstruktur vor:
@@ -4789,8 +4981,8 @@ Ordnerstruktur vor:
 In der *hosts* Datei werden die Management IP-Adressen der Switche
 eingetragen, eine Adresse pro Zeile. In der *topology.csv* wird die
 Topologie definiert. Jede Zeile in der Spalte repräsentiert hierbei eine
-Verbindung zwischen zwei Switchen, welche jeweils durch ihre letztes
-Management-IP Tupel identifiziert werden. Bei dem jeweiligen ersten
+Verbindung zwischen zwei Switchen, welche jeweils durch ihr letztes
+Management-IP Byte identifiziert werden. Bei dem jeweiligen ersten
 Vorkommen eines Switches wird das erste Interface und bei jedem weiteren
 Vorkommen ein von unten ansteigend weiteres Interface konfiguriert.
 
@@ -4803,8 +4995,8 @@ root@<docker-id>:/$ python3 /MPLS_LAB/mpls-cli.py
 ![MPLS-CLI](media/mpls-cli.png){width="100%"}
 
 Durch Eingabe gezeigter Nummern lassen sich die einzelnen Optionen
-aufrufen. Es sollten die hier ausgegeben Management-Adressen überprüft
-werden auf Korrektheit.
+aufrufen. Es sollten die hier ausgegeben Management-Adressen auf
+Korrektheit überprüft werden.
 
 Im ersten Schritt wird die Konnektivität zu allen Switchen mit der
 Option überprüft. Hierbei sollte für jeden Switch folgende Zeile
@@ -4817,12 +5009,12 @@ FQDN:     Arista-1
 Node reachable!
 ```
 
-Sollten alle Switche erreichbar sein kann die Grundkonfiguration von
-MPLS-SR und BGP-EVPN erfolgen. Die erfolgt über die Option . Dies
-passiert ohne weitere Eingabe des Nutzers vollautomatisch. Die
-generierte Konfiguration kann mit der Option betrachtet werden. Im
-weiteren wird die Konfiguration erläutert, wobei weniger relevante sowie
-sich wiederholende Elemente nicht berücksichtigt werden.
+Sollten alle Switche erreichbar sein, kann die Grundkonfiguration von
+MPLS-SR und BGP-EVPN über die Option erfolgen. Dies passiert ohne
+weitere Eingabe des Nutzers vollautomatisch. Die generierte
+Konfiguration kann mit der Option betrachtet werden. Im weiteren wird
+die Konfiguration erläutert, wobei weniger relevante sowie sich
+wiederholende Elemente nicht berücksichtigt werden.
 
 ``` {caption="vEOS Konfiguration - ISIS"}
 {...}
@@ -4851,21 +5043,23 @@ router isis ISIS-SR
 
 ISIS wird bei Arista lokal auf den jeweiligen Interfaces aktiviert und
 global pro Router-Instanz konfiguriert. Den [nni]{acronym-label="nni"
-acronym-form="singular+short"} Interfaces wird eine IP-Adresse in einem
-30er Transfernetz zugewiesen und ISIS unter Angabe der Router-Instanz
+acronym-form="singular+short"}-Interfaces wird eine IP-Adresse in einem
+30er-Transfernetz zugewiesen und ISIS unter Angabe der Router-Instanz
 aktiviert.
 
-Da ISIS Protokoll-unabhängig wird eine eindeutige Adresse in einem
-eigenen Adressformat benötigt, welche mit dem Konfigurationskommando
-*net* konfiguriert wird.
+Da ISIS auf CLNP basiert, benötigt es eine eindeutige NET-Adresse
+(Network Entity Title). Dies ist eine 20-Byte lange NSAP (Network
+Service Access Point) Adresse, welche im OSI-Modell auf Ebene 3 gültig
+ist. ISIS ist älter als IP. Diese wird mit dem Konfigurationskommando
+*net* konfiguriert.
 
 Die Adressfamilie *IPv4 Unicast* wird aktiviert, da MPLS auf ein
 IP-Netzwerk angewiesen ist. Hierdurch werden alle Loopback-Adressen der
 verschiedenen Switche im Netzwerk erreichbar. Weitere Bedingung hierfür
-ist es ISIS auch auf dem Loopback-Interface zu aktivieren. Dem
+ist es, ISIS auch auf dem Loopback-Interface zu aktivieren. Dem
 Loopback-Interface wird zusätzlich eine *segment-id* zugewiesen, welche
 diesen als MPLS-Endpunkt in diesem Netzwerk eindeutig identifiziert. Als
-ID wird das letzte Tupel der Loopback-Adresse verwendet.
+ID wird das letzte Byte der Loopback-Adresse verwendet.
 
 ``` {caption="vEOS Konfiguration - BGP"}
 !
@@ -4903,18 +5097,18 @@ Nachdem das MPLS-Underlay konfiguriert ist, wird auf den MPLS-Endpunkten
 BGP konfiguriert. Über BGP werden die EVPN-Routen mit den jeweils
 verfügbaren Layer-3 und Layer-2 Netzwerken verteilt. Die notwendigen
 Konfigurationselemente werden auf einer peer group definiert, zu der die
-benachbarten Switche dann entsprechend zugeordnet werden. Weiterhin wird
-die Adressfamilie *evpn* für alle Nachbarn aktiviert. In dieser wird
-auch die Enkapsulierung mittels MPLS festgelegt.
+benachbarten Switche zugeordnet werden. Weiterhin wird die Adressfamilie
+*evpn* für alle Nachbarn aktiviert. In dieser wird auch die
+Enkapsulierung mittels MPLS festgelegt.
 
-Für die Gastnetzwerke wird ein *VRF* angelegt, welcher innerhalb des
-MPLS Netzwerkes über einen Route Distinguisher identifiziert wird. Es
-ist möglich weitere *VRFs* zu konfigurieren welche eine logische
-Separierung zwischen den Gastnetzwerken ermöglicht. Weiterhin wird
-konfiguriert welche Routen per *evpn* empfangen werden und mit welchen
-Route Distinguisher sie versehen werden. Durch das redistribute
-connected werden alle lokal in diesem *VRF* bekannten Routen über BGP
-verteilt.
+Für die Gastnetzwerke wird ein VRF (Virtual-Routing-Function) angelegt,
+welcher innerhalb des MPLS Netzwerkes über einen Route Distinguisher
+identifiziert wird. Es ist möglich weitere VRFs zu konfigurieren, welche
+eine logische Separierung zwischen den Gastnetzwerken ermöglicht.
+Weiterhin wird konfiguriert, welche Routen per *evpn* empfangen werden
+und mit welchen Route Distinguisher sie ausgehend versehen werden. Durch
+das redistribute connected werden alle in diesem VRF lokal bekannten
+Routen über BGP signalisiert.
 
 ``` {caption="vEOS Konfiguration - Gastnetzwerk"}
 vlan 30
@@ -4941,8 +5135,7 @@ nun entsprechend ein Endgerät angeschlossen werden kann.
 Im ersten Schritt wird überprüft, ob das ISIS-Protokoll korrekt arbeitet
 und eine IPv4-Konnektivität durch das Netzwerk gegeben ist. Dies kann
 durch eine Kontrolle der ISIS Instanzen sowie der verfügbaren über ISIS
-gelernten Routen erfolgen. Es muss jeweils eine Route zu allen weiteren
-Loopback-Adressen verfügbar sein.
+gelernten Routen erfolgen.
 
 Mittels der Option kann mit der *mpls-cli* der Befehl show isis
 neighbors auf allen Switchen abgesetzt werden.
@@ -5086,32 +5279,31 @@ Sobald auf mehreren Switchen in diesem Netzwerk Interfaces im VRF *NLAB*
 mit entsprechenden Netzwerken angelegt sind, sollten diese in den
 Tabellen auftauchen. In dieser Ausgabe ist zu sehen, dass das Subnetz
 .2.0/24 hinter der Adresse .0.45 verfügbar ist. Da es zu diese Adresse
-einen Eintrag in der MPLS-Tablle existiert würde ein Paket in Richtung
-diesen Netzwerkes per MPLS versendet werden.
+einen Eintrag in der MPLS-Tabelle existiert, würde ein Paket in Richtung
+dieses Netzwerkes per MPLS versendet werden.
 
-Zum weiteren Test sollte jeweils ein Gastnetzwerk an zwei Enden des
+Zum weiteren Test kann jeweils ein Gastnetzwerk an zwei Enden des
 Netzwerkes angelegt werden und Netlab-PCs mit diesem verbunden werden.
-Mittels einem Ping zwischen den Netlab Geräten kann das soeben
-validierte Netzwerk getestet werden.
+Mit einem Ping zwischen den Netlab Geräten kann das soeben validierte
+Netzwerk getestet werden.
 
 ### Traffic-Engineering
 
-Für das Traffic-Engineering werden zum einen explizit definierte Tunnel
-durch das Netzwerk, und zum Anderen Regeln welche Datenverkehr welchem
-Tunnel zugewiesen werden benötigt.
+Für das Traffic-Engineering werden explizit definierte Tunnel und
+Regeln, welche Datenverkehr Tunnel zuweisen, benötigt.
 
 #### Tunnel-Konfiguration
 
 Die Tunnel werden durch *colors* identifiziert. Die *colors* werden
-technisch durch Zahlen implementiert, können aber zur Verdeutlichung mit
-echten Farben gekennzeichnet werden. Diese werden konfigurativ
-allerdings nur als Name hinterlegt und haben keine technische Bedeutung.
+durch Zahlen repräsentiert, können aber zur Verdeutlichung mit echten
+Farben gekennzeichnet werden. Diese werden allerdings nur als Name
+hinterlegt und haben keine technische Bedeutung.
 
 ![MPLS SR Tunnel](media/mpls-sr-tunnel.png "fig:"){#fig:srtunnel
 width="100%"} [\[fig:srtunnel\]]{#fig:srtunnel label="fig:srtunnel"}
 
 In der Abbildung werden drei Tunnel gezeigt. In dem Beispiel sollen am
-Switch *Arista-10-0-0-41* drei verschiedene Services wie ein
+Switch *Arista-10-0-0-41* drei verschiedene Services, wie ein
 Video-Streaming Dienst oder einen File-Service angeboten werden. Diese
 Services befinden sich alle in jeweils unterschiedlichen IP-Subnetzen.
 Die Clients an *Arista-5* sollen diese Services über verschiedene Tunnel
@@ -5133,19 +5325,19 @@ router traffic-engineering
 ```
 
 Der Tunnel wird auf dem Switch konfiguriert, auf dem die Pakete in den
-Tunnel eintreten. Die Tunnel sind nicht bidirektional und müssen wenn
-Bidirektionalität gewünscht ist auf beiden Seiten konfiguriert werden.
-Da die Zuordnung der Tunnel über die IP-Zieladresse verfolgt ist in
-diesem Beispiel die Rückrichtung zu dem Client nur über ein en Tunnel
-möglich, da diese nur über eine IP-Adresse verfügt.
+Tunnel eintreten. Die Tunnel sind nicht bidirektional und müssen, wenn
+Bidirektionalität gewünscht ist, auf beiden Seiten konfiguriert werden.
+Da die Zuordnung der Tunnel über die IP-Zieladresse verfolgt, ist in
+diesem Beispiel die Rückrichtung zu dem Client nur über einen Tunnel
+möglich.
 
-Die *policy* wird angelegt unter der Bezeichnung eines *endpoints*,
-wofür die Loopback-Adresse des Switches auf dem der Tunnel terminiert
-eingesetzt wird. Als *color* wird die Zahl gesetzt, welche den Tunnel
+Die *policy* wird unter der Angabe eines *endpoints* angelegt, wofür die
+Loopback-Adresse des Switches eingesetzt wird, auf dem der Tunnel
+terminiert . Als *color* wird die Zahl gesetzt, welche den Tunnel
 identifiziert.
 
 Die Arista Implementation setzt eine gesetzte *binding-sid* voraus.
-Diese kann ebenfalls dazu genutzt werden Datenverkehr in diesen Tunnel
+Diese kann ebenfalls dazu genutzt werden, Datenverkehr in diesen Tunnel
 zu leiten. Dafür muss ein Paket bereits mit der *binding-sid* als
 MPLS-Label durch ein vorgeschaltetes Gerät versehen werden.
 
@@ -5153,12 +5345,12 @@ Der Name Green dient lediglich zur Visualisierung und hat keine
 technische Bedeutung.
 
 Die *path-group* beschreibt für diesen Tunnel einen möglichen Pfad durch
-das Netzwerk. Hierbei wir die *path-group* mit der geringsten Präferenz
+das Netzwerk. Hierbei wird die *path-group* mit der geringsten Präferenz
 bevorzugt. Der Switch überprüft, ob er für das erste Label einen
-gültigen Eintrag in seiner *lfib* besitzt. Ist dies nicht der Fall würde
-einer dies für einen alternativen Pfad ebenfalls überprüfen. Für dieses
-Beispiel wird für jeden Tunnel nur ein Pfad konfiguriert. Der Pfad wird
-in dem Unterbefehl durch eine Vielzahl von Labeln definiert, welche
+gültigen Eintrag in seiner *lfib* besitzt. Ist dies nicht der Fall, wäre
+die *path-group* ungültig und würde nicht benutzt. Für dieses Beispiel
+wird für jeden Tunnel nur ein Pfad konfiguriert. Der Pfad wird in dem
+Unterbefehl durch eine Vielzahl von Labeln definiert, welche
 nacheinander abgearbeitet werden. Das Paket würde im ersten Schritt an
 den Switch mit dem lokalen MPLS-Label geschickt. Dieser entfernt das
 oberste Label und sendet das Paket weiter an den Switch mit der .
@@ -5192,19 +5384,19 @@ router traffic-engineering
 ```
 
 Hier wird die vollständige Konfiguration für die drei in Abbildung
-[9.2](#fig:srtunnel){reference-type="ref" reference="fig:srtunnel"}
+[9.3](#fig:srtunnel){reference-type="ref" reference="fig:srtunnel"}
 eingezeichneten Tunnel gezeigt.
 
 #### Policy-Konfiguration
 
-Um Datenverkehr in die entsprechenden Tunnel zu leiten wird in diese
-Simulation IP-Steering eingesetzt. Dafür werden Routen mit einer *color*
-versehen. Dadurch weiß der Switch über welchen Tunnel der Verkehr
-geleitet werden soll. BGP ist in der Lage diese *color* als Attribut
-einer Route mit bekannt zu geben. Dadurch ist es möglich die Route auf
+Um Datenverkehr in die entsprechenden Tunnel zu leiten, wird in dieser
+Simulation IP-Steering verwendet. Dafür werden Routen mit einer *color*
+versehen. Dadurch weiß der Switch, über welchen Tunnel der Verkehr
+geleitet werden soll. BGP ist in der Lage, diese *color* als Attribut
+einer Route mit bekannt zu geben. Dadurch ist es möglich, die Route auf
 dem Quell- und auf dem Ziel-Switch einzufärben. In diesem Beispiel wird
 die Route auf dem Quell-Switch, also auf dem Switch auf dem das Netzwerk
-tatsächlich existiert, mit der *color* markiert.
+anliegt, mit der *color* markiert.
 
 ``` {caption="Arista vEOS: Route-Maps"}
 !
@@ -5219,11 +5411,11 @@ route-map SET-COLOR permit 10
 ```
 
 Dafür wird im ersten Schritt eine *Route-Map* konfiguriert. Diese
-besteht aus einer *match*-Sektion, in der die Routen spezifiziert werden
-auf die die weiteren Regeln angewendet werden. In gezeigten Beispiel
-wird eine *Prefix-Liste* konfiguriert, welche im oberen Teil definiert
-ist. Teil dieser *Prefix-Liste* ist das Subnetz, welches eingefärbt
-werden soll. In der *set*-Sektion wird der Route eine Farbe zugewiesen.
+besteht aus einer *match*-Sektion, in der die Routen spezifiziert
+werden, auf welche die weiteren Regeln angewendet werden. In gezeigten
+Beispiel wird die im oberen Teil definierte Prefix-Liste konfiguriert.
+Teil dieser Prefix-Liste ist das einzufärbende Subnetz. In der
+*set*-Sektion wird der Route eine Farbe zugewiesen.
 
 ``` {caption="Arista vEOS: Route-Maps an VRF binden"}
 vrf NLAB
@@ -5235,9 +5427,9 @@ vrf NLAB
 ```
 
 Damit die *Route-Map* angewendet wird, muss die explizit im
-entsprechendem VRF konfiguriert werden. Da in diesem Beispiiel die
-Routen markiert werden sollen welche an andere Router gesendet werden,
-wird die *Route-Map* zu *route-target export* zugewiesen.
+entsprechendem VRF konfiguriert werden. Da in diesem Beispiel die an die
+Router zu sendenden Routen markiert werden sollen, wird die Route-Map zu
+route-target export zugewiesen.
 
 ``` {caption="Arista-10-0-0-41: Route-Maps für Lab"}
 !
@@ -5263,14 +5455,14 @@ route-map SET-COLOR permit 103
 
 Hier wird die vollständige Konfiguration der Policys über Route-Maps für
 den Arista Switch *Arista-10-0-0-41* gezeigt. Die drei vorhanden
-Subnetze werden jeweils durch setzen einer entsprechenden Farbe einem
-Tunnel zugewiesen.
+Subnetze werden jeweils durch das Setzen einer entsprechenden Farbe
+einem Tunnel zugewiesen.
 
 #### Validierung Traffic-Engineering
 
 Zur Validierung können im ersten Schritt die Routen auf dem Switch
 *Arista-10-0-0-45* betrachtet werden. Diese sollte mit einer Farbe
-versehen haben und als Next-Hop die entsprechende Policy und den Tunnel
+versehen sein und als Next-Hop die entsprechende Policy und den Tunnel
 eingetragen haben.
 
 ``` {caption="Arista-10-0-0-45: Validierung Traffic-Engineering"}
@@ -5303,9 +5495,9 @@ Durch Mitschneiden und Visualisierung des Datenverkehrs auf den
 [nni]{acronym-label="nni" acronym-form="singular+short"}-Strecken mit
 den GNS3-Boardmittel lässt sich der Datenpfad nachvollziehen.
 
-In diesem Setup ist die Datenweiterleitung Bidirektional. Da in
+In diesem Setup ist die Datenweiterleitung asymmetrisch. Da in
 Rückrichtung zum **192.168.2.0/24** kein expliziter Tunnel konfiguriert
-ist werden die Daten über den von ISIS berechneten kürzesten Pfad
+ist, werden die Daten über den von ISIS berechneten kürzesten Pfad
 geleitet. Lediglich die Hinrichtung über die oben gezeigten Routen wird
 über die Tunnel geleitet.
 
@@ -5318,31 +5510,158 @@ Wie bei neuen Technologien üblich, die gerade für Carrier-Netzwerke
 interessant sind, sind die benötigten Features nur in den gehobenen
 Serien der Hersteller zu finden. Während VXLAN mittlerweile eine hohe
 Verbreitung auch auf günstigen Access-Switchen findet, ist MPLS auf
-diesen oft nicht zu finden. Die Technologie hingegen selbst überzeugt
-auf Basis von robusten Protokollen wir ISIS und MPLS. Die Art und Weise
-wie hiermit Traffic-Engineering betrieben werden kann übertrifft den
-Ansatz mit VXLAN bei weitem. Während Traffic-Engineering mit einem
-geschlossenem Regelkreis sich in Form von geschlossenen SD-WAN Lösungen
-derzeit etabliert, spielt es innerhalb der meisten Enterprise-Netzwerke
-eine untergeordnete Rolle. Die Marktanalyse zeigt derzeit keine fertige
-Lösung auf Basis von MPLS und Segment Routing, beworben wird bis auf
-Extreme durchgängig Lösungen auf Basis von VXLAN und EVPN
-beziehungsweise LISP. Der springende Punkt für die Verbreitung von
-Netzwerken auf Basis von MPLS-SR wird die Verfügbarkeit von Controllern
-sein, welche das Potential des Traffic-Engineering in einem Netzwerk
-ausschöpfen. Hier ist es wichtig nicht nur die Auslastung eines Pfades
-sondern auch weitere Metriken wie Jitter zu kennen und Anschließend
-granular Dienste wie Voice-over-IP auf den best geeigneten Pfad zu
-kommissionieren. Es existieren eine PCE Implementation als Applikation
-für ONOS, welche aber nicht mehr weiterentwickelt wird und in der
-aktuellsten Version nicht mehr vorhanden ist, und eine Applikation für
-den OpenDaylight-Controller mit dem Namen Pathman-SR, welche ebenfalls
-seit 2018 kein Update erfahren hat und in der Beta stecken geblieben
-ist. Als kommerzielle Lösungen sind derzeit Junipers Northstar und eine
-Cisco Lösung zu nennen. Cisco implementiert die PCE-Funktion auf ihrem
-IOS XRv 9000 Router, welcher ein Netzwerk mit insgesamt 50000 Knoten
-verwalten kann. Beide dieser Lösungen sind Carrier-Grade und nicht für
+diesen oft nicht zu finden. Die Technologie hingegen selbst basiert auf
+robusten Protokollen wie ISIS und MPLS.
+
+Während Traffic-Engineering sich in Form von SD-WAN Lösungen derzeit
+etabliert, spielt es innerhalb der meisten Enterprise-Netzwerke eine
+untergeordnete Rolle. Die Marktanalyse zeigt derzeit keine fertige
+Lösung auf Basis von MPLS und Segment-Routing. Beworben wird, bis auf
+von Extreme Networks und andere Ausnahmen, durchgängig Lösungen auf
+Basis von VXLAN und IP.
+
+Der zentrale Faktor für die Verbreitung von Netzwerken auf Basis von
+MPLS-SR wird die Verfügbarkeit von Controllern sein, welche das
+Potential des Traffic-Engineering in einem Netzwerk ausschöpfen. Hier
+ist es wichtig, reichhaltige Metriken erfassen zu können und
+anschließend granular Dienste wie Voice-over-IP einen optimalen Pfad
+zuzuweisen.
+
+Als kommerzielle Controller-Lösungen sind derzeit Junipers Northstar und
+eine Cisco Lösung zu nennen. Cisco implementiert die PCE-Funktion auf
+ihrem IOS XRv 9000 Router, welcher ein Netzwerk mit insgesamt 50000
+Knoten verwalten kann. Beide Lösungen sind Carrier-Grade und nicht für
 den Enterprise-Markt bestimmt.
+
+Fazit
+=====
+
+Zu dem Begriff Software-Defined-Networking kann abschließend das Fazit
+gezogen werden, dass die ursprünglich tragende und zentrale Technologie
+OpenFlow mittlerweile eine untergeordnete Rolle einnimmt. Die Idee
+dahinter wird aber weiterhin durch verschiedene andere Technologien
+verfolgt, die allerdings nur Teilbereiche der durch SDN adressierten
+Problemstellung begegnen. Diese Technologien sind oft integraler
+Bestandteil am Markt erhältlicher Enterprise-Netzwerklösungen. Bei dem
+formalen Nachfolger von OpenFlow, P4 mit P4Runtime, welcher als Next
+Generation SDN bezeichnet wird, bleiben eine relevante
+Marktdurchdringung sowie sinnvolle Anwendungsfälle in
+Enterprise-Netzwerken abzuwarten. Weitere Erkenntnis ist, dass der im
+Marketing verwendete Begriff SDN nicht definiert ist und keine
+wirklichen Rückschlüsse auf das Produkt zulässt.
+
+Erfreulicherweise konnten alle in dieser Thesis ausgemachte Technologien
+im Zusammenhang mit SDN auf der GNS-3 Plattfom der Hochschule simuliert
+werden. Die Technologien OpenFlow und P4 lassen sich beinahe ohne
+Einschränkungen demonstrieren, da mit dem virtuellen Switch OpenvSwitch
+und der virtualisierbaren Switchplattform Stratum jeweilige vollwertige
+Referenzimplementierung bereitstehen. Bei den Technologien zur
+Netzwerkvirtualisierung und Traffic-Engineering kam es zu einzelnen
+Einschränkungen durch die virtuellen Software-Switche. Während
+Funktionen teilweise nicht implementiert waren, wie zum Beispiel
+EVPN-Multihoming im virtuellen SONiC, haben andere trotz möglicher
+Konfiguration nicht korrekt funktioniert. Beispiel hier ist
+DSCP-basierte Pfadsteuerung bei Aristas vEOS. Die Umsetzung der
+Dataplane der simulierten Switche ist hierbei kritisches Element. Dieses
+Element muss stets als potentielle Einschränkung bei der Simulation mit
+einberechnet werden.
+
+Im Rahmen der Betrachtung des Begriffes SDN sowie verschiedener
+Switching-Plattformen wurde ebenfalls die Thematik Open-Networking
+aufgegriffen. Diese hat das Potential, in Zukunft durch einheitliche
+Standards eine freie Wahl der Software auf den Netzwerkkomponenten zu
+ermöglichen. Dies wiederum hat für den Endverbraucher Vorteile, wie zum
+Beispiel das Verhindern von Vendor-Lockins oder der Verwendung von
+quelloffener und kostenneutraler Software. Herausgestochen ist hier das
+ursprünglich durch Microsoft entwickelte SONiC-Betriebssystem, welches
+mittlerweile quelloffen ist. Eine jetzt schon breites Spektrum an
+unterstützten Hardwareplattformen lässt auf eine Alternative zu den
+vielen geschlossenen Software-Plattformen der einzelnen Hersteller
+hoffen.
 
 Anhänge
 =======
+
+Datenträger
+-----------
+
+Zu dieser Thesis gehören zwei USB-Datenträger als Anhang. Auf diesem
+sind die portablen GNS-3 Projekte sowie alle verwendeten Konfigurationen
+und entwickelten Python-Programme enthalten.
+
+Der Datenträger enthält folgende Dateien:
+
+    |-- BGP-EVPN-Network-Virtualization-Lab
+    |   |-- evpn-management-controller
+    |   |   |-- BGP_EVPN_LAB
+    |   |   |   |-- evpn
+    |   |   |   |   |-- generate_l3.py
+    |   |   |   |   |-- generate.py
+    |   |   |   |   |-- generate-vtysh.py
+    |   |   |   |   `-- sonictoolset.py
+    |   |   |   |-- evpn-cli.py
+    |   |   |   |-- files
+    |   |   |   |   |-- vtysh-fix.cmd
+    |   |   |   |   `-- vtysh-template.cmd
+    |   |   |   |-- hosts
+    |   |   |   |-- temp.json
+    |   |   |   `-- topology.csv
+    |   |   `-- Dockerfile
+    |   |-- GNS3-Portable-Project
+    |   |   `-- evpn-full.gns3project
+    |   |-- Konfigurationen
+    |   |   |-- SONiC-41.json
+    |   |   |-- SONiC-42.json
+    |   |   |-- SONiC-43.json
+    |   |   |-- SONiC-44.json
+    |   |   |-- SONiC-45.json
+    |   |   |-- vtysh-41.cmd
+    |   |   |-- vtysh-42.cmd
+    |   |   |-- vtysh-43.cmd
+    |   |   |-- vtysh-44.cmd
+    |   |   `-- vtysh-45.cmd
+    |   `-- sonic-switch
+    |       `-- sonic-gns3a.sh
+    |-- MPLS-SR-Traffic-Engineering-Lab
+    |   |-- GNS3-Portable-Project
+    |   |   `-- mpls-sr.gns3project
+    |   |-- Konfigurationen
+    |   |   |-- 172.30.240.41.txt
+    |   |   |-- 172.30.240.42.txt
+    |   |   |-- 172.30.240.43.txt
+    |   |   |-- 172.30.240.44.txt
+    |   |   `-- 172.30.240.45.txt
+    |   |-- mpls-sr-controller
+    |   |   |-- configs
+    |   |   |-- hosts
+    |   |   |-- mpls
+    |   |   |   |-- generate.py
+    |   |   |   `-- tools.py
+    |   |   |-- mpls-cli.py
+    |   |   `-- topology.csv
+    |   |-- MPLS-SR_-_Traffic-Engineering.md
+    |   `-- sflow-client
+    |       `-- Dockerfile
+    |-- OpenFlow-Lab
+    |   |-- faucet-controller
+    |   |   |-- Dockerfile
+    |   |   |-- faucet.gns3a
+    |   |   |-- faucet-L2.yaml
+    |   |   `-- faucet-L3.yaml
+    |   |-- GNS3-Portable-Project
+    |   |   `-- openflow-full.gns3project
+    |   `-- vpls-config.json
+    `-- P4-Programmable-Network-Lab
+        |-- GNS3-Portable-Project
+        |   `-- p4stratum.gns3project
+        |-- p4runtime-controller
+        |   |-- Dockerfile
+        |   |-- P4_LAB
+        |   |   `-- l2_switch
+        |   `-- p4runtime-controller.gns3a
+        `-- stratum-bmv2-container
+            |-- chassis_config.pb.txt
+            |-- Dockerfile
+            |-- reset_switch.sh
+            |-- stratum_bmv2_deb.deb
+            `-- stratum-bmv2.gns3a
